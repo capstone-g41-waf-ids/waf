@@ -1,0 +1,24 @@
+version: '2.9.0'
+services :
+  web:
+    # This image is for Apache, we may want to change it, may not
+    build: ../Portal
+    expose:
+      - "80:80"
+      - "443:443"
+  db:
+    build: ../Database
+    environment:
+      # Note to selves to change this on delivery, possible done as .env variable folder
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: group41
+      # This is mongo default port, would recommend changing this
+      # Ports are parsed in host:container format
+      expose: 27017:27017
+  ubuntu:
+    build: ../Web-Application-Firewall
+    image: ubuntu
+
+  env_file:
+    - /opt/secrets.env
+
