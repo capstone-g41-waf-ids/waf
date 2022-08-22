@@ -1,16 +1,12 @@
 import sys
+import libpcap
 from scapy.all import *
 from scapy.layers.http import HTTPRequest # import HTTP packet
-from colorama import init, Fore
 from threading import Thread
 import argparse
 #import time
 
 methods=['GET','POST','HEAD','PUT','DELETE','CONNECT','OPTIONS','TRACE']#Define http methods
-init()
-GREEN = Fore.GREEN
-RED   = Fore.RED
-RESET = Fore.RESET
 
 def sniff_packets(iface=None):
     print('Running Sniffer')
@@ -36,11 +32,11 @@ def process_packet(packet):
         ip = packet[IP].src
         # get the request method
         method = packet[HTTPRequest].Method.decode()
-        print(f"\n{GREEN}[+] {ip} Requested {url} with {method}{RESET}")
+        print(f"\n {ip} Requested {url} with {method}{RESET}")
         if show_raw and packet.haslayer(Raw) and method == "POST":
             # if show_raw flag is enabled, has raw data, and the requested method is "POST"
             # then show raw
-            print(f"\n{RED}[*] Some useful Raw data: {packet[Raw].load}{RESET}")
+            print(f"\n[*] Some useful Raw data: {packet[Raw].load}{RESET}")
 
 try:
     print('Program started')
