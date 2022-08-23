@@ -1,61 +1,31 @@
-import sys
-
-from scapy.all import *
-from scapy.layers.http import HTTPRequest # import HTTP packet
+import socket
+import struct
 from threading import Thread
-import argparse
-#import time
 
-methods=['GET','POST','HEAD','PUT','DELETE','CONNECT','OPTIONS','TRACE']#Define http methods
+HOST = socket.gethostbyname(socket.gethostname())#gets machines IP address
 
-def sniff_packets(iface=None):
-    print('Running Sniffer')
-    if iface:
-        # port 80 for http (generally)
-        # `process_packet` is the callback
-        sniff(filter="port 80", prn=process_packet, iface=iface, store=False)
-    else:
-        # sniff with default interface
-        sniff(filter="port 80", prn=process_packet, store=False)
-
+def sniff_packets():
+    print(f"My IP address is: {HOST}")
+    Server = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))#set for packets in raw data format, accepts little endian and big endian
     
+    while True:
+        raw_data, address = Server.recvfrom(65535)#Biggest buffer size available is 65535 
+        dest_mac, src_mac, protocol, data = unpack_frame(raw_data)
+        print('\nPacket Frame:')
+        print('IP address: {}, Destination: {}, Source: {}, Protocol: {}'.format(address,dest_mac,src_mac,protocol))
 
-def process_packet(packet):
-    """
-    This function is executed whenever a packet is sniffed
-    """
-    if packet.haslayer(HTTPRequest):
-        # if this packet is an HTTP Request
-        # get the requested URL
-        url = packet[HTTPRequest].Host.decode() + packet[HTTPRequest].Path.decode()
-        # get the requester's IP Address
-        ip = packet[IP].src
-        # get the request method
-        method = packet[HTTPRequest].Method.decode()
-        print(f"\n {ip} Requested {url} with {method}")
-        if show_raw and packet.haslayer(Raw) and method == "POST":
-            # if show_raw flag is enabled, has raw data, and the requested method is "POST"
-            # then show raw
-            print(f"\n[*] Some useful Raw data: {packet[Raw].load}")
+def unpack_frame(data):
+    dest_mac, src_mac, protocol = struct.unpack('! 6s 6s H', data[:14])
+    return get_mac_address(dest_mac), get_mac_address(src_mac), socket.htons(protocol), data[14:]
 
+def get_mac_address(btyes_stream):
+    mac_address = map('{:02x}'.format, btyes_stream)
+    return ':'.join(mac_address).upper()
 try:
     print('Program started')
-    if __name__ == "__main__":
-        parser = argparse.ArgumentParser(description="HTTP Packet Sniffer, this is useful when you're a man in the middle." \
-                                                    + "It is suggested that you run arp spoof before you use this script, otherwise it'll sniff your personal packets")
-        parser.add_argument("-i", "--iface", help="Interface to use, default is scapy's default interface")
-        parser.add_argument("--show-raw", dest="show_raw", action="store_true", help="Whether to print POST raw data, such as passwords, search queries, etc.")
-        # parse arguments
-        args = parser.parse_args()
-        iface = args.iface
-        show_raw = args.show_raw
+    if __name__ == "__main__":  
+        Sniffer_thread1 = Thread(target=sniff_packets)#Create Thread
+        Sniffer_thread1.start()#Start Thread
 
-        
-        Sniffer_thread1 = Thread(target=sniff_packets, args=[iface])
-        Sniffer_thread1.start()
-
-
-
-    #KeyboardInterrupt Exit program
 except KeyboardInterrupt:
     print('GOOOD BYE - KeyboardInterrupt')

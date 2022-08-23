@@ -1,2 +1,2 @@
-libpcap
-scapy[complete]
+sockets
+supyr-struct
