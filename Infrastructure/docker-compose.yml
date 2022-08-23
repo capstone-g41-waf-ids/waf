@@ -4,25 +4,49 @@ services :
     # This image is for Apache, we may want to change it, may not
     build: ../Portal
     container_name: web-server
- #   expose:
- #     - "80:80"
- #     - "443:443"
- #   env_file:
-  #    - opt/ .env
+    #expose opens the ports between CONTAINERS only
+    expose:
+      - "80"
+      - "443"
+    networks:
+      - backend
+    #configs:
+    #  - httpd-config
+   # secrets:
+      # Insert certificate for SSL
+     # - server-certificate
   db:
     build: ../Database
     container_name: database
-  #  environment:
+    networks:
+      - backend
+    ports:
+      - "27017:27017"
+      #  environment:
   #    # Note to selves to change this on delivery, possible done as .env variable folder
-  #    MONGO_INITDB_ROOT_USERNAME: root
- #     MONGO_INITDB_ROOT_PASSWORD: group41
+   # MONGO_INITDB_ROOT_USERNAME: root
+   # MONGO_INITDB_ROOT_PASSWORD: group41
       # This is mongo default port, would recommend changing this
       # Ports are parsed in host:container format
   #    expose: 27017:27017
   ubuntu:
     build: ../Web-Application-Firewall
     container_name: web-application-firewall
+    networks:
+      - backend
 
+  webgoat:
+    container_name: webgoat
+    image: webgoat/webgoat
+    expose:
+      - "80"
+      - "443"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
  # env_file:
    # - /opt/secrets.env
 
