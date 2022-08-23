@@ -1,6 +1,17 @@
+import textwrap
 import socket
 import struct
 from threading import Thread
+
+TAB_1 = '\t - '
+TAB_2 = '\t\t - '
+TAB_3 = '\t\t\t - '
+TAB_4 = '\t\t\t\t - '
+
+DATA_TAB_1 = '\t '
+DATA_TAB_2 = '\t\t '
+DATA_TAB_3 = '\t\t\t '
+DATA_TAB_4 = '\t\t\t\t '
 
 
 HOST = socket.gethostbyname(socket.gethostname())#gets machines IP address
@@ -13,9 +24,12 @@ def sniff_packets():
         raw_data, address = Server.recvfrom(65535)#Biggest buffer size available is 65535 
         dest_mac, src_mac, protocol, data = unpack_frame(raw_data)
         print('\nPacket Frame:')
-        print('Destination: {}, Source: {}, Protocol: {}'.format(dest_mac,src_mac,protocol))
+        print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac,src_mac,protocol))
+
         version, header_length, time_to_live, protocol_2, src, target, IPv4_data = unpack_IPv4(data)
-        print('IP address: {}'.format(src))
+        print(TAB_1 + 'IPv4 Packet:')
+        print(TAB_1 + 'version: {}, header_length: {}, time_to_live: {}'.format(version,header_length,time_to_live))
+        print(TAB_1 + 'protocol: {}, Source: {}, target: {}'.format(protocol_2,src,target))
 
 
 
@@ -27,7 +41,7 @@ def get_mac_address(btyes_stream):
     mac_address = map('{:02x}'.format, btyes_stream)
     return ':'.join(mac_address).upper()
 
-def IP_translate(unformatted_address):
+def IP_format(unformatted_address):
     return '.'.join(map(str, unformatted_address))
 
 #upacks IPv4 packet
@@ -36,11 +50,24 @@ def unpack_IPv4(data):
     version = version_header_length >> 4
     header_length = (version_header_length & 15) * 4
     time_to_live, protocol, src, target = struct.unpack('! 8x B B 2x 4s 4s', data[:20])
-    return version, header_length, time_to_live, protocol, IP_translate(src), IP_translate(target), data[header_length:]
+    return version, header_length, time_to_live, protocol, IP_format(src), IP_format(target), data[header_length:]
 
 def unpack_ICMP(data):
     icmp_type, code, checksum = struct.unpack('! B B H', data[:4])
-    return icmp_type, code, checksum, data[:4]
+    return icmp_type, code, checksum, data[4:]
+
+def unpack_UDP(data):
+    src_port, dest_port, size = struct.unpack('! H H 2x H', data[:8])
+    return src_port, dest_port, size, data[8:]
+
+#This just makes data easier to read. is not packet sniffing related can remove later
+def format_multi_line_data(prefix, string, size=80):
+    size -= len(prefix)
+    if isinstance(string, bytes):
+        string = ''.join(r'\x{:02x}'.format(byte) for byte in string)
+        if size % 2:
+            size -= 1
+    return '\n'.join([prefix + line for line in textwrap.wrap(string, size)])
 
 def unpack_tcp(data):
     (src_port, dest_port, sequence, acknowledgement, offset_reserved_flags) = struct.unpack('!H H L L H', data[:14])
