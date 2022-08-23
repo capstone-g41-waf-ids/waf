@@ -1,3 +1,4 @@
+from tabnanny import check
 import textwrap
 import socket
 import struct
@@ -22,14 +23,48 @@ def sniff_packets():
     
     while True:
         raw_data, address = Server.recvfrom(65535)#Biggest buffer size available is 65535 
-        dest_mac, src_mac, protocol, data = unpack_frame(raw_data)
+        dest_mac, src_mac, eth_protocol, data = unpack_frame(raw_data)
         print('\nPacket Frame:')
-        print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac,src_mac,protocol))
+        print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac,src_mac,eth_protocol))
 
-        version, header_length, time_to_live, protocol_2, src, target, IPv4_data = unpack_IPv4(data)
-        print(TAB_1 + 'IPv4 Packet:')
-        print(TAB_1 + 'version: {}, header_length: {}, time_to_live: {}'.format(version,header_length,time_to_live))
-        print(TAB_1 + 'protocol: {}, Source: {}, target: {}'.format(protocol_2,src,target))
+        
+
+        if eth_protocol == 8:
+            version, header_length, time_to_live, IPv4_protocol, src, target, IPv4_data = unpack_IPv4(data)
+            print(TAB_1 + 'IPv4 Packet:')
+            print(TAB_2 + 'version: {}, header_length: {}, time_to_live: {}'.format(version,header_length,time_to_live))
+            print(TAB_2 + 'protocol: {}, Source: {}, target: {}'.format(IPv4_protocol,src,target))
+
+            #ICMP
+            if IPv4_protocol == 1:
+                ICMP_type, code, check_sum, ICMP_data = unpack_ICMP(data)
+                print(TAB_1 + 'ICMP Segment:')
+                print(TAB_2 + 'Type: {}, Code: {}, Check sum: {}'.format(ICMP_type,code,check_sum))
+                print(TAB_2 + 'Data: ')
+                print(format_multi_line_data(DATA_TAB_4,ICMP_data))
+
+            #TCP
+            elif IPv4_protocol == 6:
+                (src_port, dest_port, sequence, acknowledgement, flag_urg, flag_ark, flag_psh, flag_rst, flag_syn, flag_fin, TCP_data) = unpack_tcp(data)
+                print(TAB_1 + 'TCP Segment:')
+                print(TAB_2 + 'Source Port: {}, Destination Port: {}'.format(src_port,dest_port))
+                print(TAB_2 + 'Sequence: {}, Acknowlegement: {}'.format(sequence,acknowledgement))
+                print(TAB_2 + 'Flags:')
+                print(TAB_3 + 'URG: {}, ACK:, PSH: {}, RST: {}, SYN: {}, FIN: {},'.format(flag_urg,flag_ark,flag_psh,flag_rst,flag_syn,flag_fin))
+                print(TAB_1 + 'Data: ')
+                print(format_multi_line_data(DATA_TAB_4, TCP_data))
+
+            #UDP
+            elif IPv4_protocol == 17:
+                src_port, dest_port, length, UDP_data = unpack_UDP(data)
+                print(TAB_1 + 'UDP Segment: ')
+                print(TAB_2 + 'Source Port: {}, Destination Port: {}, Length: {} '.format(src_port,dest_port,length))
+                print(TAB_1 + 'Data: ')
+                print(format_multi_line_data(DATA_TAB_4, UDP_data))
+
+            else:
+                print(TAB_1 + 'Data: ')
+                print(format_multi_line_data(DATA_TAB_2, data))
 
 
 
@@ -60,15 +95,6 @@ def unpack_UDP(data):
     src_port, dest_port, size = struct.unpack('! H H 2x H', data[:8])
     return src_port, dest_port, size, data[8:]
 
-#This just makes data easier to read. is not packet sniffing related can remove later
-def format_multi_line_data(prefix, string, size=80):
-    size -= len(prefix)
-    if isinstance(string, bytes):
-        string = ''.join(r'\x{:02x}'.format(byte) for byte in string)
-        if size % 2:
-            size -= 1
-    return '\n'.join([prefix + line for line in textwrap.wrap(string, size)])
-
 def unpack_tcp(data):
     (src_port, dest_port, sequence, acknowledgement, offset_reserved_flags) = struct.unpack('!H H L L H', data[:14])
     offset = (offset_reserved_flags >> 12) * 4
@@ -79,6 +105,15 @@ def unpack_tcp(data):
     flag_syn = (offset_reserved_flags & 2) >> 1
     flag_fin = offset_reserved_flags & 1
     return src_port, dest_port, sequence, acknowledgement, flag_urg, flag_ark, flag_psh, flag_rst, flag_syn, flag_fin, data[offset:]
+
+    #This just makes data easier to read. is not packet sniffing related can remove later
+def format_multi_line_data(prefix, string, size=80):
+    size -= len(prefix)
+    if isinstance(string, bytes):
+        string = ''.join(r'\x{:02x}'.format(byte) for byte in string)
+        if size % 2:
+            size -= 1
+    return '\n'.join([prefix + line for line in textwrap.wrap(string, size)])
 
 try:
     print('Program started')
