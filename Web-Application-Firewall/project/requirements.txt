@@ -1,3 +1,2 @@
-sockets
-supyr-struct
-textwrap3
+libpcap
+scapy[complete]
