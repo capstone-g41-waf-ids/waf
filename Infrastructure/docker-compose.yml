@@ -28,9 +28,9 @@ services :
       - ../Database/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ../Database/mongod.conf:/etc/mongod.conf:ro
       - db:/data/db
-    ports:
-      - "27017:27017"
-    expose: [27017] #This is mongo default port, would recommend changing this
+    #ports:
+    #  - "27017:27017"
+    #expose: [27017] #This is mongo default port, would recommend changing this
     #env_file:
       #- ./opt/secrets.env
 
