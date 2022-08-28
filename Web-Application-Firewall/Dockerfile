@@ -13,4 +13,4 @@ RUN apt-get install -y iproute2
 RUN pip3 install -r project/requirements.txt
 EXPOSE 80/tcp
 EXPOSE 80/udp
-CMD ["python3", "project/WAF.py" ]
+CMD ["python3", "project/WAF.py"]

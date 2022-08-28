@@ -28,43 +28,44 @@ def sniff_packets():
         print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac,src_mac,eth_protocol))
 
         
+        print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------')
+        #if eth_protocol == 8:
+        version, header_length, time_to_live, IPv4_protocol, src, target, IPv4_data = unpack_IPv4(data)
+        print(TAB_1 + 'IPv4 Packet:')
+        print(TAB_2 + 'version: {}, header_length: {}, time_to_live: {}'.format(version,header_length,time_to_live))
+        print(TAB_2 + 'protocol: {}, Source: {}, target: {}'.format(IPv4_protocol,src,target))
+        print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------')
+        #ICMP
+        #if IPv4_protocol == 1:
+        ICMP_type, code, check_sum, ICMP_data = unpack_ICMP(data)
+        print(TAB_1 + 'ICMP Segment:')
+        print(TAB_2 + 'Type: {}, Code: {}, Check sum: {}'.format(ICMP_type,code,check_sum))
+        print(TAB_2 + 'Data: ')
+        print(format_multi_line_data(DATA_TAB_4,ICMP_data))
+        print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------')
+        #TCP
+        #elif IPv4_protocol == 6:
+        (src_port, dest_port, sequence, acknowledgement, flag_urg, flag_ark, flag_psh, flag_rst, flag_syn, flag_fin, TCP_data) = unpack_tcp(data)
+        print(TAB_1 + 'TCP Segment:')
+        print(TAB_2 + 'Source Port: {}, Destination Port: {}'.format(src_port,dest_port))
+        print(TAB_2 + 'Sequence: {}, Acknowlegement: {}'.format(sequence,acknowledgement))
+        print(TAB_2 + 'Flags:')
+        print(TAB_3 + 'URG: {}, ACK:, PSH: {}, RST: {}, SYN: {}, FIN: {},'.format(flag_urg,flag_ark,flag_psh,flag_rst,flag_syn,flag_fin))
+        print(TAB_1 + 'Data: ')
+        print(format_multi_line_data(DATA_TAB_4, TCP_data))
+        print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------')
+        #UDP
+        #elif IPv4_protocol == 17:
+        src_port, dest_port, length, UDP_data = unpack_UDP(data)
+        print(TAB_1 + 'UDP Segment: ')
+        print(TAB_2 + 'Source Port: {}, Destination Port: {}, Length: {} '.format(src_port,dest_port,length))
+        print(TAB_1 + 'Data: ')
+        print(format_multi_line_data(DATA_TAB_4, UDP_data))
+        print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------')
 
-        if eth_protocol == 8:
-            version, header_length, time_to_live, IPv4_protocol, src, target, IPv4_data = unpack_IPv4(data)
-            print(TAB_1 + 'IPv4 Packet:')
-            print(TAB_2 + 'version: {}, header_length: {}, time_to_live: {}'.format(version,header_length,time_to_live))
-            print(TAB_2 + 'protocol: {}, Source: {}, target: {}'.format(IPv4_protocol,src,target))
-
-            #ICMP
-            if IPv4_protocol == 1:
-                ICMP_type, code, check_sum, ICMP_data = unpack_ICMP(data)
-                print(TAB_1 + 'ICMP Segment:')
-                print(TAB_2 + 'Type: {}, Code: {}, Check sum: {}'.format(ICMP_type,code,check_sum))
-                print(TAB_2 + 'Data: ')
-                print(format_multi_line_data(DATA_TAB_4,ICMP_data))
-
-            #TCP
-            elif IPv4_protocol == 6:
-                (src_port, dest_port, sequence, acknowledgement, flag_urg, flag_ark, flag_psh, flag_rst, flag_syn, flag_fin, TCP_data) = unpack_tcp(data)
-                print(TAB_1 + 'TCP Segment:')
-                print(TAB_2 + 'Source Port: {}, Destination Port: {}'.format(src_port,dest_port))
-                print(TAB_2 + 'Sequence: {}, Acknowlegement: {}'.format(sequence,acknowledgement))
-                print(TAB_2 + 'Flags:')
-                print(TAB_3 + 'URG: {}, ACK:, PSH: {}, RST: {}, SYN: {}, FIN: {},'.format(flag_urg,flag_ark,flag_psh,flag_rst,flag_syn,flag_fin))
-                print(TAB_1 + 'Data: ')
-                print(format_multi_line_data(DATA_TAB_4, TCP_data))
-
-            #UDP
-            elif IPv4_protocol == 17:
-                src_port, dest_port, length, UDP_data = unpack_UDP(data)
-                print(TAB_1 + 'UDP Segment: ')
-                print(TAB_2 + 'Source Port: {}, Destination Port: {}, Length: {} '.format(src_port,dest_port,length))
-                print(TAB_1 + 'Data: ')
-                print(format_multi_line_data(DATA_TAB_4, UDP_data))
-
-            else:
-                print(TAB_1 + 'Data: ')
-                print(format_multi_line_data(DATA_TAB_2, data))
+        #else:
+            #print(TAB_1 + 'Data: ')
+            #print(format_multi_line_data(DATA_TAB_2, data))
 
 
 
