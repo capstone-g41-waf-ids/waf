@@ -1,11 +1,11 @@
-import sys
-import libpcap
 from scapy.all import *
 from scapy.layers.http import HTTPRequest # import HTTP packet
 from threading import Thread
 import argparse
+import socket
 #import time
 
+host = socket.gethostbyname(socket.gethostname())
 methods=['GET','POST','HEAD','PUT','DELETE','CONNECT','OPTIONS','TRACE']#Define http methods
 
 def sniff_packets(iface=None):
@@ -32,14 +32,15 @@ def process_packet(packet):
         ip = packet[IP].src
         # get the request method
         method = packet[HTTPRequest].Method.decode()
-        print(f"\n {ip} Requested {url} with {method}{RESET}")
-        if show_raw and packet.haslayer(Raw) and method == "POST":
+        print(f"\n {ip} Requested {url} with {method}")
+        if show_raw and packet.haslayer(Raw) and method == "GET":
             # if show_raw flag is enabled, has raw data, and the requested method is "POST"
             # then show raw
-            print(f"\n[*] Some useful Raw data: {packet[Raw].load}{RESET}")
+            print(f"\n[*] Some useful Raw data: {packet[Raw].load}")
 
 try:
     print('Program started')
+    print('My IP: ' + host)
     if __name__ == "__main__":
         parser = argparse.ArgumentParser(description="HTTP Packet Sniffer, this is useful when you're a man in the middle." \
                                                     + "It is suggested that you run arp spoof before you use this script, otherwise it'll sniff your personal packets")
