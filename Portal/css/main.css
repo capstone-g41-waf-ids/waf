@@ -54,3 +54,46 @@ span.pword {
      width: 50%;
   }
 }
+
+.nav1 {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  text-align: center;
+  font-size: small;
+}
+
+.nav1 a {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: small;
+}
+
+.nav1 a:hover {
+  background-color: #008800;
+}
+.nav2 {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  text-align: right;
+  font-size: small;
+}
+
+.nav2 a {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: small;
+}
+
+.nav2 a:hover {
+  background-color: #008800;
+}
