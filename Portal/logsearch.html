@@ -1,26 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="login" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="css/main.css">
+	<!-- meta info -->
+	<meta charset="utf-8" />
+	<meta name="description" content="Firewall page" />
+	<meta name="keywords" content="Apply" />
+	<meta name="author" content="Darcy" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <h2>Template</h2>
 
 <nav class="nav1"><!-- nav menu -->
+	<div> Health Status&#128578 </div> 
 	<a href="serverstatus.html">Server Status</a>
     <a href="logsearch.html">Log Search</a>
 	<a href="firewall.html">Firewall Settings</a>
-	<a href="security.html">General Security</a>
+	<div class="nav2">
+		<a href="logsearch.php">Edit user</a>
+		<a href="login.html">Logout</a>
+	</div>
 </nav>
-
-<nav class="nav2"><!-- nav 2 menu -->
-	<a href="login.html">Logout</a>
-    <a href="logsearch.php">Edit user</a>
-</nav>
-
 <div>
-
+	<h1 >Log Search</h1></div>
+<div>
+<div class="main">
+	<div class="topnav">
+		<div class="search-container">
+			<form action="/action_page.php">
+			  <input type="text" placeholder="Search.." name="search">
+			  <button type="submit"><i class="fa fa-search"></i></button>
+			</form>
+		</div>
+	  </div>
+	<fieldset class="logs">
+		<table style="undefined;table-layout: fixed; width: auto">
+		<colgroup>
+		<col style="width: 200px">
+		<col style="width: 200px">
+		<col style="width: 200px">
+		<col style="width: 200px">
+		<col style="width: 200px">
+		<col style="width: 200px">
+		</colgroup>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>IP Address</th>
+					<th>Geo location</th>
+					<th>User</th>
+					<th>Request</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+				<div class="scrollit">
+			<tr>
+				<td>1</td>
+				<td>192.168.0.1/24</td>
+				<td>Sweden</td>
+				<td>192.168.0.1/24</td>
+				<td>GET /database/log82710327.lg</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>10.0.0.1/16</td>
+				<td>Germany</td>
+				<td>192.168.0.1/24</td>
+				<td>GET /secrets/password.txt</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>128.0.0.1/20</td>
+				<td>Australia</td>
+				<td>192.168.0.1/24</td>
+				<td>GET /funnycatpictures/catwearingatie.png</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>200.40.0.8/16</td>
+				<td>Russia</td>
+				<td>192.168.0.1/24</td>
+				<td>GET /verybigbusinessdeals/facebookmerger.pdf</td>
+			</tr>
+			</div>
+			</tbody>
+		</table>
+	</fieldset>
 </div>
 
 </body>
