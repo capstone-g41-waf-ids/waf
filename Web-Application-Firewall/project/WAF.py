@@ -15,13 +15,13 @@ def sniff_packets(iface=None):
         # `process_packet` is the callback
         print(f"iface on")
         sniff(filter="port 80", prn=process_packet, iface=iface, store=False)
-        sniff(filter="port 443", prn=process_packet, iface=iface, store=False)
+        #sniff(filter="port 443", prn=process_packet, iface=iface, store=False)
         
     else:
         # sniff with default interface
         print(f"iface off")
         sniff(filter="port 80", prn=process_packet, store=False)
-        sniff(filter="port 443", prn=process_packet, store=False)
+        #sniff(filter="port 443", prn=process_packet, store=False)
 
     
 
