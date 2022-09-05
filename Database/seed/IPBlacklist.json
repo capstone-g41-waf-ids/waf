@@ -1,4 +1,4 @@
-{
+[{
   "_id": 1,
   "name" : { "first" : "IPBlacklist", "last" : "Backus" },
   "contribs" : [ "Fortran", "ALGOL", "Backus-Naur Form", "FP" ],
@@ -13,4 +13,4 @@
       "by" : "National Academy of Engineering"
     }
   ]
-}
+}]
