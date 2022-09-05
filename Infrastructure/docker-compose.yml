@@ -1,8 +1,8 @@
 version: '3.8'
-services :
-
-  reverse proxy:
-    image: nginx:1.17.10
+services:
+  proxy:
+    build: .
+    image: nginx:latest
     container_name: reverse_proxy
     depends_on: 
       - ubuntu
