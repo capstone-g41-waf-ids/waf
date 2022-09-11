@@ -19,33 +19,27 @@ services :
       - MONGODB_CONNSTRING=mongodb://root:group41@database
 
   mongodb:
-    image: mongo:latest
+    image: mongo
     container_name: database
     command:
       - mongod
       - ./import.sh
     environment:     #Note to selves to change this on delivery, possible done as .env variable folder
+      #- .env
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=group41
       - MONGODB_CONNSTRING=mongodb://root:group41@database
     volumes:
-      - ../Database/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ../Database/mongod.conf:/etc/mongod.conf:ro
+      #- ../Database/mongod.conf:/etc/mongod.conf:ro
+      - ../Database/init:/docker-entrypoint-initdb.d
       - ../Database/seed:/seed
-      - ../Database/import.sh:/import.sh
       - db:/data/db
     ports:
-      - "27017:27017"
-    expose:
+      - "27017:27017" #This is mongo default port, would recommend changing this
+    expose: #may or may not do anything
       - "27017"
-
-
-    #expose: [27017] #This is mongo default port, would recommend changing this
     #env_file:
       #- ./opt/secrets.env
-
-
-
 
 
 volumes:

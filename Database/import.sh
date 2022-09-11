@@ -1,6 +1,0 @@
-mongoimport --host database -u "root" -p "group41" --authenticationDatabase "admin" --db database --collection WAFLogs --type json --file seed/WAFLogs.json --jsonArray && \
-mongoimport --host database -u "root" -p "group41" --authenticationDatabase "admin" --db database --collection UserAccounts --type json --file seed/UserAccounts.json --jsonArray && \
-mongoimport --host database -u "root" -p "group41" --authenticationDatabase "admin" --db database --collection WAFFilters --type json --file seed/WAFFilters.json --jsonArray && \
-mongoimport --host database -u "root" -p "group41" --authenticationDatabase "admin" --db database --collection IPBlacklist --type json --file seed/IPBlacklist.json --jsonArray && \
-mongoimport --host database -u "root" -p "group41" --authenticationDatabase "admin" --db database --collection CountryBlacklist --type json --file seed/CountryBlacklist.json --jsonArray && \
-mongoimport --host database -u "root" -p "group41" --authenticationDatabase "admin" --db database --collection HTTPTypes --type json --file seed/HTTPTypes.json --jsonArray
