@@ -21,6 +21,9 @@ services :
   mongodb:
     image: mongo
     container_name: database
+    command:
+      - mongod
+      - ./import.sh
     environment:     #Note to selves to change this on delivery, possible done as .env variable folder
       #- .env
       - MONGO_INITDB_ROOT_USERNAME=root
@@ -33,8 +36,11 @@ services :
       - db:/data/db
     ports:
       - "27017:27017" #This is mongo default port, would recommend changing this
+    expose: #may or may not do anything
+      - "27017"
     #env_file:
       #- ./opt/secrets.env
+
 
 volumes:
     db:
