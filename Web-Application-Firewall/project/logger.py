@@ -1,24 +1,28 @@
-"""WIP DONT LOOK"""
-
 import os
 import pymongo
 from scapy import *
 from scapy.layers.http import *
 
-""" DATABASE LOGGING STUFF - needs to be  linked in with roys waf.py """
+"""WIP DONT LOOK"""
+"""file name/structure not finalised. will be consolidated/adjusted"""
+
+""" DATABASE LOGGING STUFF - needs to be  linked in with roy's waf.py """
+
 
 def get_db():
-    connstring = os.environ['MONGODB_CONNSTRING'] #from container env
-    print(connstring) #test
-    client = pymongo.MongoClient(connstring) #connect to mongo
-    db = client['database'] #get db
-    collection = db['WAFLogs'] #get collection for waf log storage
+    connstring = os.environ['MONGODB_CONNSTRING']  # from container env
+    print(connstring)  # test
+    client = pymongo.MongoClient(connstring)  # connect to mongo
+    db = client['database']  # get db
+    collection = db['WAFLogs']  # get collection for waf log storage
     return collection
 
-def close_db():
-    """"""
 
-def log_packet(packet): #this will go in process packet probably
+def close_db():
+    print("this does nothing")
+
+
+def log_packet(packet):  # this will go in process packet probably
     """
     This function sends logs packets in db
     """
@@ -86,7 +90,7 @@ def log_packet(packet): #this will go in process packet probably
         "x_wap_profile": packet[HTTPRequest].X_Wap_Profile.decode(),
         "unknown_headers": packet[HTTPRequest].Unknown_Headers.decode(),
 
-        "source": packet[IP].src,
+        "source": packet[IP].src,  # work our what you need for ip
     }
 
     coll.insert_one(log)
