@@ -4,6 +4,9 @@ services :
     # This image is for Apache, we may want to change it, may not
     build: ../Portal
     container_name: web-server
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.4
     #expose:
       #- "80:80"
       #- "443:443"
@@ -17,13 +20,15 @@ services :
     #- ./opt/secrets.env
     environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
       - MONGODB_CONNSTRING=mongodb://root:group41@database
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.2
 
   mongodb:
     image: mongo
     container_name: database
     command:
       - mongod
-      - ./import.sh
     environment:     #Note to selves to change this on delivery, possible done as .env variable folder
       #- .env
       - MONGO_INITDB_ROOT_USERNAME=root
@@ -38,9 +43,21 @@ services :
       - "27017:27017" #This is mongo default port, would recommend changing this
     expose: #may or may not do anything
       - "27017"
+    networks:
+      projectNetwork:
+         ipv4_address: 172.2.2.3
+
     #env_file:
       #- ./opt/secrets.env
 
 
 volumes:
     db:
+
+networks:
+  projectNetwork:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.2.2.0/28"
