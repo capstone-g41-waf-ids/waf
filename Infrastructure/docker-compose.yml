@@ -1,5 +1,15 @@
 version: '3.8'
-services :
+services:
+
+  proxy:
+    build: ./reverse_proxy
+    image: dmgnx/nginx-naxsi
+    container_name: reverse_proxy
+    volumes:
+      - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 8000:80
+
   web:
     # This image is for Apache, we may want to change it, may not
     build: ../Portal
@@ -22,6 +32,7 @@ services :
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.2
+
   mongodb:
     image: mongo
     container_name: database
