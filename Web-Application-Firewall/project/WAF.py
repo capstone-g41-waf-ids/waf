@@ -17,10 +17,15 @@ def sniff_packets(iface=None):
     if iface:
         # port 80 for http (generally)
         # `process_packet` is the callback
+        print(f"iface on")
         sniff(filter="port 80", prn=process_packet, iface=iface, store=False)
+        #sniff(filter="port 443", prn=process_packet, iface=iface, store=False)
+        
     else:
         # sniff with default interface
+        print(f"iface off")
         sniff(filter="port 80", prn=process_packet, store=False)
+        #sniff(filter="port 443", prn=process_packet, store=False)
 
 
 def process_packet(packet):
@@ -36,7 +41,7 @@ def process_packet(packet):
         # get the request method
         method = packet[HTTPRequest].Method.decode()
         print(f"\n {ip} Requested {url} with {method}")
-        if show_raw and packet.haslayer(Raw) and method == "GET":
+        if show_raw and packet.haslayer(Raw) and method == "POST":
             # if show_raw flag is enabled, has raw data, and the requested method is "POST"
             # then show raw
             print(f"\n[*] Some useful Raw data: {packet[Raw].load}")
