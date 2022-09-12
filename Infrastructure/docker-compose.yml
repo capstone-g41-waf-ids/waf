@@ -12,7 +12,6 @@ services :
       #- "443:443"
     #env_file:
     #- ./opt/secrets.env
-
   ubuntu:
     build: ../Web-Application-Firewall
     container_name: web-application-firewall
@@ -23,7 +22,6 @@ services :
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.2
-
   mongodb:
     image: mongo
     container_name: database
@@ -46,10 +44,17 @@ services :
     networks:
       projectNetwork:
          ipv4_address: 172.2.2.3
-
+  webgoat:
+    image: webgoat/webgoat
+    container_name: webgoat
+    ports:
+      - "80:8080"
+      - "9090:9090"
     #env_file:
       #- ./opt/secrets.env
-
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.5
 
 volumes:
     db:
