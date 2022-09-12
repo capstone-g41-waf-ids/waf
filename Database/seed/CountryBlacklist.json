@@ -1,6 +1,6 @@
-{
+[{
   "_id": 1,
-  "name" : { "first" : "HTTPTypes", "last" : "Backus" },
+  "name" : { "first" : "Country Blacklist", "last" : "Backus" },
   "contribs" : [ "Fortran", "ALGOL", "Backus-Naur Form", "FP" ],
   "awards" : [
     {
@@ -14,3 +14,4 @@
     }
   ]
 }
+]
