@@ -1,4 +1,4 @@
-FROM nginx:1.15.8-alpine
+FROM dmgnx/nginx-naxsi
 
 EXPOSE 8000
 
