@@ -1,7 +1,7 @@
-LearningMode;
+#LearningMode;
 SecRulesEnabled;
 #SecRulesDisabled;
-DeniedUrl "/usr/share/html/RequestDenied.txt";
+DeniedUrl "/RequestDenied.txt";
 
 ## Check & Blocking Rules
 CheckRule "$SQL >= 8" BLOCK;
