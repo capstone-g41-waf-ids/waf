@@ -1,6 +1,4 @@
-#LearningMode;
 SecRulesEnabled;
-#SecRulesDisabled;
 DeniedUrl "/RequestDenied.txt";
 
 ## Check & Blocking Rules
