@@ -36,7 +36,7 @@ services:
   mongodb:
     image: mongo
     container_name: database
-    command:
+    command: #why is this needed?
       - mongod
     environment:     #Note to selves to change this on delivery, possible done as .env variable folder
       #- .env
