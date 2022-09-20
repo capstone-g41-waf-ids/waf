@@ -1,5 +1,26 @@
 //initialising the db - creating collections etc.
 
+/*dbAdmin = db.getSiblingDB("admin");
+
+dbAdmin.createUser({
+  user: 'root',
+  pwd: 'group41',
+  roles: [
+    {
+      role: 'userAdminAnyDatabase',
+      db: 'database'
+    }
+  ]
+});
+
+dbAdmin.auth({
+  user: "root",
+  pwd: "group41",
+  mechanisms: ["SCRAM-SHA-1"],
+  digestPassword: true,
+});
+
+*/
 db = new Mongo().getDB("database");
 
 //db.createCollection('TestCollection', { capped: false }); //just for testing, delete later
