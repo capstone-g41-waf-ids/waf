@@ -15,6 +15,7 @@ DATA_TAB_2 = '\t\t '
 DATA_TAB_3 = '\t\t\t '
 DATA_TAB_4 = '\t\t\t\t '
 
+WEB_SERVER = ""
 
 HOST = socket.gethostbyname(socket.gethostname())#gets machines IP address
 
