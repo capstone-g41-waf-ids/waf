@@ -70,6 +70,11 @@ services:
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.5
+    inputs:
+      scriptPath: "./test.sh"        
+#    task:
+#      displayName: "Run integration tests"
+
 
 volumes:
     db:
