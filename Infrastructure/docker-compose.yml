@@ -1,46 +1,88 @@
 version: '3.8'
-services :
-  web:
-    # This image is for Apache, we may want to change it, may not
-    build: ../Portal
-    container_name: web-server
-    #expose:
-      #- "80:80"
-      #- "443:443"
-    #env_file:
-    #- ./opt/secrets.env
+services:
 
-  ubuntu:
+  proxy:
+    build: ../reverse_proxy
+    image: dmgnx/nginx-naxsi
+    container_name: reverse_proxy
+    ports:
+      - 8000:80
+    depends_on:
+      - webgoat
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.4
+
+  # web:
+  #   # This image is for Apache, we may want to change it, may not
+  #   build: ../Portal
+  #   container_name: web-server
+  #   networks:
+  #     projectNetwork:
+  #       ipv4_address: 172.2.2.4
+  #   #expose:
+  #     #- "80:80"
+  #     #- "443:443"
+  #   #env_file:
+  #   #- ./opt/secrets.env
+
+  Web-Application-Firewall:
+    image: python:3
     build: ../Web-Application-Firewall
     container_name: web-application-firewall
+    ports:
+    - 9090:80
     #env_file:
     #- ./opt/secrets.env
     environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
-      - MONGODB_CONNSTRING=mongodb://root:group41@database
+    - MONGODB_CONNSTRING=mongodb://root:group41@database
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.2
 
-  mongodb:
-    image: mongo
-    container_name: database
-    command:
-      - mongod
-      - ./import.sh
-    environment:     #Note to selves to change this on delivery, possible done as .env variable folder
-      #- .env
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=group41
-      - MONGODB_CONNSTRING=mongodb://root:group41@database
-    volumes:
-      #- ../Database/mongod.conf:/etc/mongod.conf:ro
-      - ../Database/init:/docker-entrypoint-initdb.d
-      - ../Database/seed:/seed
-      - db:/data/db
+  # mongodb:
+  #   image: mongo
+  #   container_name: database
+  #   command:
+  #     - mongod
+  #   environment:     #Note to selves to change this on delivery, possible done as .env variable folder
+  #     #- .env
+  #     - MONGO_INITDB_ROOT_USERNAME=root
+  #     - MONGO_INITDB_ROOT_PASSWORD=group41
+  #     - MONGODB_CONNSTRING=mongodb://root:group41@database
+  #   volumes:
+  #     #- ../Database/mongod.conf:/etc/mongod.conf:ro
+  #     - ../Database/init:/docker-entrypoint-initdb.d
+  #     - ../Database/seed:/seed
+  #     - db:/data/db
+  #   ports:
+  #     - "27017:27017" #This is mongo default port, would recommend changing this
+  #   expose: #may or may not do anything
+  #     - "27017"
+  #   networks:
+  #     projectNetwork:
+  #        ipv4_address: 172.2.2.3
+
+
+  webgoat:
+    build: ../webgoat
+    image: webgoat/webgoat-8.0
+    container_name: webgoat
     ports:
-      - "27017:27017" #This is mongo default port, would recommend changing this
-    expose: #may or may not do anything
-      - "27017"
+      - "8080:8080"
     #env_file:
       #- ./opt/secrets.env
-
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.5
 
 volumes:
     db:
+
+networks:
+  projectNetwork:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.2.2.0/28"
