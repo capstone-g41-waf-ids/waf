@@ -3,7 +3,7 @@ services:
 
   proxy:
     build: ../reverse_proxy
-    image: dmgnx/nginx-naxsi
+    image: nginx:latest
     container_name: reverse_proxy
     ports:
       - 8000:80
