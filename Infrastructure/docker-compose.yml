@@ -1,10 +1,10 @@
 version: '3.8'
 services:
 
-  proxy:
-    build: ../reverse_proxy
+  Web-Application-Firewall:
+    build: ../Web-Application-Firewall
     image: dmgnx/nginx-naxsi
-    container_name: reverse_proxy
+    container_name: Web-Application-Firewall
     ports:
       - 8000:80
     depends_on:
@@ -26,19 +26,19 @@ services:
   #   #env_file:
   #   #- ./opt/secrets.env
 
-  Web-Application-Firewall:
-    image: python:3
-    build: ../Web-Application-Firewall
-    container_name: web-application-firewall
-    ports:
-    - 9090:80
-    #env_file:
-    #- ./opt/secrets.env
-    environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
-    - MONGODB_CONNSTRING=mongodb://root:group41@database
-    networks:
-      projectNetwork:
-        ipv4_address: 172.2.2.2
+  #Web-Application-Firewall:
+  # image: python:3
+  #   build: ../Web-Application-Firewall
+  #   container_name: web-application-firewall
+  #   ports:
+  #   - 9090:80
+  #   env_file:
+  #   - ./opt/secrets.env
+  #   environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
+  #   - MONGODB_CONNSTRING=mongodb://root:group41@database
+  #   networks:
+  #    projectNetwork:
+  #    ipv4_address: 172.2.2.2
 
   # mongodb:
   #   image: mongo
