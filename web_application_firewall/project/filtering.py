@@ -7,7 +7,7 @@ CASE_INSENSITIVE = "(?i)"
 #ELLEN ADDITION http methods
 #check if method is allowed
 # https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/06-Test_HTTP_Methods
-bad_methods = "(PUT|MERGE|PATCH|DELETE|CONNECT|TRACE)"
+#bad_methods = "(PUT|MERGE|PATCH|DELETE|CONNECT|TRACE)"
 
 #Special Element Injections
 # ellen note - this seems super general , probably covered by other items?
@@ -25,15 +25,15 @@ bad_methods = "(PUT|MERGE|PATCH|DELETE|CONNECT|TRACE)"
 
 #SQL Injection
 # stored in database
-sqli = "(?i)"
+#sqli = "(?i)"
 #sqli = ["insert", "select", "union", "alter", "create", "delete", "drop", "execute", "exec", "merge", "update", "*", "<", ">", "1=1", "'1'", "--", "1'1", " = ", ";" ]
 # for < > need to filter out expected tags
 
 #XML and CRLF Injections
-xml = ""
+#xml = ""
 
 # Status Code Injections
-status_code_injections = ""
+#status_code_injections = ""
 
 # path traversal
 # in URL
@@ -48,21 +48,20 @@ php_lfi = "(?i)((\.php)+)"
 
 #remote file includsion
 # IN URL
-rfi = ["file"]
+#rfi = ["file"]
 ## ALSO = http more than once, <- captured in lfi blacklist
 
 #Resource injection
-resource_injection = ""
+#resource_injection = ""
 
 #HTTP Response splitting
-http_response_splitting = ""
+#http_response_splitting = ""
 
 #Xpath and xquery injections
-xpath_xquery_injection = ""
+#xpath_xquery_injection = ""
 
 #scripted http headers and expression language injections
-header = "<script>"
-if [i for i in header_scripting if i in packet.header.useragent], block
+#header = "<script>"
 
 #encoding injections
 
@@ -74,7 +73,7 @@ if [i for i in header_scripting if i in packet.header.useragent], block
 
 #ip parsing
 
-blacklists = [xss, sqli, traversal, lfi, php_lfi, rfi, ETC] #array of blacklists
+blacklists = [traversal, lfi, php_lfi] #array of blacklists
 
 #can/should be further focused on specific parts of the packet... or regex can be specified (e.g. COOKIE:)
 def check(pkt):
