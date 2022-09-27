@@ -3,12 +3,14 @@ services:
 
   Web-Application-Firewall:
     build: ../Web-Application-Firewall
-    image: dmgnx/nginx-naxsi
+    image: owasp/modsecurity:nginx-alpine
     container_name: Web-Application-Firewall
     ports:
-      - 8000:80
+      - 8000:443
     depends_on:
       - webgoat
+    volumes:
+      - ../Web-Application-Firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
