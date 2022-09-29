@@ -6,7 +6,11 @@ services:
     image: owasp/modsecurity:nginx-alpine
     container_name: Web-Application-Firewall
     ports:
-      - 8000:443
+      - "7999:8080"
+      - "8000:8000"
+    expose:
+      - "8000"
+      - "443"
     depends_on:
       - webgoat
     volumes:
@@ -15,16 +19,22 @@ services:
       projectNetwork:
         ipv4_address: 172.2.2.4
 
-  # web:
+  web-portal:
   #   # This image is for Apache, we may want to change it, may not
-  #   build: ../Portal
-  #   container_name: web-server
-  #   networks:
-  #     projectNetwork:
-  #       ipv4_address: 172.2.2.4
-  #   #expose:
-  #     #- "80:80"
-  #     #- "443:443"
+      build: ../Portal
+      image: nginx
+      container_name: web-portal
+      networks:
+       projectNetwork:
+         ipv4_address: 172.2.2.6
+      ports:
+        - "80:80"
+        - "443"
+      expose:
+        - "80"
+      volumes:
+        - ../Portal/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
+        - ../Portal/www:/usr/share/nginx/html/:rw
   #   #env_file:
   #   #- ./opt/secrets.env
 
@@ -72,6 +82,9 @@ services:
     container_name: webgoat
     ports:
       - "8080:8080"
+      - "9090:9090"
+    expose:
+      - "8080"
     #env_file:
       #- ./opt/secrets.env
     networks:
