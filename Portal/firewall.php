@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="script.js"></script>
 </head>
 <body>
 	<h2>Template</h2>
@@ -49,7 +50,7 @@
 		<div class="topnav">
 			<div class="search-container">
 				<form action="/action_page.php">
-				  <input type="text" placeholder="Search.." name="search">
+				  <input id="myInput" type="text" placeholder="Search.." onkeyup= "searchFunction()" name="search">
 				  <button type="submit"><i class="fa fa-search"></i></button>
 				</form>
 			</div>
@@ -72,24 +73,18 @@
 				$mongoClient = new MongoClient();
 				
 				$db = $mongoClient -> selectDB($dbCollection);//TODO: Add Database name
-				$dbCollection = $db->selectCollection($WAFLogs); //TODO:Add collection names
+				$dbCollection = $db->selectCollection($WAFFilters);
 				$tableResults = $dbCollection->find();
 
 				foreach ($tableResults as $tableResult) {
 					$ID = $tableResult["__id"];
 					$IP = $tableResut["IP Address"];
-					$Location = $tableResut["Geolocation"];
-					$User = $tableResult["User Location"];
-					$Request = $tableResult["Request"];
 
 
 					$resultContent = [];
 					
 					$resultContent[0] = $ID;
 					$resultContent[1] = $IP;
-					$resultContent[2] = $Location;
-					$resultContent[3] = $User;
-					$resultContent[4] = $Request;
 
 					echo "<tr>";
 					foreach ($resultContent as $result) {
@@ -107,6 +102,7 @@
 					echo "</tr>";
 
 				}
+				?>
 			  <tr>
 				<td>1</td>
 				<td>128.0.0.1/27</td>
@@ -134,6 +130,40 @@
 				  </tr>
 				</thead>
 				<tbody>
+				<?php
+				$mongoClient = new MongoClient();
+				
+				$db = $mongoClient -> selectDB($dbCollection);//TODO: Add Database name
+				$dbCollection = $db->selectCollection($WAFFilters);
+				$tableResults = $dbCollection->find();
+
+				foreach ($tableResults as $tableResult) {
+					$ID = $tableResult["__id"];
+					$IP = $tableResut["Location"];
+
+
+					$resultContent = [];
+					
+					$resultContent[0] = $ID;
+					$resultContent[1] = $Location;
+
+					echo "<tr>";
+					foreach ($resultContent as $result) {
+						echo "<td>"
+						$resultText = "";
+						for ($i=0; $i < $result.count(); $i++) { 
+							$resultText .= $result; //Append result to set string
+							if ($i != $result.count() - 1) {
+								$result.text .= " ";
+							};
+						};
+						echo $resultText;
+						echo "</td>"
+					}
+					echo "</tr>";
+
+				}
+				?>
 				  <tr>
 					<td>1</td>
 					<td>Germany</td>
