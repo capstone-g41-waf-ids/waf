@@ -31,4 +31,25 @@ db.createCollection('IPBlacklist', { capped: false });
 db.createCollection('CountryBlacklist', { capped: false });
 db.createCollection('HTTPTypes', { capped: false });
 
+exportFile();
+
+function exportFile() {
+  mongoClient=new MongoClient(new Server("localhost", 27017, {native_parse:true}));
+  mongoClient.open(function(err,mongoClient) {
+    db.collection(options.collection),find().toArray(function(err,results) {
+      if (err) {
+          console.log(err);
+          return;
+      }
+      fs.writeFile("blacklist.txt", JSON.stringify(results),function(err) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        console.log(["Connected to: localhost, exported " + results.length + " records"].join("\n"));
+        mongoClient.close();
+      });
+    });
+  });
+}
 //db.TestCollection.insert([{ "TestItem": 1 },]); //just for testing, delete later
