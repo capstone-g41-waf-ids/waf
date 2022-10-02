@@ -4,6 +4,7 @@ services:
   Web-Application-Firewall:
     build: ../Web-Application-Firewall
     image: owasp/modsecurity:nginx-alpine
+    #image: nginx
     container_name: Web-Application-Firewall
     ports:
       - 8000:80
@@ -11,8 +12,8 @@ services:
       - webgoat
     volumes:
       - ../Web-Application-Firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
-    #environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
-     #- MONGODB_CONNSTRING=mongodb://root:group41@database
+    environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
+     - MONGODB_CONNSTRING=mongodb://root:group41@database
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
