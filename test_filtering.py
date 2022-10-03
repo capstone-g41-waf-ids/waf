@@ -1,6 +1,8 @@
 import unittest
 from web_application_firewall.project import filtering
 
+#do some tests
+
 class TestFileInclusion(unittest.TestCase):
 
     def test_sanity(self):
