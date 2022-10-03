@@ -1,4 +1,6 @@
 version: '3.8'
+
+
 services:
 
   web_application_firewall:
@@ -54,7 +56,7 @@ services:
         ipv4_address: 172.2.2.5
 
 volumes:
-    db:
+  db:
 
 networks:
   projectNetwork:
