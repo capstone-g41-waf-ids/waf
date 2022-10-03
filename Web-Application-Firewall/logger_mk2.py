@@ -2,7 +2,7 @@ import os
 import time
 import subprocess
 import select
-#import pymongo
+import pymongo
 
 connstring = os.environ['MONGODB_CONNSTRING'] #from container env
 myclient = pymongo.MongoClient(connstring) #connect to mongo
@@ -18,5 +18,5 @@ p.register(f.stdout)
 while True:
     if p.poll(1):
         print(f.stdout.readline())
-        x = mycol.insert_one(f.stdout.readline())
+        mycol.insert_one(f.stdout.readline())
     time.sleep(5)
