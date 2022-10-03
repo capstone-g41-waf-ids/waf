@@ -18,8 +18,20 @@ CASE_INSENSITIVE = "(?i)"
 #special_chars = ['!', '\"', '#', '$', '%', '&', '(', ')', '*', '+', ',', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '`', '{', '|', '}', '~', '–', '‘']
 
 #XSS Attempts
-#reflected xss
-#xss = ["<", ">", "javascript", ".js", "<script", "script>", "alert", "bot", "\.", "\\", "\/", "//"]
+"""
+reflected xss
+#xss = ["<", ">", "javascript", ".js", "<script", "script>", "alert", "bot", "\.", "\\", "\/", "//", onerror, onload, on<anything>]
+"""
+xss = "(?i)(<|&lt|%3C)*script(>|&gt;|%3E)*"
+# < &lt; > &gt;
+"""
+&  "&amp;"
+<  "&lt;"
+>  "&gt;"
+" "&quot;"
+'  "&#039;"
+\n "<br>"
+"""
 
 #stored xss
 
@@ -35,51 +47,77 @@ CASE_INSENSITIVE = "(?i)"
 # Status Code Injections
 #status_code_injections = ""
 
-# path traversal
-# in URL
+# FILE INCLUSION
+"""
+PATH TRAVERSAL
+
+What to check for:
+- IN REQUEST URL
+    - \..\
+    - \..\ but encoded
+"""
 traversal = "(?i)((((\.|%(25)?2e)+(\\|%(25)?5C)*(\\?\/|%((25)?2f|c0|af))+)+)|(\.|%(25)?2e){2,}|\\+)"
+ # can be expanded, add further encoding
 
-#IN URL
+
+"""
+LOCAL FILE INCLUSION
+
+What to check for:
+- IN REQUEST URL
+    - ["<not https or http>:", "file=", "php:", "zip:", "data:", "expect:" "<directory traversal>", "%00"]
+
+"""
 lfi = "(?i)((.+((http|php|zip|data|expect):))|(%00)+)"
-#["<not https or http>:", "file=", "php:", "zip:", "data:", "expect:" "<directory traversal>", "%00"]
+#include list of internal/restricted files?
 
-#PHP File inclusions (literally just lfi)
+"""
+PHP FILE INCLUSIONS
+
+What to check for:
+- IN REQUEST URL
+   - (.php)
+   - include(), require()
+"""
 php_lfi = "(?i)((\.php)+)"
 
-#remote file includsion
-# IN URL
-#rfi = ["file"]
-## ALSO = http more than once, <- captured in lfi blacklist
 
-#Resource injection
-#resource_injection = ""
+"""
+REMOTE FILE INCLUSION
 
-#HTTP Response splitting
-#http_response_splitting = ""
-
-#Xpath and xquery injections
-#xpath_xquery_injection = ""
-
-#scripted http headers and expression language injections
-#header = "<script>"
-
-#encoding injections
+What to check for:
+- IN REQUEST URL
+   - URL (http(s), ftp(s), file)
+   - IP - "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
+   - Include functions (include(s), include_once, etc)
+"""
+rfi = "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
 
 
+# Resource injection
+# resource_injection = ""
 
-#http request smuggling
+# HTTP Response splitting
+# http_response_splitting = ""
 
-#ip blocking
+# Xpath and xquery injections
+# xpath_xquery_injection = ""
 
-#ip parsing
+# scripted http headers and expression language injections
+# header = "<script>"
 
-blacklists = [traversal, lfi, php_lfi] #array of blacklists
+# encoding injections
 
-#can/should be further focused on specific parts of the packet... or regex can be specified (e.g. COOKIE:)
-def check(pkt):
+# http request smuggling
+
+
+blacklists = [traversal, lfi, php_lfi, rfi] #array of blacklists
+
+
+def check(pkt): # can/should be further focused on specific parts of the packet... or regex can be specified (e.g. COOKIE:)
     output = ""
     for i in blacklists:
-        output = re.search(i, pkt) #check the packet against each of the blacklists
+        output = re.search(i, pkt) # check the packet against each of the blacklists
         if output is not None: # if there is a regex match
-            return "403" #return Forbidden status code
-    return "200" #return OK status code
+            return "403" # return Forbidden status code
+    return "200" # return OK status code
