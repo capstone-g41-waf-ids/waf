@@ -1,5 +1,7 @@
 FROM owasp/modsecurity:nginx
 #FROM nginx
+WORKDIR /app
+COPY . .
 
 EXPOSE 80
 #EXPOSE 443
@@ -8,9 +10,12 @@ EXPOSE 80
 #COPY ./RequestDenied.txt /usr/share/nginx/html/RequestDenied.txt
 #COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./blacklist /etc/nginx/blacklist
-COPY ./health_checker.py /etc/nginx/health_checker.py
+COPY ./health_checker.py /health_checker.py
+COPY ./logger_mk2.py /logger_mk2.py
+COPY requirements.txt requirements.txt
 RUN apt-get update
-RUN apt-get install -y python3
+RUN apt-get install -y python3-pip
+RUN pip3 install -r requirements.txt
 RUN apt-get install -y inetutils-ping
 RUN chmod 700 /etc/nginx/ssl
 RUN openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/webgoat.key -out /etc/nginx/ssl/webgoat.cert -sha256 -days 365\

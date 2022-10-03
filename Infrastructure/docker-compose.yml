@@ -45,28 +45,28 @@ services:
   #    projectNetwork:
   #    ipv4_address: 172.2.2.2
 
-  # mongodb:
-  #   image: mongo
-  #   container_name: database
-  #   command:
-  #     - mongod
-  #   environment:     #Note to selves to change this on delivery, possible done as .env variable folder
-  #     #- .env
-  #     - MONGO_INITDB_ROOT_USERNAME=root
-  #     - MONGO_INITDB_ROOT_PASSWORD=group41
-  #     - MONGODB_CONNSTRING=mongodb://root:group41@database
-  #   volumes:
-  #     #- ../Database/mongod.conf:/etc/mongod.conf:ro
-  #     - ../Database/init:/docker-entrypoint-initdb.d
-  #     - ../Database/seed:/seed
-  #     - db:/data/db
-  #   ports:
-  #     - "27017:27017" #This is mongo default port, would recommend changing this
-  #   expose: #may or may not do anything
-  #     - "27017"
-  #   networks:
-  #     projectNetwork:
-  #        ipv4_address: 172.2.2.3
+  mongodb:
+    image: mongo
+    container_name: database
+    command:
+      - mongod
+    environment:     #Note to selves to change this on delivery, possible done as .env variable folder
+      #- .env
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=group41
+      - MONGODB_CONNSTRING=mongodb://root:group41@database
+    volumes:
+      #- ../Database/mongod.conf:/etc/mongod.conf:ro
+      - ../Database/init:/docker-entrypoint-initdb.d
+      - ../Database/seed:/seed
+      - db:/data/db
+    ports:
+      - "27017:27017" #This is mongo default port, would recommend changing this
+    expose: #may or may not do anything
+      - "27017"
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.3
 
 
   webgoat:
