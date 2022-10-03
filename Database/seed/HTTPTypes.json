@@ -1,16 +1,9 @@
 [{
   "_id": 1,
-  "name" : { "first" : "HTTPTypes", "last" : "Backus" },
-  "contribs" : [ "Fortran", "ALGOL", "Backus-Naur Form", "FP" ],
-  "awards" : [
-    {
-      "award" : "W.W. McDowell Award",
-      "year" : 1967,
-      "by" : "IEEE Computer Society"
-    }, {
-      "award" : "Draper Prize",
-      "year" : 1993,
-      "by" : "National Academy of Engineering"
-    }
-  ]
-}]
+  "name" : "Test1"
+},
+{
+  "_id": 2,
+  "name" : "Test2"
+}
+]

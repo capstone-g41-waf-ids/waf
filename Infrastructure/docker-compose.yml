@@ -8,35 +8,20 @@ services:
     ports:
       - "7999:8080"
       - "8000:8000"
+      - "80:80"
     expose:
       - "8000"
       - "443"
+      - "80"
     depends_on:
       - webgoat
     volumes:
       - ../Web-Application-Firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
+      - ../Portal/www:/usr/share/nginx/html:rw
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
 
-  web-portal:
-  #   # This image is for Apache, we may want to change it, may not
-      build: ../Portal
-      image: nginx
-      container_name: web-portal
-      networks:
-       projectNetwork:
-         ipv4_address: 172.2.2.6
-      ports:
-        - "80:80"
-        - "443"
-      expose:
-        - "80"
-      volumes:
-        - ../Portal/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
-        - ../Portal/www:/usr/share/nginx/html/:rw
-  #   #env_file:
-  #   #- ./opt/secrets.env
 
   #Web-Application-Firewall:
   # image: python:3
