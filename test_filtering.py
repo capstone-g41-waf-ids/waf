@@ -1,7 +1,7 @@
 import unittest
-
 from web_application_firewall.project import filtering
 
+#do some tests
 
 class TestFileInclusion(unittest.TestCase):
 
@@ -12,7 +12,7 @@ class TestFileInclusion(unittest.TestCase):
         normal_1 = "http://www.google.com/page/"
         normal_2 = "https://www.google.com/search?q=file+inclusion&client=firefox-b-d&ei=kog6Y4HgF7n14-EP-sGqwAU&ved=0ahUKEwiB8a6zvsP6AhW5-jgGHfqgClgQ4dUDCA0&uact=5&oq=file+inclusion&gs_lcp=Cgdnd3Mtd2l6EAMyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEOgoIABBHENYEELADOgQIABBDOgsIABCABBCxAxCDAToLCC4QgAQQsQMQgwE6CAguELEDEIMBOhEILhCABBCxAxCDARDHARDRAzoLCC4QsQMQgwEQ1AI6BQgAEJECOggIABCABBCxAzoRCC4QgAQQsQMQgwEQxwEQrwE6FAguEIAEELEDEIMBEMcBEK8BENQCOggIABCxAxCRAjoICAAQsQMQgwE6BwgAEIAEEApKBAhBGABKBAhGGABQ_g1YsSBg7SJoA3ABeAGAAZMEiAHmHJIBCjItMTAuMi4wLjGYAQCgAQHIAQjAAQE&sclient=gws-wiz"
 
-        packets = [normal_1,normal_2]
+        packets = [normal_1, normal_2]
 
         result = ""
         for i in packets:
