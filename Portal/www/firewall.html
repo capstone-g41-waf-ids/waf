@@ -29,25 +29,7 @@
 		<fieldset>
 			<div>
 				<h1 >Firewall settings</h1></div>
-			<div>
-				<!-- <h2 >Prevent Web App Injection</h2></div>
-			<div>
-				<label for="select1" class="formbuilder-select-label">Select</label>
-				<select class="form" name="select1" >
-					<option value="option-1" selected="true" >Select</option>
-					<option value="option-2" >Option 2</option>
-					<option value="option-3" >Option 3</option>
-				</select>
 			</div>
-			<div>
-				<label for="text1" class="formbuilder-text-label">Name</label>
-				<input type="text" class="form-control" name="text1" access="false">
-			</div>
-			<div>
-				<label for="text2" class="formbuilder-text-label">Injection</label>
-				<input type="text" class="form-control" name="text2" access="false">
-			</div>
-			<div> -->
 				<h2 >IP Settings</h2></div>
 			<div>
 				<label for="select2" class="formbuilder-select-label">Block by country</label>
@@ -86,6 +68,45 @@
 			  </tr>
 			</thead>
 			<tbody>
+				<?php
+				$mongoClient = new MongoClient();
+				
+				$db = $mongoClient -> selectDB($dbCollection);//TODO: Add Database name
+				$dbCollection = $db->selectCollection($WAFLogs); //TODO:Add collection names
+				$tableResults = $dbCollection->find();
+
+				foreach ($tableResults as $tableResult) {
+					$ID = $tableResult["__id"];
+					$IP = $tableResut["IP Address"];
+					$Location = $tableResut["Geolocation"];
+					$User = $tableResult["User Location"];
+					$Request = $tableResult["Request"];
+
+
+					$resultContent = [];
+					
+					$resultContent[0] = $ID;
+					$resultContent[1] = $IP;
+					$resultContent[2] = $Location;
+					$resultContent[3] = $User;
+					$resultContent[4] = $Request;
+
+					echo "<tr>";
+					foreach ($resultContent as $result) {
+						echo "<td>"
+						$resultText = "";
+						for ($i=0; $i < $result.count(); $i++) { 
+							$resultText .= $result; //Append result to set string
+							if ($i != $result.count() - 1) {
+								$result.text .= " ";
+							};
+						};
+						echo $resultText;
+						echo "</td>"
+					}
+					echo "</tr>";
+
+				}
 			  <tr>
 				<td>1</td>
 				<td>128.0.0.1/27</td>

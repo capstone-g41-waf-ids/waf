@@ -9,6 +9,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="scripts/sort.js"></script>
 </head>
 <body>
 <h2>Template</h2>
@@ -16,13 +17,16 @@
 <nav class="nav1"><!-- nav menu -->
 	<div> Health Status&#128578 </div> 
 	<a href="serverstatus.html">Server Status</a>
-    <a href="logsearch.html">Log Search</a>
+	<a href="logsearch.html">Log Search</a>
 	<a href="firewall.html">Firewall Settings</a>
 	<div class="nav2">
 		<a href="logsearch.php">Edit user</a>
 		<a href="login.html">Logout</a>
 	</div>
 </nav>
+
+<!-- <include src="header.inc"></include> -->
+
 <div>
 	<h1 >Log Search</h1></div>
 <div>
@@ -30,13 +34,13 @@
 	<div class="topnav">
 		<div class="search-container">
 			<form action="/action_page.php">
-			  <input type="text" placeholder="Search.." name="search">
-			  <button type="submit"><i class="fa fa-search"></i></button>
+				<input type="text" id="myInput" onkeyup="searchFunction()" placeholder="Search">
+			  	<button type="submit"><i class="fa fa-search"></i></button>
 			</form>
 		</div>
 	  </div>
 	<fieldset class="logs">
-		<table style="undefined;table-layout: fixed; width: auto">
+		<table id="myTable" style="table-layout: fixed; width: auto">
 		<colgroup>
 		<col style="width: 200px">
 		<col style="width: 200px">
@@ -55,8 +59,47 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
 				<div class="scrollit">
+			<?php
+				$mongoClient = new MongoClient();
+				
+				$db = $mongoClient -> selectDB($dbCollection);//TODO: Add Database name
+				$dbCollection = $db->selectCollection($WAFLogs); //TODO:Add collection names
+				$tableResults = $dbCollection->find();
+
+				foreach ($tableResults as $tableResult) {
+					$ID = $tableResult["__id"];
+					$IP = $tableResut["IP Address"];
+					$Location = $tableResut["Geolocation"];
+					$User = $tableResult["User Location"];
+					$Request = $tableResult["Request"];
+
+
+					$resultContent = [];
+					
+					$resultContent[0] = $ID;
+					$resultContent[1] = $IP;
+					$resultContent[2] = $Location;
+					$resultContent[3] = $User;
+					$resultContent[4] = $Request;
+
+					echo "<tr>";
+					foreach ($resultContent as $result) {
+						echo "<td>"
+						$resultText = "";
+						for ($i=0; $i < $result.count(); $i++) { 
+							$resultText .= $result; //Append result to set string
+							if ($i != $result.count() - 1) {
+								$result.text .= " ";
+							};
+						};
+						echo $resultText;
+						echo "</td>"
+					}
+					echo "</tr>";
+
+				}
+			?>
 			<tr>
 				<td>1</td>
 				<td>192.168.0.1/24</td>
