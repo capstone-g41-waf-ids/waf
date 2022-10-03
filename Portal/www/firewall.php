@@ -70,7 +70,10 @@
 			</thead>
 			<tbody>
 				<?php
-				$mongoClient = new MongoClient();
+				$mongoClient = new MongoClient('mongodb://database',[
+				'username' => 'root',
+				'password' => 'group41',
+				'db' => 'database']);
 				
 				$db = $mongoClient -> selectDB($dbCollection);//TODO: Add Database name
 				$dbCollection = $db->selectCollection($WAFFilters);

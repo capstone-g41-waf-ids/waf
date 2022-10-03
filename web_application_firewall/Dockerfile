@@ -11,6 +11,7 @@ COPY ./health_checker.py /etc/nginx/health_checker.py
 RUN apt-get update
 RUN apt-get install -y python3
 RUN apt-get install -y inetutils-ping
+RUN apt-get install -y php7.4
 RUN chmod 700 /etc/nginx/ssl
 RUN openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/webgoat.key -out /etc/nginx/ssl/webgoat.cert -sha256 -days 365\
      -subj "/C=AU/ST=VICTORIA/L=MELBOURNE/O=SWINBURNE/OU=GROUP 41/CN=WebGoat.com"
