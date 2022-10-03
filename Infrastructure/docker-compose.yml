@@ -11,6 +11,8 @@ services:
       - webgoat
     volumes:
       - ../Web-Application-Firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
+#    environment:
+#      - MONGODB_CONNSTRING=mongodb://root:group41@database
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
@@ -53,14 +55,14 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=group41
       - MONGODB_CONNSTRING=mongodb://root:group41@database
     volumes:
-      #- ../Database/mongod.conf:/etc/mongod.conf:ro
+     #- ../Database/mongod.conf:/etc/mongod.conf:ro
       - ../Database/init:/docker-entrypoint-initdb.d
       - ../Database/seed:/seed
-      - db:/data/db
+#      - db:/data/db
     ports:
-      - "27017:27017" #This is mongo default port, would recommend changing this
+     - "27017:27017" #This is mongo default port, would recommend changing this
     expose: #may or may not do anything
-      - "27017"
+     - "27017"
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.3

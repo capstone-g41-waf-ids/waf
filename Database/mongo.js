@@ -21,17 +21,40 @@ dbAdmin.auth({
 });
 
 */
+
+
+/*db.createUser({
+  user: "root",
+  pdw: "group41",
+  roles: [
+    {
+      roles: "readWrite",
+      db: "database"
+    },
+  ],
+});*/
+
 db = new Mongo().getDB("database");
 
-//db.createCollection('TestCollection', { capped: false }); //just for testing, delete later
-db.createCollection('WAFLogs', { capped: false });
-db.createCollection('UserAccounts', { capped: false });
-db.createCollection('WAFFilters', { capped: false });
-db.createCollection('IPBlacklist', { capped: false });
-db.createCollection('CountryBlacklist', { capped: false });
-db.createCollection('HTTPTypes', { capped: false });
 
-exportFile();
+//db.createCollection('TestCollection', { capped: false }); //just for testing, delete later
+//db.createCollection('WAFLogs', { capped: false });
+//db.createCollection('UserAccounts', { capped: false });
+//db.createCollection('WAFFilters', { capped: false });
+db.createCollection('IPBlacklist', { capped: false });
+//db.createCollection('CountryBlacklist', { capped: false });
+//db.createCollection('HTTPTypes', { capped: false });
+
+db.IPBlacklist.insert([
+  {
+    IP: "allow: 192.168.1.1"
+  },
+  {
+    IP: "allow: 172.17.2.1"
+  }
+]);
+
+/*exportFile();
 
 function exportFile() {
   mongoClient=new MongoClient(new Server("localhost", 27017, {native_parse:true}));
@@ -51,5 +74,5 @@ function exportFile() {
       });
     });
   });
-}
+}*/
 //db.TestCollection.insert([{ "TestItem": 1 },]); //just for testing, delete later

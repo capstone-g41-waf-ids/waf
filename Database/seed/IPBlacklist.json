@@ -1,16 +1,4 @@
 [{
   "_id": 1,
-  "name" : { "first" : "IPBlacklist", "last" : "Backus" },
-  "contribs" : [ "Fortran", "ALGOL", "Backus-Naur Form", "FP" ],
-  "awards" : [
-    {
-      "award" : "W.W. McDowell Award",
-      "year" : 1967,
-      "by" : "IEEE Computer Society"
-    }, {
-      "award" : "Draper Prize",
-      "year" : 1993,
-      "by" : "National Academy of Engineering"
-    }
-  ]
+  "_IP": "deny 192.168.1.1"
 }]
