@@ -12,6 +12,7 @@ RUN apt-get update
 RUN apt-get install -y python3
 RUN apt-get install -y inetutils-ping
 RUN chmod 700 /etc/nginx/ssl
+RUN sudo pecl install mongodb
 RUN openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/webgoat.key -out /etc/nginx/ssl/webgoat.cert -sha256 -days 365\
      -subj "/C=AU/ST=VICTORIA/L=MELBOURNE/O=SWINBURNE/OU=GROUP 41/CN=WebGoat.com"
 #CMD ["nginx", "-g", "daemon off;"]

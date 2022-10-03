@@ -72,7 +72,7 @@
 				<?php
 				$mongoClient = new MongoClient();
 				
-				$db = $mongoClient -> selectDB($dbCollection);//TODO: Add Database name
+				$db = $mongoClient -> selectDB($database);//TODO: Add Database name
 				$dbCollection = $db->selectCollection($WAFFilters);
 				$tableResults = $dbCollection->find();
 

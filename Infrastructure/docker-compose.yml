@@ -12,6 +12,7 @@ services:
       - webgoat
     volumes:
       - ../Web-Application-Firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
+      - ../Portal/www:/usr/share/nginx/html:rw
     environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
      - MONGODB_CONNSTRING=mongodb://root:group41@database
     networks:
