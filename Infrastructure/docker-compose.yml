@@ -3,17 +3,17 @@ version: '3.8'
 
 services:
 
-  web_application_firewall:
-    build: ../web_application_firewall
+  Web-Application-Firewall:
+    build: ../Web-Application-Firewall
     image: owasp/modsecurity:nginx-alpine
-    container_name: web_application_firewall
+    #image: nginx
+    container_name: Web-Application-Firewall
     ports:
       - "8000:80"
     depends_on:
       - webgoat
     volumes:
-      - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
-      - ../portal/www:/usr/share/nginx/html:rw
+      - ../Web-Application-Firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
     environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
      - MONGODB_CONNSTRING=mongodb://root:group41@database
     networks:
@@ -31,17 +31,17 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=group41
       - MONGODB_CONNSTRING=mongodb://root:group41@database
     volumes:
-      #- ../database/mongod.conf:/etc/mongod.conf:ro
-      - ../database/init:/docker-entrypoint-initdb.d
-      - ../database/seed:/seed
+      #- ../Database/mongod.conf:/etc/mongod.conf:ro
+      - ../Database/init:/docker-entrypoint-initdb.d
+      - ../Database/seed:/seed
       - db:/data/db
     ports:
-      - "27017:27018" #This is mongo default port, would recommend changing this
-    expose: #may or may not do anything
+      - "27017:27017" #This is mongo default port, would recommend changing this
+    expose: #exposes to local machine, remove when we can
       - "27017"
     networks:
       projectNetwork:
-         ipv4_address: 172.2.2.3
+        ipv4_address: 172.2.2.3
 
   webgoat:
     build: ../webgoat
