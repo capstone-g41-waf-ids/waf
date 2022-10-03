@@ -6,35 +6,17 @@ services:
     image: owasp/modsecurity:nginx-alpine
     container_name: web_application_firewall
     ports:
-      - "7999:8080"
-      - "8000:8000"
-      - "80:80"
-    expose:
-      - "8000"
-      - "443"
-      - "80"
+      - "8000:80"
     depends_on:
       - webgoat
     volumes:
       - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
       - ../portal/www:/usr/share/nginx/html:rw
+    environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
+     - MONGODB_CONNSTRING=mongodb://root:group41@database
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
-
-  #web_application_firewall:
-  # image: python:3
-  #   build: ../web_application_firewall
-  #   container_name: web_application_firewall
-  #   ports:
-  #   - 9090:80
-  #   env_file:
-  #   - ./opt/secrets.env
-  #   environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
-  #   - MONGODB_CONNSTRING=mongodb://root:group41@database
-  #   networks:
-  #    projectNetwork:
-  #    ipv4_address: 172.2.2.2
 
   mongodb:
      image: mongo
@@ -59,16 +41,12 @@ services:
        projectNetwork:
           ipv4_address: 172.2.2.3
 
-
   webgoat:
     build: ../webgoat
     image: webgoat/webgoat-8.0
     container_name: webgoat
     ports:
       - "8080:8080"
-      - "9090:9090"
-    expose:
-      - "8080"
     #env_file:
       #- ./opt/secrets.env
     networks:
