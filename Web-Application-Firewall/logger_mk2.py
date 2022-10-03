@@ -1,3 +1,4 @@
+import json
 import os
 import time
 import subprocess
@@ -18,5 +19,5 @@ p.register(f.stdout)
 while True:
     if p.poll(1):
         print(f.stdout.readline())
-        mycol.insert_one(f.stdout.readline())
+        mycol.insert_one(json.loads(f.stdout.readline()))
     time.sleep(5)
