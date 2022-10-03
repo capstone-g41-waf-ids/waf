@@ -11,7 +11,7 @@ EXPOSE 80
 #COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./blacklist /etc/nginx/blacklist
 COPY ./health_checker.py /health_checker.py
-COPY ./logger_mk2.py /logger_mk2.py
+COPY ./logger.py /logger.py
 COPY requirements.txt requirements.txt
 RUN apt-get update
 RUN apt-get install -y python3-pip

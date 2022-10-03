@@ -61,9 +61,9 @@ services:
       - ../Database/seed:/seed
       - db:/data/db
     ports:
-      - "27017:27017" #This is mongo default port, would recommend changing this
+      - "27017:27018" #This is mongo default port, would recommend changing this
     expose: #may or may not do anything
-      - "27017"
+      - "27018"
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.3
