@@ -3,8 +3,8 @@ FROM owasp/modsecurity:nginx
 WORKDIR /app
 COPY . .
 
-EXPOSE 80
-#EXPOSE 443
+EXPOSE 8000
+EXPOSE 443
 
 #COPY ./naxsi.rules /etc/nginx/naxsi/naxsi.rules`
 #COPY ./RequestDenied.txt /usr/share/nginx/html/RequestDenied.txt
