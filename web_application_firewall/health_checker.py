@@ -1,11 +1,11 @@
 import os
 import time
 
-
 while True:
-    response = os.popen(f"ping -c 4 webgoat").read()
-    if "4 packets received" in response:
-        print(f"Ping Successful")
+    response = os.popen(f"curl --max-time 5 -I http://webgoat:8080/WebGoat").read()
+    if "HTTP/1.1 302 Found" in response:
+        print(f"curl Successful")
     else:
-        print(f"Ping Unsuccessful")
+        print(f"curl Unsuccessful")
+
     time.sleep(5)
