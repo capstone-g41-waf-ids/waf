@@ -1,23 +1,46 @@
 version: '3.8'
-
 services:
 
-  web_application_firewall:
-    build: ../web_application_firewall
+  Web-Application-Firewall:
+    build: ../Web-Application-Firewall
     image: owasp/modsecurity:nginx-alpine
-    container_name: web_application_firewall
+    container_name: Web-Application-Firewall
     ports:
       - "8000:8000"
     depends_on:
       - webgoat
     volumes:
-      - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
-      - ../portal/www:/usr/share/nginx/html:rw
-    environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
-     - MONGODB_CONNSTRING=mongodb://root:group41@database
+      - ../Web-Application-Firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
+
+  # web:
+  #   # This image is for Apache, we may want to change it, may not
+  #   build: ../Portal
+  #   container_name: web-server
+  #   networks:
+  #     projectNetwork:
+  #       ipv4_address: 172.2.2.4
+  #   #expose:
+  #     #- "80:80"
+  #     #- "443:443"
+  #   #env_file:
+  #   #- ./opt/secrets.env
+
+  #Web-Application-Firewall:
+  # image: python:3
+  #   build: ../Web-Application-Firewall
+  #   container_name: web-application-firewall
+  #   ports:
+  #   - 9090:80
+  #   env_file:
+  #   - ./opt/secrets.env
+  #   environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
+  #   - MONGODB_CONNSTRING=mongodb://root:group41@database
+  #   networks:
+  #    projectNetwork:
+  #    ipv4_address: 172.2.2.2
 
   mongodb:
     image: mongo
@@ -30,9 +53,9 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=group41
       - MONGODB_CONNSTRING=mongodb://root:group41@database
     volumes:
-      #- ../database/mongod.conf:/etc/mongod.conf:ro
-      - ../database/init:/docker-entrypoint-initdb.d
-      - ../database/seed:/seed
+      #- ../Database/mongod.conf:/etc/mongod.conf:ro
+      - ../Database/init:/docker-entrypoint-initdb.d
+      - ../Database/seed:/seed
       - db:/data/db
     ports:
       - "27017:27017"
@@ -42,7 +65,7 @@ services:
       - "27017"
     networks:
       projectNetwork:
-         ipv4_address: 172.2.2.3
+        ipv4_address: 172.2.2.3
 
 
   webgoat:
@@ -58,7 +81,7 @@ services:
         ipv4_address: 172.2.2.5
 
 volumes:
-  db:
+    db:
 
 networks:
   projectNetwork:
