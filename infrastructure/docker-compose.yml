@@ -47,8 +47,6 @@ services:
   mongodb:
     image: mongo
     container_name: database
-    command:
-      - mongod
     environment:     #Note to selves to change this on delivery, possible done as .env variable folder
       #- .env
       - MONGO_INITDB_ROOT_USERNAME=root
