@@ -16,10 +16,11 @@ mycol = mydb["IPBlacklist"]
 #p = select.poll()
 #p.register(f.stdout)
 
+f = open("blacklist", "a")
 for x in mycol.find():
-    print(x)
-
-
+    f.write(str(x) + "\n")
+f.close()
+   
 #while True:
 #    if p.poll(1):
 #       print(f.stdout.readline())
