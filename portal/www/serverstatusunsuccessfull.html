@@ -9,8 +9,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-	<script defer src="https://pyscript.net/latest/pyscript.js"></script>
 </head>
 <body>
 	<h2>Template</h2>
@@ -25,23 +23,7 @@
 			<a href="login.html">Logout</a>
 		</div>
 	</nav>
-	<div class="Status" id="outputDiv">
-		
-	</div>
-	<py-script output="outputDiv">
-		import os
-		import time
-
-		while True:
-			response = os.popen(f"curl --max-time 5 -I http://webgoat:8080/WebGoat").read()
-			if "HTTP/1.1 302 Found" in response:
-				out = Element("outputDiv")
-				out.write("<h2> <center> &#128578 Webgoat | Active </center></h2>")
-			else:
-				out = Element("outputDiv")
-				out.write("<h2> <center> &#128577 Webgoat | Inactive </center></h2>")	
-			time.sleep(5)
-	</py-script>
+	<h2> <center> &#128577 Webgoat | Inactive </center></h2>
 
 </body>
 </html>

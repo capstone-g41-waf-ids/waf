@@ -16,26 +16,31 @@ services:
     depends_on:
       - webgoat
     volumes:
+      - ../portal/www:/templates:rw
       - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
-      - ../portal/www:/usr/share/nginx/html:rw
-    environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
-      - MONGODB_CONNSTRING=mongodb://root:group41@database
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
 
   # web:
-  #   # This image is for Apache, we may want to change it, may not
   #   build: ../Portal
-  #   container_name: web-server
+  #   container_name: web-portal
+  #   image: alpine
   #   networks:
   #     projectNetwork:
-  #       ipv4_address: 172.2.2.4
-  #   #expose:
-  #     #- "80:80"
-  #     #- "443:443"
-  #   #env_file:
-  #   #- ./opt/secrets.env
+  #       ipv4_address: 172.2.2.2
+  #   volumes:
+  #     - ../portal/www:/app/templates:rw
+  #   environment:     #connection string for db
+  #     - MONGODB_CONNSTRING=mongodb://root:group41@database
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   expose:
+  #     - "80"
+  #     - "443"
+  #   env_file:
+  #   - ./opt/secrets.env
 
 
   mongodb:
