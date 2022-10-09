@@ -17,6 +17,7 @@ services:
       - webgoat
     volumes:
       - ../portal/www:/templates:rw
+      - ../portal/static:/static:rw
       - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
     networks:
       projectNetwork:
