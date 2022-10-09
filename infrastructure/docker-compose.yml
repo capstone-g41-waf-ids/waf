@@ -17,6 +17,8 @@ services:
       - "30"
     depends_on:
       - webgoat
+    environment:     #connection string for db
+      - MONGODB_CONNSTRING=mongodb://root:group41@database
     volumes:
       - ../portal/www:/templates:rw
       - ../portal/static:/static:rw
