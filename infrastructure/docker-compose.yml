@@ -9,10 +9,12 @@ services:
       - "7999:8080"
       - "8000:8000"
       - "80:80"
+      - "30:30"
     expose:
       - "8000"
       - "443"
       - "80"
+      - "30"
     depends_on:
       - webgoat
     volumes:

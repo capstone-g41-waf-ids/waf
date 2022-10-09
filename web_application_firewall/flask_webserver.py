@@ -42,4 +42,4 @@ def logsearch():
 
 
 if __name__ == '__main__':
-    app.run(host='172.2.2.4',port = 80, debug = True)
+    app.run(host='172.2.2.4',port = 30, debug = True)
