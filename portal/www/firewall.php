@@ -12,7 +12,7 @@
 	<script src="script.js"></script>
 </head>
 <body>
-	<h2>Template</h2>
+<h2>WAF Portal</h2>
 
 	<nav class="nav1"><!-- nav menu -->
 		<div> Health Status&#128578 </div> 

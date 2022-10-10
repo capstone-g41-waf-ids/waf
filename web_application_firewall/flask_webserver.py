@@ -54,7 +54,7 @@ def search():
     search_data = request.form['searched']
     search_field = request.form['field']
     mycol = mydb["WAFLogs"]
-    myquery = {search_field : search_data}
+    myquery = {search_field : { "$regex": search_data }}
     x = mycol.find(myquery)
     return render_template('search.html', results = x)
 
