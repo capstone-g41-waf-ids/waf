@@ -9,7 +9,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script src="scripts/sort.js"></script>
 </head>
 <body>
 <h2>Template</h2>
@@ -30,14 +29,6 @@
 	<h1 >Log Search</h1></div>
 <div>
 <div class="main">
-	<div class="topnav">
-		<div class="search-container">
-			<form action="/action_page.php">
-				<input type="text" id="myInput" onkeyup="searchFunction()" placeholder="Search">
-			  	<button type="submit"><i class="fa fa-search"></i></button>
-			</form>
-		</div>
-	  </div>
 	<fieldset class="logs">
 		<table id="myTable" style="table-layout: fixed; width: auto">
 		<colgroup>
@@ -50,83 +41,79 @@
 		</colgroup>
 			<thead>
 				<tr>
-					<th>ID</th>
+					<th>
+						<form action="{{url_for('search')}}" method="POST">
+							<input type="hidden" name="field" value="ip" readonly>
+							<input type="text" name="searched" placeholder="Search">
+							<button type="submit"><i class="fa fa-search"></i></button>
+						</form>
+					</th>
+					<th>
+						<form action="{{url_for('search')}}" method="POST">
+							<input type="hidden" name="field" value="time_local" readonly>
+							<input type="text" name="searched" placeholder="Search">
+							<button type="submit"><i class="fa fa-search"></i></button>
+						</form>
+					</th>
+					<th>
+						<form action="{{url_for('search')}}" method="POST">
+							<input type="hidden" name="field" value="http_referrer" readonly>
+							<input type="text" name="searched" placeholder="Search">
+							<button type="submit"><i class="fa fa-search"></i></button>
+						</form>
+					</th>
+					<th>
+						<form action="{{url_for('search')}}" method="POST">
+							<input type="hidden" name="field" value="status" readonly>
+							<input type="text" name="searched" placeholder="Search">
+							<button type="submit"><i class="fa fa-search"></i></button>
+						</form>
+					</th>
+					<th>
+						<form action="{{url_for('search')}}" method="POST">
+							<input type="hidden" name="field" value="request" readonly>
+							<input type="text" name="searched" placeholder="Search">
+							<button type="submit"><i class="fa fa-search"></i></button>
+						</form>
+					</th>
+					<th>
+						<form action="{{url_for('search')}}" method="POST">
+							<input type="hidden" name="field" value="path" readonly>
+							<input type="text" name="searched" placeholder="Search">
+							<button type="submit"><i class="fa fa-search"></i></button>
+						</form>
+					</th>
+					<th>
+						<form action="{{url_for('search')}}" method="POST">
+							<input type="hidden" name="field" value="user_agent" readonly>
+							<input type="text" name="searched" placeholder="Search">
+							<button type="submit"><i class="fa fa-search"></i></button>
+						</form>
+					</th>
+				</tr>
+				<tr>
 					<th>IP Address</th>
-					<th>Geo location</th>
-					<th>User</th>
+					<th>Time</th>
+					<th>HTTP referrer</th>
+					<th>Status</th>
 					<th>Request</th>
+					<th>Path</th>
+					<th>User_agent</th>
 				</tr>
 			</thead>
 			<tbody>
 				<div class="scrollit">
-			<?php
-				$mongoClient = new MongoClient();
-				
-				$db = $mongoClient -> selectDB($dbCollection);//TODO: Add Database name
-				$dbCollection = $db->selectCollection($WAFLogs); //TODO:Add collection names
-				$tableResults = $dbCollection->find();
-
-				foreach ($tableResults as $tableResult) {
-					$ID = $tableResult["__id"];
-					$IP = $tableResut["IP Address"];
-					$Location = $tableResut["Geolocation"];
-					$User = $tableResult["User Location"];
-					$Request = $tableResult["Request"];
-
-
-					$resultContent = [];
-					
-					$resultContent[0] = $ID;
-					$resultContent[1] = $IP;
-					$resultContent[2] = $Location;
-					$resultContent[3] = $User;
-					$resultContent[4] = $Request;
-
-					echo "<tr>";
-					foreach ($resultContent as $result) {
-						echo "<td>"
-						$resultText = "";
-						for ($i=0; $i < $result.count(); $i++) { 
-							$resultText .= $result; //Append result to set string
-							if ($i != $result.count() - 1) {
-								$result.text .= " ";
-							};
-						};
-						echo $resultText;
-						echo "</td>"
-					}
-					echo "</tr>";
-
-				}
-			?>
+			{% for x in results %}
 			<tr>
-				<td>1</td>
-				<td>192.168.0.1/24</td>
-				<td>Sweden</td>
-				<td>192.168.0.1/24</td>
-				<td>GET /database/log82710327.lg</td>
+				<td>{{x["ip"]}}</td>
+				<td>{{x["time_local"]}}</td>
+				<td>{{x["http_referrer"]}}</td>
+				<td>{{x["status"]}}</td>
+				<td>{{x["request"]}}</td>
+				<td>{{x["path"]}}</td>
+				<td>{{x["user_agent"]}}</td>
 			</tr>
-			<tr>
-				<td>2</td>
-				<td>10.0.0.1/16</td>
-				<td>Germany</td>
-				<td>192.168.0.1/24</td>
-				<td>GET /secrets/password.txt</td>
-			</tr>
-			<tr>
-				<td>3</td>
-				<td>128.0.0.1/20</td>
-				<td>Australia</td>
-				<td>192.168.0.1/24</td>
-				<td>GET /funnycatpictures/catwearingatie.png</td>
-			</tr>
-			<tr>
-				<td>4</td>
-				<td>200.40.0.8/16</td>
-				<td>Russia</td>
-				<td>192.168.0.1/24</td>
-				<td>GET /verybigbusinessdeals/facebookmerger.pdf</td>
-			</tr>
+			{% endfor %}
 			</div>
 			</tbody>
 		</table>
