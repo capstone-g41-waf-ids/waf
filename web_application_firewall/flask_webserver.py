@@ -79,4 +79,6 @@ def logger():
 if __name__ == '__main__':
     logger = Thread(target=logger)
     logger.start()
-    app.run(host='172.2.2.4',port = 30, debug = True)
+    context = ('local.crt', 'local.key') #Certificate and key files
+    app.run(host='172.2.2.4',port = 30, debug = True, ssl_context='adhoc')
+
