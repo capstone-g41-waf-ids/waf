@@ -54,9 +54,10 @@ services:
       - MONGODB_CONNSTRING=mongodb://root:group41@database
     volumes:
       #- ../Database/mongod.conf:/etc/mongod.conf:ro
-      - ../Database/init:/docker-entrypoint-initdb.d
-      - ../Database/seed:/seed
       - db:/data/db
+      - ../Database/seed:/seed
+      - ../Database/init:/docker-entrypoint-initdb.d
+
     ports:
       - "27017:27017"
       - "27018:27018"

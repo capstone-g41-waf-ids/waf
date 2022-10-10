@@ -16,11 +16,24 @@ mycol = mydb["IPBlacklist"]
 #p = select.poll()
 #p.register(f.stdout)
 
-f = open("blacklist", "a")
+f = open("blacklist", "a+")
+r = f.read()
+
+arr=[100]
+d=0
+f.write("\n")
+
 for x in mycol.find():
-    f.write(str(x) + "\n")
+    arr.append(str(x))
+    data=arr[d].strip("''"":{}[]")
+    f.write(data + "\n")
+    d=d+1
+f.write(r)
 f.close()
-   
+
+
+
+
 #while True:
 #    if p.poll(1):
 #       print(f.stdout.readline())
