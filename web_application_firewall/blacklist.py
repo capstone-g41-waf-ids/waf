@@ -24,7 +24,7 @@ x = mycol.find()
 
 for data in x:
     if data["ip"] != None:
-        f.write(data["ip"] + "\n")
+        f.write("deny " + data["ip"] + "\n")
 f.write(r)
 f.close()
         
