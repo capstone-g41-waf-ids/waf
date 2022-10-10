@@ -16,15 +16,15 @@ mycol = mydb["IPBlacklist"]
 #p = select.poll()
 #p.register(f.stdout)
 
-f = open("blacklist", "w+")
-r = f.read()
+os.remove("/etc/nginx/blacklist")
+f = open("/etc/nginx/blacklist", "w+")
 
 x = mycol.find()
 
 for data in x:
     if data["ip"] != None:
         f.write("deny " + data["ip"] + "\n")
-f.write(r)
+f.write("allow all;")
 f.close()
         
 
