@@ -7,13 +7,20 @@ services:
     container_name: web_application_firewall
     ports:
       - "7999:8080"
+      # Port 8000 to redirect to 8080 webgoat
       - "8000:8000"
+      # Port 80 for webportal HTTP NGINX
       - "80:80"
+      #Port 30 for WebPortal Flask
       - "30:30"
+      #Port 443 for WebPortal SSL Redirect NGINX
+      - "443:443"
     expose:
+      # Webgoat
       - "8000"
+      # Portal HTTPS
       - "443"
-      - "80"
+      #Portal HTTP
       - "30"
     depends_on:
       - webgoat
