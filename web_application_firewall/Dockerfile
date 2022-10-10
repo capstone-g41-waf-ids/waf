@@ -11,8 +11,7 @@ EXPOSE 443
 #COPY ./RequestDenied.txt /usr/share/nginx/html/RequestDenied.txt
 COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./blacklist /etc/nginx/blacklist
-COPY ./blacklist.py /blacklist.py
-COPY ./flask_webserver.py /flask_webserver.py
+COPY ./health_checker.py /health_checker.py
 COPY ./logger.py /logger.py
 COPY requirements.txt requirements.txt
 RUN apt-get update \
