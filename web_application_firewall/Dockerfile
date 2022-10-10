@@ -1,6 +1,6 @@
 FROM owasp/modsecurity:nginx
 #FROM nginx
-WORKDIR /app
+WORKDIR /
 COPY . .
 
 EXPOSE 8000
