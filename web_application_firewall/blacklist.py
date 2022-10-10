@@ -18,7 +18,6 @@ mycol = mydb["IPBlacklist"]
 
 f = open("blacklist", "w+")
 r = f.read()
-f.write("\n")
 
 x = mycol.find()
 
