@@ -1,5 +1,6 @@
 import unittest
-from web_application_firewall import filtering
+from unit_tests import filtering
+
 
 # do some tests
 
