@@ -13,6 +13,8 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./flask_webserver.py /flask_webserver.py
 COPY requirements.txt requirements.txt
 COPY ./country_codes /country_codes
+RUN touch /etc/nginx/GEOIP_blacklist
+RUN touch /etc/nginx/blacklist
 RUN apt-get update \
      && apt-get install -y python3-pip \
      && pip3 install -r requirements.txt \
