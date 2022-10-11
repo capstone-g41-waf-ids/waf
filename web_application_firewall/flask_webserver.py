@@ -50,6 +50,14 @@ def serverstatus():
             return render_template('serverstatusunsuccessfull.html')
     else:
         return render_template('/login.html')
+
+def get_GeoBlacklist_options():
+    if "user" in session:
+        with open("/country_codes") as json_file:
+            x = json.load(json_file)
+        return x
+    else:
+        return render_template('/login.html')
         
 
 @app.route('/edituser.html')
@@ -77,7 +85,7 @@ def get_GeoBlacklist():
 @app.route('/firewall.html')
 def firewall():
     if "user" in session:    
-        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist(), results_3 = get_GeoBlacklist_options())
     else:
         return render_template('/login.html')
 
@@ -88,7 +96,7 @@ def blacklistIP():
         mycol = mydb["IPBlacklist"]
         x = mycol.insert_one({"ip":ipBLACK})
         update_blacklist_file()
-        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist(), results_3 = get_GeoBlacklist_options())
     else:
         return render_template('/login.html')
 
@@ -99,7 +107,7 @@ def blacklistGEO():
         mycol = mydb["GEOIP_blacklist"]
         x = mycol.insert_one({"country_code":geoip_blacked})
         update_geoIP_file()
-        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist(), results_3 = get_GeoBlacklist_options())
     else:
         return render_template('/login.html')
 
@@ -110,7 +118,7 @@ def deleteIP():
         mycol = mydb["IPBlacklist"]
         x = mycol.delete_one({"ip":deleteIP})
         update_blacklist_file()
-        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist(), results_3 = get_GeoBlacklist_options())
     else:
         return render_template('/login.html')
 
@@ -121,7 +129,7 @@ def delete_geo():
         mycol = mydb["GEOIP_blacklist"]
         x = mycol.delete_one({"country_code":delete_geo})
         update_geoIP_file()
-        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist(), results_3 = get_GeoBlacklist_options())
     else:
         return render_template('/login.html')
 

@@ -57,13 +57,20 @@
 					</div>
 				</tbody>
 			</table>
+		</fieldset>
+		
+		<form action="{{url_for('blacklistGEO')}}" method="POST">
+			<label for="text3" class="formbuilder-text-label">Block by Geo location</label>
+			<select name="geoip_blacked" id="geoip_blacked">
+				{% for x in results_3 %}
+					<option value="{{x["Code"]}}" name="geoip_blacked">{{x["Name"]}} ({{x["Code"]}})</option>
+				{% endfor %}
+			</select>
+			<br><br>
+			<button type="submit">add Geo location</button>
+		</form>
 
-			<form action="{{url_for('blacklistGEO')}}" method="POST">
-				<label for="text3" class="formbuilder-text-label">Block by Geo location</label>
-			  <input type="text" placeholder="add country code to block location eg: US" name="geoip_blacked">
-			  <button type="submit">add Geo location</button>
-			</form>
-
+		<fieldset>
 			<table style="undefined;table-layout: fixed; width: 600px">
 				<colgroup>
 				<col style="width: 100px">
@@ -87,16 +94,7 @@
 					</div>
 				</tbody>
 			</table>
-		</fieldset>
-		<div>
-			<label for="select2" class="formbuilder-select-label">Block by country</label>
-			<select class="form-control" name="select2">
-				<option value="option-0" selected="true" >select</option>
-				<option value="option-1" >Australia</option>
-				<option value="option-2" >Venezuela</option>
-				<option value="option-3" >Sweden</option>
-			</select>
-		</div>	
+		</fieldset>	
 		</form>
 	</div>
 </body>
