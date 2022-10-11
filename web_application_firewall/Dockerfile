@@ -10,6 +10,7 @@ EXPOSE 443
 
 #COPY ./RequestDenied.txt /usr/share/nginx/html/RequestDenied.txt
 COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./modsecurity.d/ etc/modsecurity.d
 COPY ./flask_webserver.py /flask_webserver.py
 COPY requirements.txt requirements.txt
 COPY ./country_codes /country_codes

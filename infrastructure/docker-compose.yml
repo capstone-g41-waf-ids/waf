@@ -23,7 +23,7 @@ services:
       - ../portal/www:/templates:rw
       - ../portal/static:/static:rw
       - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
-      #- ../web_application_firewall/etc/:/etc/nginx/templates/modsecurity.d/:rw
+      - ../web_application_firewall/modsecurity.d/setup.conf:/etc/nginx/templates/modsecurity.d/setup.conf.template:rw
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
