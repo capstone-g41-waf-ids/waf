@@ -28,27 +28,6 @@ services:
       projectNetwork:
         ipv4_address: 172.2.2.4
 
-  # web:
-  #   build: ../Portal
-  #   container_name: web-portal
-  #   image: alpine
-  #   networks:
-  #     projectNetwork:
-  #       ipv4_address: 172.2.2.2
-  #   volumes:
-  #     - ../portal/www:/app/templates:rw
-  #   environment:     #connection string for db
-  #     - MONGODB_CONNSTRING=mongodb://root:group41@database
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   expose:
-  #     - "80"
-  #     - "443"
-  #   env_file:
-  #   - ./opt/secrets.env
-
-
   mongodb:
     image: mongo
     container_name: database
@@ -73,8 +52,6 @@ services:
       projectNetwork:
         ipv4_address: 172.2.2.3
 
-
-
   webgoat:
     build: ../webgoat
     image: webgoat/webgoat-8.0
@@ -87,8 +64,10 @@ services:
       projectNetwork:
         ipv4_address: 172.2.2.5
 
+
 volumes:
     db:
+
 
 networks:
   projectNetwork:
