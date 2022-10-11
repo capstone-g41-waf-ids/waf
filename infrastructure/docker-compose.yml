@@ -23,7 +23,7 @@ services:
       - ../portal/www:/templates:rw
       - ../portal/static:/static:rw
       - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
-      - ../web_application_firewall/etc/modsecurity/:/etc/nginx/modsec/
+      #- ../web_application_firewall/etc/:/etc/nginx/templates/modsecurity.d/:rw
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
@@ -60,8 +60,8 @@ services:
     volumes:
       #- ../Database/mongod.conf:/etc/mongod.conf:ro
       - db:/data/db
-      - ../Database/seed:/seed
-      - ../Database/init:/docker-entrypoint-initdb.d
+      - ../database/seed:/seed
+      - ../database/init:/docker-entrypoint-initdb.d
     ports:
       - "27017:27017"
       - "27018:27018"
