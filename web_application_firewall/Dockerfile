@@ -10,11 +10,12 @@ EXPOSE 443
 
 #COPY ./RequestDenied.txt /usr/share/nginx/html/RequestDenied.txt
 COPY ./nginx.conf /etc/nginx/nginx.conf
+#COPY ./etc/modsecurity.conf /etc/modsecurity.d/modsecurity.conf
 COPY ./blacklist /etc/nginx/blacklist
 COPY ./blacklist.py /blacklist.py
 COPY ./flask_webserver.py /flask_webserver.py
 COPY ./logger.py /logger.py
-COPY requirements.txt requirements.txt
+COPY requirements.txt requirements.txsst
 RUN apt-get update \
      && apt-get install -y python3-pip \
      && pip3 install -r requirements.txt
