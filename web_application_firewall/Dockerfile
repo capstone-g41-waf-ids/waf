@@ -10,14 +10,15 @@ EXPOSE 443
 
 #COPY ./RequestDenied.txt /usr/share/nginx/html/RequestDenied.txt
 COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY ./blacklist /etc/nginx/blacklist
-COPY ./blacklist.py /blacklist.py
 COPY ./flask_webserver.py /flask_webserver.py
-COPY ./logger.py /logger.py
 COPY requirements.txt requirements.txt
+COPY ./country_codes /country_codes
+RUN touch /etc/nginx/GEOIP_blacklist
+RUN touch /etc/nginx/blacklist
 RUN apt-get update \
      && apt-get install -y python3-pip \
-     && pip3 install -r requirements.txt
+     && pip3 install -r requirements.txt \
+     && apt-get install -y geoip-database libgeoip1
 #RUN apt-get install -y inetutils-ping
 RUN chmod 700 /etc/nginx/ssl
 RUN openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/webgoat.key -out /etc/nginx/ssl/webgoat.cert -sha256 -days 365\
