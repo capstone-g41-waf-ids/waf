@@ -143,7 +143,7 @@ def logsearch():
 def get_logs():
     if "user" in session:
         mycol = mydb["WAFLogs"]
-        x = mycol.find()
+        x = mycol.find().sort("time",-1)
         return x
     else:
         return render_template('/login.html')
