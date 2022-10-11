@@ -4,6 +4,7 @@ import re
 import time
 import subprocess
 import select
+from unittest import result
 import pymongo
 from threading import Thread
 from flask import Flask, render_template, Response, request, session
@@ -65,11 +66,18 @@ def get_blacklist():
         return x
     else:
         return render_template('/login.html')
+def get_GeoBlacklist():
+    if "user" in session:
+        mycol = mydb["GEOIP_blacklist"]
+        x = mycol.find()
+        return x
+    else:
+        return render_template('/login.html')
 
 @app.route('/firewall.html')
 def firewall():
     if "user" in session:    
-        return render_template('firewall.html', results = get_blacklist())
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
     else:
         return render_template('/login.html')
 
@@ -80,7 +88,18 @@ def blacklistIP():
         mycol = mydb["IPBlacklist"]
         x = mycol.insert_one({"ip":ipBLACK})
         update_blacklist_file()
-        return render_template('firewall.html', results = get_blacklist())
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
+    else:
+        return render_template('/login.html')
+
+@app.route('/blacklistGEO', methods=['POST'])
+def blacklistGEO():
+    if "user" in session:
+        geoip_blacked = request.form['geoip_blacked']
+        mycol = mydb["GEOIP_blacklist"]
+        x = mycol.insert_one({"country_code":geoip_blacked})
+        update_geoIP_file()
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
     else:
         return render_template('/login.html')
 
@@ -91,7 +110,18 @@ def deleteIP():
         mycol = mydb["IPBlacklist"]
         x = mycol.delete_one({"ip":deleteIP})
         update_blacklist_file()
-        return render_template('firewall.html', results = get_blacklist())
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
+    else:
+        return render_template('/login.html')
+
+@app.route('/delete_geo', methods=['POST'])
+def delete_geo():
+    if "user" in session:
+        delete_geo = request.form['delete_geo']
+        mycol = mydb["GEOIP_blacklist"]
+        x = mycol.delete_one({"country_code":delete_geo})
+        update_geoIP_file()
+        return render_template('firewall.html', results_1 = get_blacklist(), results_2 = get_GeoBlacklist())
     else:
         return render_template('/login.html')
 
@@ -149,7 +179,8 @@ def logger():
         time.sleep(5)
 
 def update_blacklist_file():
-    os.remove("/etc/nginx/blacklist")
+    if os.path.exists('/etc/nginx/blacklist'):
+        os.remove("/etc/nginx/blacklist")
     f = open("/etc/nginx/blacklist", "w+")
     mycol = mydb["IPBlacklist"]
     x = mycol.find()
@@ -157,12 +188,25 @@ def update_blacklist_file():
     for data in x:
         if data["ip"] != None:
             f.write("deny " + data["ip"] + ";\n")
-    f.write("allow all;")
+    f.close()
+    os.system('service nginx reload')
+
+def update_geoIP_file():
+    if os.path.exists('/etc/nginx/GEOIP_blacklist'):
+        os.remove("/etc/nginx/GEOIP_blacklist")
+    f = open("/etc/nginx/GEOIP_blacklist", "w+")
+    mycol = mydb["GEOIP_blacklist"]
+    x = mycol.find()
+
+    for data in x:
+        if data["country_code"] != None:
+            f.write(data["country_code"] + " no;\n")
     f.close()
     os.system('service nginx reload')
     
 if __name__ == '__main__':
     update_blacklist_file()
+    update_geoIP_file()
     logger = Thread(target=logger)
     logger.start()
     app.run(host='172.2.2.4',port = 30, debug = True, ssl_context='adhoc')
