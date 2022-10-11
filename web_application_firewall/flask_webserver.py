@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import time
 import subprocess
 import select
@@ -32,7 +33,7 @@ def check_login():
         for data in x:
             if data["username"] != None and data["password"] != None:
                 session["user"] = username_local
-                return render_template('/logsearch.html')
+                return render_template('/logsearch.html', results = get_logs())
             else:
                 return render_template('/login.html')
         return render_template('/login.html')
@@ -57,33 +58,55 @@ def edituser():
     else:
         return render_template('/login.html')
 
+def get_blacklist():
+    if "user" in session:
+        mycol = mydb["IPBlacklist"]
+        x = mycol.find()
+        return x
+    else:
+        return render_template('/login.html')
+
 @app.route('/firewall.html')
 def firewall():
-    if "user" in session:
-        return render_template('firewall.html')
+    if "user" in session:    
+        return render_template('firewall.html', results = get_blacklist())
     else:
         return render_template('/login.html')
 
-@app.route('/firewall.php')
-def firewallphp():
+@app.route('/blacklistIP', methods=['POST'])
+def blacklistIP():
     if "user" in session:
-        return render_template('firewall.php')
+        ipBLACK = request.form['ip_blacked']
+        mycol = mydb["IPBlacklist"]
+        x = mycol.insert_one({"ip":ipBLACK})
+        update_blacklist_file()
+        return render_template('firewall.html', results = get_blacklist())
     else:
         return render_template('/login.html')
 
-@app.route('/forgotpass.html')
-def forgotpass():
+@app.route('/deleteIP', methods=['POST'])
+def deleteIP():
     if "user" in session:
-        return render_template('forgotpass.html')
+        deleteIP = request.form['deleteIP']
+        mycol = mydb["IPBlacklist"]
+        x = mycol.delete_one({"ip":deleteIP})
+        update_blacklist_file()
+        return render_template('firewall.html', results = get_blacklist())
     else:
         return render_template('/login.html')
 
 @app.route('/logsearch.html')
 def logsearch():
     if "user" in session:
+        return render_template('logsearch.html', results = get_logs())
+    else:
+        return render_template('/login.html')
+
+def get_logs():
+    if "user" in session:
         mycol = mydb["WAFLogs"]
         x = mycol.find()
-        return render_template('logsearch.html', results = x)
+        return x
     else:
         return render_template('/login.html')
 
@@ -124,8 +147,22 @@ def logger():
             print(f.stdout.readline())
             mycol.insert_one(json.loads(f.stdout.readline()))
         time.sleep(5)
+
+def update_blacklist_file():
+    os.remove("/etc/nginx/blacklist")
+    f = open("/etc/nginx/blacklist", "w+")
+    mycol = mydb["IPBlacklist"]
+    x = mycol.find()
+
+    for data in x:
+        if data["ip"] != None:
+            f.write("deny " + data["ip"] + ";\n")
+    f.write("allow all;")
+    f.close()
+    os.system('service nginx reload')
     
 if __name__ == '__main__':
+    update_blacklist_file()
     logger = Thread(target=logger)
     logger.start()
     app.run(host='172.2.2.4',port = 30, debug = True, ssl_context='adhoc')

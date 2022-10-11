@@ -23,7 +23,7 @@ x = mycol.find()
 
 for data in x:
     if data["ip"] != None:
-        f.write("deny " + data["ip"] + "\n")
+        f.write("deny " + data["ip"] + ";\n")
 f.write("allow all;")
 f.close()
         

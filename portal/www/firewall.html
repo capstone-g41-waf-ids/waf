@@ -25,100 +25,40 @@
 
 	<div class="rendered-form">
 		<form id="confirm" action="" method="post"></form> <!-- put database link in action -->
-		<fieldset>
-			<div>
-				<h1 >Firewall settings</h1></div>
-			</div>
-				<h2 >IP Settings</h2></div>
-			<div>
-				<label for="select2" class="formbuilder-select-label">Block by country</label>
-				<select class="form-control" name="select2">
-					<option value="option-0" selected="true" >select</option>
-					<option value="option-1" >Australia</option>
-					<option value="option-2" >Venezuela</option>
-					<option value="option-3" >Sweden</option>
-				</select>
-			</div>
-			<div>
-				<label for="text3" class="formbuilder-text-label">Block by IP address</label>
-				<input type="text" class="form-control" name="text3" access="false">
-			</div>
-			
-		</fieldset>
-		<div class="topnav">
 			<div class="search-container">
-				<form action="/action_page.php">
-				  <input type="text" placeholder="Search.." name="search">
-				  <button type="submit"><i class="fa fa-search"></i></button>
+				<form action="{{url_for('blacklistIP')}}" method="POST">
+					<label for="text3" class="formbuilder-text-label">Block by IP address</label>
+				  <input type="text" placeholder="add IP or IP with subnet eg: 192.168.0.1 or 192.168.0.1/24" name="ip_blacked">
+				  <button type="submit">add IP</button>
 				</form>
-			</div>
 		</div>
+
 		<fieldset>
 			<table style="undefined;table-layout: fixed; width: 600px">
 			<colgroup>
+			<col style="width: 100px">
 			<col style="width: 77px">
-			<col style="width: 200px">
-			<col style="width: 200px">
 			</colgroup>
 			<thead>
 			  <tr>
-				<th>ID</th>
 				<th>IP Address</th>
 			  </tr>
 			</thead>
 			<tbody>
-				<?php
-				$mongoClient = new MongoClient();
-				
-				$db = $mongoClient -> selectDB($dbCollection);//TODO: Add Database name
-				$dbCollection = $db->selectCollection($WAFLogs); //TODO:Add collection names
-				$tableResults = $dbCollection->find();
-
-				foreach ($tableResults as $tableResult) {
-					$ID = $tableResult["__id"];
-					$IP = $tableResut["IP Address"];
-					$Location = $tableResut["Geolocation"];
-					$User = $tableResult["User Location"];
-					$Request = $tableResult["Request"];
-
-
-					$resultContent = [];
-					
-					$resultContent[0] = $ID;
-					$resultContent[1] = $IP;
-					$resultContent[2] = $Location;
-					$resultContent[3] = $User;
-					$resultContent[4] = $Request;
-
-					echo "<tr>";
-					foreach ($resultContent as $result) {
-						echo "<td>"
-						$resultText = "";
-						for ($i=0; $i < $result.count(); $i++) { 
-							$resultText .= $result; //Append result to set string
-							if ($i != $result.count() - 1) {
-								$result.text .= " ";
-							};
-						};
-						echo $resultText;
-						echo "</td>"
-					}
-					echo "</tr>";
-
-				}
-			  <tr>
-				<td>1</td>
-				<td>128.0.0.1/27</td>
-			  </tr>
-			  <tr>
-				<td>2</td>
-				<td>192.168.0.1/24</td>
-			  </tr>
-			  <tr>
-				<td>3</td>
-				<td>10.0.0.1/16</td>
-			  </tr>
+				<div class="scrollit">
+					{% for x in results %}
+					<tr>
+						<form action="{{url_for('deleteIP')}}" method="POST">
+						<td><input type="text" value="{{x["ip"]}}" name="deleteIP"  readonly></td>
+						<td><button type="submit" style="default" class="btn" name="deleteIP">delete</button></td>
+						</form>
+					</tr>
+					{% endfor %}
+				</div>
 			</tbody>
+
+
+
 			</table>
 			<table style="undefined;table-layout: fixed; width: 600px">
 				<colgroup>
@@ -128,32 +68,22 @@
 				</colgroup>
 				<thead>
 				  <tr>
-					<th>ID</th>
 					<th>Geo location</th>
 				  </tr>
 				</thead>
-				<tbody>
-				  <tr>
-					<td>1</td>
-					<td>Germany</td>
-				  </tr>
-				  <tr>
-					<td>2</td>
-					<td>Sweden</td>
-				  </tr>
-				  <tr>
-					<td>3</td>
-					<td>Australia</td>
-				  </tr>
-				</tbody>
-				</table>
+
+
+			</table>
 		</fieldset>
 		<div>
-			<button type="reset" class="btn" name="button1" access="false" id="reset" style="default">Reset</button>
-		</div>
-		<div>
-			<button type="submit" class="btn" name="button2" access="false" id="submit" style="default">Submit</button>
-		</div>		
+			<label for="select2" class="formbuilder-select-label">Block by country</label>
+			<select class="form-control" name="select2">
+				<option value="option-0" selected="true" >select</option>
+				<option value="option-1" >Australia</option>
+				<option value="option-2" >Venezuela</option>
+				<option value="option-3" >Sweden</option>
+			</select>
+		</div>	
 		</form>
 	</div>
 </body>
