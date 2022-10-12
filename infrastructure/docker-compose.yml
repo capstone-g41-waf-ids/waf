@@ -23,30 +23,10 @@ services:
       - ../portal/www:/templates:rw
       - ../portal/static:/static:rw
       - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
+      - ../web_application_firewall/modsecurity.d/setup.conf:/etc/nginx/templates/modsecurity.d/setup.conf.template:rw
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
-
-  # web:
-  #   build: ../Portal
-  #   container_name: web-portal
-  #   image: alpine
-  #   networks:
-  #     projectNetwork:
-  #       ipv4_address: 172.2.2.2
-  #   volumes:
-  #     - ../portal/www:/app/templates:rw
-  #   environment:     #connection string for db
-  #     - MONGODB_CONNSTRING=mongodb://root:group41@database
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   expose:
-  #     - "80"
-  #     - "443"
-  #   env_file:
-  #   - ./opt/secrets.env
-
 
   mongodb:
     image: mongo
@@ -59,8 +39,8 @@ services:
     volumes:
       #- ../Database/mongod.conf:/etc/mongod.conf:ro
       - db:/data/db
-      - ../Database/seed:/seed
-      - ../Database/init:/docker-entrypoint-initdb.d
+      - ../database/seed:/seed
+      - ../database/init:/docker-entrypoint-initdb.d
     ports:
       - "27017:27017"
       - "27018:27018"
@@ -71,7 +51,6 @@ services:
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.3
-
 
   webgoat:
     build: ../webgoat
@@ -85,8 +64,10 @@ services:
       projectNetwork:
         ipv4_address: 172.2.2.5
 
+
 volumes:
     db:
+
 
 networks:
   projectNetwork:
