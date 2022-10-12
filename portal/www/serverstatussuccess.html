@@ -7,29 +7,24 @@
 	<meta name="keywords" content="Apply" />
 	<meta name="author" content="Darcy" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
-	<h2>Template</h2>
+	<h2>WAF Portal</h2>
 
 	<nav class="nav1"><!-- nav menu -->
-		<div> Health Status&#128578 </div> 
 		<a href="serverstatus.html">Server Status</a>
 		<a href="logsearch.html">Log Search</a>
 		<a href="firewall.html">Firewall Settings</a>
 		<div class="nav2">
 			<a href="logsearch.php">Edit user</a>
-			<a href="login.html">Logout</a>
+			<a href="{{url_for('logout')}}">Logout</a>
 		</div>
 	</nav>
-	<div class="Status">
-		<h2> <center> &#128578 Webgoat | Active </center></h2>
-		<h2> <center> &#128577 Webgoat | Inactive </center></h2>
-		<h2> <center> &#129300 Webgoat | Slow </center></h2>
-	</div>
-	
+	<h2> <center> &#128578 Webgoat | Active </center></h2>
 
 </body>
 </html>
+
+
 

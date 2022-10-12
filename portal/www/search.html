@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- meta info -->
+	<meta charset="utf-8" />
+	<meta name="description" content="Firewall page" />
+	<meta name="keywords" content="Apply" />
+	<meta name="author" content="Darcy" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <h2>WAF Portal</h2>
+
+<nav class="nav1"><!-- nav menu -->
+	<a href="serverstatus.html">Server Status</a>
+	<a href="logsearch.html">Log Search</a>
+	<a href="firewall.html">Firewall Settings</a>
+	<div class="nav2">
+		<a href="logsearch.php">Edit user</a>
+		<a href="{{url_for('logout')}}">Logout</a>
+	</div>
+</nav>
+
+<!-- <include src="header.inc"></include> -->
+
+<div>
+	<h1 >Log Searched</h1></div>
+<div>
+<div class="main">
+	<fieldset class="logs">
+		<table id="myTable" style="table-layout: fixed; width: auto">
+		<colgroup>
+		<col style="width: 200px">
+		<col style="width: 200px">
+		<col style="width: 200px">
+		<col style="width: 200px">
+		<col style="width: 200px">
+		<col style="width: 200px">
+		</colgroup>
+			<thead>
+				<tr>
+					<th>IP Address</th>
+					<th>Time</th>
+					<th>HTTP referrer</th>
+					<th>Status</th>
+					<th>Request</th>
+					<th>Path</th>
+					<th>User_agent</th>
+				</tr>
+			</thead>
+			<tbody>
+				<div class="scrollit">
+			{% for x in results %}
+			<tr>
+				<td>{{x["ip"]}}</td>
+				<td>{{x["time_local"]}}</td>
+				<td>{{x["http_referrer"]}}</td>
+				<td>{{x["status"]}}</td>
+				<td>{{x["request"]}}</td>
+				<td>{{x["path"]}}</td>
+				<td>{{x["user_agent"]}}</td>
+			</tr>
+			{% endfor %}
+			</div>
+			</tbody>
+		</table>
+	</fieldset>
+</div>
+
+</body>
+</html>
+

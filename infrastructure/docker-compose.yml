@@ -1,54 +1,56 @@
 version: '3.8'
 services:
 
-  Web-Application-Firewall:
+  web_application_firewall:
     build: ../web_application_firewall
     image: owasp/modsecurity:nginx-alpine
-    container_name: Web_Application_Firewall
+    container_name: web_application_firewall
     ports:
+      - "7999:8080"
       - "8000:8000"
+      - "80:80"
+      - "30:30"
+    expose:
+      - "8000"
+      - "443"
+      - "80"
+      - "30"
     depends_on:
       - webgoat
-    volumes:
-      - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
-    environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
+    environment:     #connection string for db
       - MONGODB_CONNSTRING=mongodb://root:group41@database
+    volumes:
+      - ../portal/www:/templates:rw
+      - ../portal/static:/static:rw
+      - ../web_application_firewall/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
 
   # web:
-  #   # This image is for Apache, we may want to change it, may not
   #   build: ../Portal
-  #   container_name: web-server
+  #   container_name: web-portal
+  #   image: alpine
   #   networks:
   #     projectNetwork:
-  #       ipv4_address: 172.2.2.4
-  #   #expose:
-  #     #- "80:80"
-  #     #- "443:443"
-  #   #env_file:
-  #   #- ./opt/secrets.env
-
-  #Web-Application-Firewall:
-  # image: python:3
-  #   build: ../Web-Application-Firewall
-  #   container_name: web-application-firewall
+  #       ipv4_address: 172.2.2.2
+  #   volumes:
+  #     - ../portal/www:/app/templates:rw
+  #   environment:     #connection string for db
+  #     - MONGODB_CONNSTRING=mongodb://root:group41@database
   #   ports:
-  #   - 9090:80
+  #     - "80:80"
+  #     - "443:443"
+  #   expose:
+  #     - "80"
+  #     - "443"
   #   env_file:
   #   - ./opt/secrets.env
-  #   environment:     #connection string for db... move to .env eventually (format mongodb://{USERNAME}:{PASSWORD}@{DATABASE})
-  #   - MONGODB_CONNSTRING=mongodb://root:group41@database
-  #   networks:
-  #    projectNetwork:
-  #    ipv4_address: 172.2.2.2
+
 
   mongodb:
     image: mongo
     container_name: database
-    command:
-      - mongod
     environment:     #Note to selves to change this on delivery, possible done as .env variable folder
       #- .env
       - MONGO_INITDB_ROOT_USERNAME=root
@@ -56,15 +58,16 @@ services:
       - MONGODB_CONNSTRING=mongodb://root:group41@database
     volumes:
       #- ../Database/mongod.conf:/etc/mongod.conf:ro
-      - ../Database/init:/docker-entrypoint-initdb.d
-      - ../Database/seed:/seed
       - db:/data/db
+      - ../Database/seed:/seed
+      - ../Database/init:/docker-entrypoint-initdb.d
     ports:
       - "27017:27017"
       - "27018:27018"
       #This is mongo default port, would recommend changing this
     expose: #may or may not do anything
       - "27017"
+      - "27018"
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.3

@@ -7,12 +7,12 @@
     <meta name="keywords" content="Apply" />
     <meta name="author" content="Darcy" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="script.js"></script>
 </head>
 <body>
-	<h2>Template</h2>
+<h2>WAF Portal</h2>
 
 	<nav class="nav1"><!-- nav menu -->
 		<div> Health Status&#128578 </div> 
@@ -21,7 +21,7 @@
 		<a href="firewall.html">Firewall Settings</a>
 		<div class="nav2">
 			<a href="logsearch.php">Edit user</a>
-			<a href="login.html">Logout</a>
+			<a href="{{url_for('logout')}}">Logout</a>
 		</div>
 	</nav>
 

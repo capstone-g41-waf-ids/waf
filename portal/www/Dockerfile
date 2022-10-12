@@ -1,3 +1,0 @@
-FROM httpd
-WORKDIR /
-

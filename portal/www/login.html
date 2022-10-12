@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta name="login" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
 <h2>WAF login</h2>
 
 <div id="id01" class="form">
-  <form class="content" action="/action_page.php" method="post">
+  <form class="content" action="{{url_for('check_login')}}" method="POST">
     <div class="container">
       <label for="uname"><b>Username</b></label>
       <input type="text" placeholder="Enter Username" name="uname" required>
