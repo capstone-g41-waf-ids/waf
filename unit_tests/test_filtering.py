@@ -2,9 +2,6 @@ import unittest
 from unit_tests import filtering
 
 
-# do some tests
-
-
 class TestFileInclusion(unittest.TestCase):
 
     def test_sanity(self):

@@ -5,21 +5,22 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
-<h2>Forgot Password</h2>
+<h2>Edit User</h2>
 
 <div id="id01" class="form">
   <form class="content" action="/action_page.php" method="post">
     <div class="container">
       <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+      <input type="text" placeholder="Enter Username" id="uname" name="uname" required>
 
-      <label for="seckey"><b>Security Key</b></label>
-      <input type="text" placeholder="Enter Security Kry" name="seckey" required>
+      <label for="seckey"><b>Current Password</b></label>
+      <input type="text" placeholder="Enter Security Kry" id="seckey" name="seckey" required>
 
       <label for="pword"><b>New Password</b></label>
-      <input type="password" placeholder="Enter Password" name="pword" required>
+      <input type="password" placeholder="Enter Password" id="pword" name="pword" required>
         
-      <p for="nseckey"><b>New Security Key</b></p>
+      <div><b>New Security Key</b>
+      <p id="nseckey"></p></div>
 
       <button type="submit">Submit</button>
     </div>
