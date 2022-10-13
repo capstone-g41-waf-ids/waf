@@ -8,25 +8,19 @@
 <h2>Edit User</h2>
 
 <div id="id01" class="form">
-  <form class="content" action="/action_page.php" method="post">
+  <form class="content" action="{{url_for('editcurrentuser')}}" method="post">
     <div class="container">
-      <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+      <h2>Hello {{result}}</h2>
 
       <label for="seckey"><b>Current Password</b></label>
-      <input type="text" placeholder="Enter Security Kry" name="seckey" required>
+      <input type="text" placeholder="Enter Security Kry" name="current_pword">
 
       <label for="pword"><b>New Password</b></label>
-      <input type="password" placeholder="Enter Password" name="pword" required>
-        
-      <div><b>New Security Key</b>
-      <p id="nseckey"></p></div>
+      <input type="password" placeholder="Enter Password" name="pword">
 
       <button type="submit">Submit</button>
     </div>
     <div class="container" style="background-color:#f1f1f1">
-      <span class="pword"><a href="serverstatus.html">Forgot password?</a></span>
-    </div>
   </form>
 </div>
 
