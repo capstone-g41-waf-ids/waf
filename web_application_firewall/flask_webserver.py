@@ -1,19 +1,17 @@
 import json
 import os
-import re
 import time
 import subprocess
 import select
-from unittest import result
 import pymongo
 from threading import Thread
-from flask import Flask, render_template, Response, request, session
+from flask import Flask, render_template, request, session
 
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
 
-connstring = os.environ['MONGODB_CONNSTRING']  # from container env
-myclient = pymongo.MongoClient(connstring)  # connect to mongo
+connstring = os.environ['MONGODB_CONNSTRING']   # from container env
+myclient = pymongo.MongoClient(connstring)   # connect to mongo
 mydb = myclient["database"]
 
 
@@ -33,9 +31,9 @@ def check_login():
         myquery = {"username": username_local, "password": password_local}
         x = mycol.find(myquery)
         for data in x:
-            if data["username"] != None and data["password"] != None:
+            if data["username"] is not None and data["password"] is not None:
                 session["user"] = username_local
-                return render_template('/logsearch.html', results = get_logs())
+                return render_template('/logsearch.html', results=get_logs())
             else:
                 return render_template('/login.html')
         return render_template('/login.html')
@@ -55,7 +53,7 @@ def serverstatus():
 
 def get_GeoBlacklist_options():
     if "user" in session:
-        with open("/country_codes") as json_file:
+        with open("country_codes") as json_file:
             x = json.load(json_file)
         return x
     else:
@@ -102,7 +100,7 @@ def blacklistIP():
     if "user" in session:
         ipBLACK = request.form['ip_blacked']
         mycol = mydb["IPBlacklist"]
-        x = mycol.insert_one({"ip": ipBLACK})
+        mycol.insert_one({"ip": ipBLACK})
         update_blacklist_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
@@ -115,7 +113,7 @@ def blacklistGEO():
     if "user" in session:
         geoip_blacked = request.form['geoip_blacked']
         mycol = mydb["GEOIP_blacklist"]
-        x = mycol.insert_one({"country_code": geoip_blacked})
+        mycol.insert_one({"country_code": geoip_blacked})
         update_geoIP_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
@@ -128,7 +126,7 @@ def deleteIP():
     if "user" in session:
         deleteIP = request.form['deleteIP']
         mycol = mydb["IPBlacklist"]
-        x = mycol.delete_one({"ip": deleteIP})
+        mycol.delete_one({"ip": deleteIP})
         update_blacklist_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
@@ -141,7 +139,7 @@ def delete_geo():
     if "user" in session:
         delete_geo = request.form['delete_geo']
         mycol = mydb["GEOIP_blacklist"]
-        x = mycol.delete_one({"country_code": delete_geo})
+        mycol.delete_one({"country_code": delete_geo})
         update_geoIP_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
@@ -194,8 +192,8 @@ def logout():
 
 def logger():
     mycol = mydb["WAFLogs"]
-    f = subprocess.Popen(['tail', '-F', 'var/log/nginx/host.access.log'], \
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    f = subprocess.Popen(['tail', '-F', 'var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
 
@@ -214,7 +212,7 @@ def update_blacklist_file():
     x = mycol.find()
 
     for data in x:
-        if data["ip"] != None:
+        if data["ip"] is not None:
             f.write("deny " + data["ip"] + ";\n")
     f.close()
     os.system('service nginx reload')
@@ -228,7 +226,7 @@ def update_geoIP_file():
     x = mycol.find()
 
     for data in x:
-        if data["country_code"] != None:
+        if data["country_code"] is not None:
             f.write(data["country_code"] + " no;\n")
     f.close()
     os.system('service nginx reload')

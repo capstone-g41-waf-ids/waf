@@ -27,8 +27,8 @@
 		<form id="confirm" action="" method="post"></form> <!-- put database link in action -->
 			<div class="search-container">
 				<form action="{{url_for('blacklistIP')}}" method="POST">
-					<label for="text3" class="formbuilder-text-label">Block by IP address</label>
-				  <input type="text" placeholder="add IP or IP with subnet eg: 192.168.0.1 or 192.168.0.1/24" name="ip_blacked">
+					<label for="ip_blacked" class="formbuilder-text-label">Block by IP address</label>
+				  <input type="text" placeholder="add IP or IP with subnet eg: 192.168.0.1 or 192.168.0.1/24" id="ip_blacked" name="ip_blacked">
 				  <button type="submit">add IP</button>
 				</form>
 		</div>
@@ -49,7 +49,7 @@
 						{% for x in results_1 %}
 						<tr>
 							<form action="{{url_for('deleteIP')}}" method="POST">
-							<td><input type="text" value="{{x["ip"]}}" name="deleteIP"  readonly></td>
+							<td><input type="text" value="{{x['ip']}}" name="deleteIP"  readonly></td>
 							<td><button type="submit" style="default" class="btn" name="deleteIP">delete</button></td>
 							</form>
 						</tr>
@@ -60,10 +60,10 @@
 		</fieldset>
 		
 		<form action="{{url_for('blacklistGEO')}}" method="POST">
-			<label for="text3" class="formbuilder-text-label">Block by Geo location</label>
+			<label for="geoip_blacked" class="formbuilder-text-label">Block by Geo location</label>
 			<select name="geoip_blacked" id="geoip_blacked">
 				{% for x in results_3 %}
-					<option value="{{x["Code"]}}" name="geoip_blacked">{{x["Name"]}} ({{x["Code"]}})</option>
+					<option value="{{x['Code']}}" name="geoip_blacked">{{x['Name']}} ({{x['Code']}})</option>
 				{% endfor %}
 			</select>
 			<br><br>
@@ -86,7 +86,7 @@
 						{% for x in results_2 %}
 						<tr>
 							<form action="{{url_for('delete_geo')}}" method="POST">
-							<td><input type="text" value="{{x["country_code"]}}" name="delete_geo"  readonly></td>
+							<td><input type="text" value="{{x['country_code']}}" name="delete_geo"  readonly></td>
 							<td><button type="submit" style="default" class="btn" name="delete_geo">delete</button></td>
 							</form>
 						</tr>
@@ -94,8 +94,7 @@
 					</div>
 				</tbody>
 			</table>
-		</fieldset>	
-		</form>
+		</fieldset>
 	</div>
 </body>
 </html>
