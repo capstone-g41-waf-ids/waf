@@ -15,10 +15,8 @@ myclient = pymongo.MongoClient(connstring)   # connect to mongo
 mydb = myclient["database"]
 
 
-@app.route('/')
-def index():
-    return render_template('login.html')
 
+@app.route('/')
 @app.route('/login.html')
 def index():
     return render_template('login.html')
@@ -71,7 +69,7 @@ def edituser():
     else:
         return render_template('/login.html')
 
-@app.route('/editcurrentuser')
+@app.route('/editcurrentuser', methods=['POST'])
 def editcurrentuser():
     if "user" in session:
         current_pword = request.form['current_pword']
@@ -84,9 +82,9 @@ def editcurrentuser():
                 updatequery = { "username": session["user"] }
                 newvalues = { "$set": { "password": pword } }
                 mycol.update_one(updatequery, newvalues)
-                return render_template('/update_user_success')
-            else:
-                return render_template('/update_user_fail')
+                return render_template('/update_user_success.html')
+        
+        return render_template('/update_user_fail.html')
     else:
         return render_template('/login.html')
 
