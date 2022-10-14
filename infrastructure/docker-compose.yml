@@ -6,10 +6,10 @@ services:
     image: owasp/modsecurity:nginx-alpine
     container_name: web_application_firewall
     ports:
-      - "7999:8080"
+      #- "7999:8080"
       - "8000:8000"
       - "80:80"
-      - "30:30"
+      #- "30:30"
     expose:
       - "8000"
       - "443"
@@ -20,8 +20,8 @@ services:
     environment:     #connection string for db
       - MONGODB_CONNSTRING=mongodb://root:group41@database
     volumes:
-      - ../web_application_firewall/portal/templates:/templates:rw
-      - ../web_application_firewall/portal/static:/static:rw
+      - ../web_application_firewall/app/templates:/templates:rw
+      - ../web_application_firewall/app/static:/static:rw
       - ../web_application_firewall/etc/nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
       - ../web_application_firewall/etc/modsecurity.d/setup.conf:/etc/nginx/templates/modsecurity.d/setup.conf.template:rw
     networks:
@@ -56,7 +56,7 @@ services:
     image: webgoat/webgoat-8.0
     container_name: webgoat
     ports:
-      - "8080:8080"
+      - "8080:8080" #IM PRETTY SURE THIS SHOULD JUST BE EXPOSED, NOT EXTERNAL
     #env_file:
       #- ./opt/secrets.env
     networks:
