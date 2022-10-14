@@ -15,7 +15,9 @@ myclient = pymongo.MongoClient(connstring)   # connect to mongo
 mydb = myclient["database"]
 
 
+
 @app.route('/')
+@app.route('/login.html')
 def index():
     return render_template('login.html')
 
@@ -63,7 +65,26 @@ def get_GeoBlacklist_options():
 @app.route('/edituser.html')
 def edituser():
     if "user" in session:
-        return render_template('edituser.html')
+        return render_template('edituser.html', result = session["user"])
+    else:
+        return render_template('/login.html')
+
+@app.route('/editcurrentuser', methods=['POST'])
+def editcurrentuser():
+    if "user" in session:
+        current_pword = request.form['current_pword']
+        pword = request.form['pword']
+        mycol = mydb["UserAccounts"]
+        myquery = {"username": session["user"], "password": current_pword}
+        x = mycol.find(myquery)
+        for data in x:
+            if data["username"] != None and data["password"] != None:
+                updatequery = { "username": session["user"] }
+                newvalues = { "$set": { "password": pword } }
+                mycol.update_one(updatequery, newvalues)
+                return render_template('/update_user_success.html')
+        
+        return render_template('/update_user_fail.html')
     else:
         return render_template('/login.html')
 
