@@ -53,7 +53,7 @@ def serverstatus():
 
 def get_GeoBlacklist_options():
     if "user" in session:
-        with open("../country_codes") as json_file:
+        with open("../../country_codes") as json_file:
             x = json.load(json_file)
         return x
     else:
@@ -186,7 +186,7 @@ def logout():
         return render_template('/login.html')
 
 
-# @app.route('/')
+# @portal.route('/')
 # def e():
 #   return render_template('')
 

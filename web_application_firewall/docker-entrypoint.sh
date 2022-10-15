@@ -1,6 +1,5 @@
 #!/bin/bash
 
 service nginx start
-pip install pyopenssl
-uwsgi app/wsgi.ini
-#python3 app/flask_webserver.py
+uwsgi etc/portal/wsgi.ini
+#python3 portal/flask_webserver.py
