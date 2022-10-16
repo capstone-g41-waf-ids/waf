@@ -4,6 +4,7 @@ import time
 import subprocess
 import select
 import pymongo
+import hashlib
 from threading import Thread
 from flask import Flask, render_template, request, session
 
@@ -29,8 +30,9 @@ def check_login():
     else:
         username_local = request.form['uname']
         password_local = request.form['pword']
+        password_local = hashlib.md5(password_local.encode('utf-8'))
         mycol = mydb["UserAccounts"]
-        myquery = {"username": username_local, "password": password_local}
+        myquery = {"username": username_local, "password": password_local.hexdigest()}
         x = mycol.find(myquery)
         for data in x:
             if data["username"] is not None and data["password"] is not None:
@@ -44,7 +46,7 @@ def check_login():
 @app.route('/serverstatus.html')
 def serverstatus():
     if "user" in session:
-        response = os.popen(f"curl --max-time 5 -I http://webgoat:8080/WebGoat").read()
+        response = os.popen(f"curl --max-time 2 -I http://webgoat:8080/WebGoat").read()
         if "HTTP/1.1 302 Found" in response:
             return render_template('serverstatussuccess.html')
         else:
@@ -74,13 +76,15 @@ def editcurrentuser():
     if "user" in session:
         current_pword = request.form['current_pword']
         pword = request.form['pword']
+        current_pword = hashlib.md5(current_pword.encode('utf-8'))
+        pword = hashlib.md5(pword.encode('utf-8'))
         mycol = mydb["UserAccounts"]
-        myquery = {"username": session["user"], "password": current_pword}
+        myquery = {"username": session["user"], "password": current_pword.hexdigest()}
         x = mycol.find(myquery)
         for data in x:
             if data["username"] != None and data["password"] != None:
                 updatequery = { "username": session["user"] }
-                newvalues = { "$set": { "password": pword } }
+                newvalues = { "$set": { "password": pword.hexdigest() } }
                 mycol.update_one(updatequery, newvalues)
                 return render_template('/update_user_success.html')
         
