@@ -10,10 +10,10 @@ from flask import Flask, render_template, request, session
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
 
-connstring = os.environ['MONGODB_CONNSTRING']   # from container env
-myclient = pymongo.MongoClient(connstring)   # connect to mongo
+#TEMPFIX = "?ssl=true&ssl_cert_reqs=CERT_NONE"
+connstring = os.environ['MONGODB_CONNSTRING']  # from container env
+myclient = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
 mydb = myclient["database"]
-
 
 @app.route('/')
 def index():
