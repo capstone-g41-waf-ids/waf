@@ -11,7 +11,6 @@ from flask import Flask, render_template, request, session
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
 
-#TEMPFIX = "?ssl=true&ssl_cert_reqs=CERT_NONE"
 connstring = os.environ['MONGODB_CONNSTRING']  # from container env
 myclient = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
 mydb = myclient["database"]
@@ -229,9 +228,9 @@ def logger():
 
 
 def update_blacklist_file():
-    if os.path.exists('/etc/nginx/blacklist'):
-        os.remove("/etc/nginx/blacklist")
-    f = open("/etc/nginx/blacklist", "w+")
+    #if os.path.exists('/etc/nginx/blacklist'):
+    #    os.remove("/etc/nginx/blacklist")
+    f = open("/etc/nginx/blacklist", "w")
     mycol = mydb["IPBlacklist"]
     x = mycol.find()
 
