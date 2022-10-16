@@ -5,7 +5,8 @@ import requests
 
 class TestFileInclusion(unittest.TestCase):
     def setUp(self):
-        self.url = "http://localhost:8000/"
+        self.domain = "localhost:8000"
+        self.url = "http://" + self.domain + "/"
 
     def test_sanity(self):
         self.assertEqual(True, True)
@@ -163,6 +164,69 @@ class TestFileInclusion(unittest.TestCase):
                                  "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
                                      response.status_code))
 
+"""
+    def test_localhost_bypass(self):
+        urls = ["127.0.0.1:80",
+                "127.0.0.1:443",
+                "127.0.0.1:22",
+                "127.1:80",
+                "0",
+                "0.0.0.0:80",
+                "①②⑦.⓪.⓪.⓪",
+                "127.127.127.127",
+                "127.0.1.3",
+                "127.0.0.0",
+                "2130706433/",
+                "017700000001",
+                "3232235521/",
+                "3232235777/",
+                "0x7f000001/",
+                "0xc0a80014/",
+                self.domain + "@127.0.0.1",
+                "127.0.0.1#" + self.domain,
+                self.domain + ".127.0.0.1",
+                "127.0.0.1/" + self.domain,
+                "127.0.0.1/?d=" + self.domain,
+                self.domain + "@127.0.0.1",
+                "127.0.0.1#" + self.domain,
+                self.domain + ".127.0.0.1",
+                "127.0.0.1/" + self.domain,
+                "127.0.0.1/?d=" + self.domain,
+                self.domain + "@localhost",
+                "localhost#" + self.domain,
+                self.domain + ".localhost",
+                "localhost/" + self.domain,
+                "localhost/?d=" + self.domain,
+                "127.0.0.1%00" + self.domain,
+                "127.0.0.1?" + self.domain,
+                "127.0.0.1///" + self.domain,
+                "127.0.0.1%00" + self.domain,
+                "127.0.0.1?" + self.domain,
+                "127.0.0.1///" + self.domain + "st:+11211aaa",
+                "st:00011211aaaa",
+                "0/",
+                "127.1",
+                "127.0.1",
+                "1.1.1.1 &@2.2.2.2# @3.3.3.3/",
+                "127.1.1.1:80\@127.2.2.2:80/",
+                "127.1.1.1:80\@@127.2.2.2:80/",
+                "127.1.1.1:80:\@@127.2.2.2:80/",
+                "127.1.1.1:80#\@127.2.2.2:80/",
+                "[::]:80/",
+                "[::]:25/ SMTP",
+                "[::]:3128/ Squid",
+                "[0000::1]:80/",
+                "[0:0:0:0:0:ffff:127.0.0.1]/thefile"]
+
+        for i in urls:
+            with self.subTest(i=i):
+                try:
+                    response = requests.get("http://" + i, timeout=1)
+                    self.assertEqual(403, response.status_code,
+                                     "False Negative on URL 'http://" + i + "'" + " with status code " + str(response.status_code))
+                except requests.exceptions.RequestException as e:  # This is the correct syntax
+                    self.assertIsNotNone(e, "Unknown error on URL 'http://" + i + "'")
+"""
 
 if __name__ == '__main__':
     unittest.main()
