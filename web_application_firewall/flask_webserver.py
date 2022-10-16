@@ -215,9 +215,22 @@ def logout():
 # def e():
 #   return render_template('')
 
-def logger():
+def access_logger():
     mycol = mydb["WAFLogs"]
     f = subprocess.Popen(['tail', '-F', 'var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+    p = select.poll()
+    p.register(f.stdout)
+
+    while True:
+        if p.poll(1):
+            print(f.stdout.readline())
+            mycol.insert_one(json.loads(f.stdout.readline()))
+        time.sleep(5)
+
+def audit_logger():
+    mycol = mydb["modsec_audit_logs"]
+    f = subprocess.Popen(['tail', '-F', 'var/log/modsec_audit.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
@@ -260,6 +273,8 @@ def update_geoIP_file():
 if __name__ == '__main__':
     update_blacklist_file()
     update_geoIP_file()
-    logger = Thread(target=logger)
-    logger.start()
+    access_logger = Thread(target=access_logger)
+    access_logger.start()
+    audit_logger = Thread(target=audit_logger)
+    audit_logger.start()
     app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc')
