@@ -216,6 +216,7 @@ def logout():
 
 def logger():
     mycol = mydb["WAFLogs"]
+
     f = subprocess.Popen(['tail', '-F', 'var/log/nginx/host.access.log'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
