@@ -236,4 +236,5 @@ if __name__ == '__main__':
     update_geoIP_file()
     logger = Thread(target=logger)
     logger.start()
+    #context = ("../nginx/ssl/webgoat.crt", "../nginx/ssl/webgoat.key")
     app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc')
