@@ -29,15 +29,7 @@
 
 <div class="main">
 	<fieldset class="logs">
-		<table id="myTable" style="table-layout: fixed; width: auto">
-		<colgroup>
-		<col style="width: 200px">
-		<col style="width: 200px">
-		<col style="width: 200px">
-		<col style="width: 200px">
-		<col style="width: 200px">
-		<col style="width: 200px">
-		</colgroup>
+		<table id="myTable" style="table-layout: fixed;">
 			<thead>
 				<tr>
 					<th>
@@ -101,7 +93,6 @@
 				</tr>
 			</thead>
 			<tbody>
-				<div class="scrollit">
 					{% for x in results %}
 					<tr>
 						<td>{{x["ip"]}}</td>
@@ -113,7 +104,30 @@
 						<td>{{x["user_agent"]}}</td>
 					</tr>
 					{% endfor %}
-				</div>
+			</tbody>
+		</table>
+	</fieldset>
+	<fieldset class="logs">
+		<table id="myTable" style="table-layout: fixed;">
+			<thead>
+				<tr>
+					<th>
+						<form action="{{url_for('auditlogsearch')}}" method="POST">
+							<input type="text" name="searched" placeholder="Search">
+							<button type="submit"><i class="fa fa-search"></i></button>
+						</form>
+					</th>
+				</tr>
+				<tr>
+					<th>Mod security audit logs</th>
+				</tr>
+			</thead>
+			<tbody>
+					{% for x in results2 %}
+					<tr>
+						<td>{{x["log"]}}</td>
+					</tr>
+					{% endfor %}
 			</tbody>
 		</table>
 	</fieldset>

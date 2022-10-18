@@ -199,3 +199,15 @@ span.pword {
   /* Add a grey background color to the table header and on hover */
   background-color: #f1f1f1;
 }
+
+thead, tbody { display: block; }
+
+#myTable thead {
+  width: 100%;
+}
+
+#myTable tbody {
+  height: 500px;      /* Just for the demo          */
+  overflow-y: auto;    /* Trigger vertical scroll    */
+  overflow-x: hidden;  /* Hide the horizontal scroll */
+}
