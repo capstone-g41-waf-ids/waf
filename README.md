@@ -56,8 +56,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 This project is developed as part of the Swinburne 2022 Software Engineering Capstone. Group 41 have produced a containerised Web Application Firewall to meet the requirements of the client. This application is placed between the clients web applications and the end user. It intercepts traffic and detects malicious injections intended to compromise the clients web applications and redirects normal interactions to the correct endpoint.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

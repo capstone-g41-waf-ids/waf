@@ -18,7 +18,7 @@
 		<a href="logsearch.html">Log Search</a>
 		<a href="firewall.html">Firewall Settings</a>
 		<div class="nav2">
-			<a href="edituser.html">Edit user</a>
+			<a href="edituser.html">Edit User</a>
 			<a href="{{url_for('logout')}}">Logout</a>
 		</div>
 	</nav>
@@ -60,14 +60,14 @@
 		</fieldset>
 		
 		<form action="{{url_for('blacklistGEO')}}" method="POST">
-			<label for="geoip_blacked" class="formbuilder-text-label">Block by Geo location</label>
+			<label for="geoip_blacked" class="formbuilder-text-label">Block by Geolocation</label>
 			<select name="geoip_blacked" id="geoip_blacked">
 				{% for x in results_3 %}
 					<option value="{{x['Code']}}" name="geoip_blacked">{{x['Name']}} ({{x['Code']}})</option>
 				{% endfor %}
 			</select>
 			<br><br>
-			<button type="submit">add Geo location</button>
+			<button type="submit">add Geolocation</button>
 		</form>
 
 		<fieldset>
@@ -78,7 +78,7 @@
 				</colgroup>
 				<thead>
 				<tr>
-					<th>Geo location's</th>
+					<th>Geolocation's</th>
 				</tr>
 				</thead>
 				<tbody>
