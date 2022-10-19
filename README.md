@@ -12,8 +12,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="documentation-images/capstonelogo.png" alt="Logo" width="200" height="200">
+  <a href="https://github.com/capstone-g41-waf-ids/">
+    <img src="documentation-images/capstonelogorectangle.png" alt="Logo" width="600" height="300">
   </a>
 
 <h3 align="center">Web Application Firewall</h3>
@@ -31,7 +31,7 @@
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
-  <ol>
+  <ol>  
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
@@ -130,7 +130,7 @@ Please note that the design in these screenshots and the actual product may diff
 <br>
 <br>
 ### The Login Page
-
+<img src="documentation-images/login.png" width="720" >
 <br>
 
 To login to the application use the following credentials:
@@ -146,11 +146,18 @@ After logging in a session is generated with your credentials. You are then redi
 ### The Logs Page
 This page shows the communications between the client and the web applications sitting behind the WAF. 
 <br>
+
+<img src="documentation-images/log.png" width="720">
+
 It provides the following information: IP Address
 ### The Server Status Page
+<img src="documentation-images/status.png" width="720" >
+
+### The Settings Page
+<img src="documentation-images/settings.png" width="720" >
 
 ### The Edit User Page
-
+<img src="documentation-images/edituser.png" width="720" >
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -160,9 +167,9 @@ It provides the following information: IP Address
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
+- [ ] Blocking Spoofing, Capture Replay and Alternate Channels
+- [ ] Additional Users / Forgot Password Functionality
+- [ ] Develop an IDS to work with the WAF
     - [ ] Nested Feature
 
 
