@@ -14,7 +14,7 @@
     <a href="logsearch.html">Log Search</a>
 	<a href="firewall.html">Firewall Settings</a>
 	<div class="nav2">
-		<a href="logsearch.php">Edit user</a>
+		<a href="logsearch.php">Edit User</a>
 		<a href="login.html">Logout</a>
 	</div>
 </nav>

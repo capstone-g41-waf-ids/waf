@@ -12,8 +12,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/capstone-g41-waf-ids/">
+    <img src="documentation-images/capstonelogorectangle.png" alt="Logo" width="600" height="300">
   </a>
 
 <h3 align="center">Web Application Firewall</h3>
@@ -31,7 +31,7 @@
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
-  <ol>
+  <ol>  
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
@@ -56,8 +56,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 This project is developed as part of the Swinburne 2022 Software Engineering Capstone. Group 41 have produced a containerised Web Application Firewall to meet the requirements of the client. This application is placed between the clients web applications and the end user. It intercepts traffic and detects malicious injections intended to compromise the clients web applications and redirects normal interactions to the correct endpoint.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -69,8 +67,8 @@ This project is developed as part of the Swinburne 2022 Software Engineering Cap
 * [![Docker][Docker.com]][Docker-url]
 * [![Nginx][Nginx.com]][Nginx-url]
 * [![MongoDB][MongoDB.com]][MongoDB-url]
-* [![Angular][Python.org]][Python-url]
-* [![Svelte][Flask]][Flask-url]
+* [![Python][Python.org]][Python-url]
+* [![Flask][Flask]][Flask-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -130,7 +128,7 @@ Please note that the design in these screenshots and the actual product may diff
 <br>
 <br>
 ### The Login Page
-
+<img src="documentation-images/login.png" width="720" >
 <br>
 
 To login to the application use the following credentials:
@@ -145,10 +143,19 @@ After logging in a session is generated with your credentials. You are then redi
 
 ### The Logs Page
 This page shows the communications between the client and the web applications sitting behind the WAF. 
+<br>
+
+<img src="documentation-images/log.png" width="720">
+
+It provides the following information: IP Address
 ### The Server Status Page
+<img src="documentation-images/status.png" width="720" >
+
+### The Settings Page
+<img src="documentation-images/settings.png" width="720" >
 
 ### The Edit User Page
-
+<img src="documentation-images/edituser.png" width="720" >
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -158,10 +165,9 @@ This page shows the communications between the client and the web applications s
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [ ] Blocking Spoofing, Capture Replay and Alternate Channels
+- [ ] Additional Users / Forgot Password Functionality
+- [ ] Develop an IDS to work with the WAF
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -173,6 +179,7 @@ This page shows the communications between the client and the web applications s
 * [Ellen](https://github.com/orgs/capstone-g41-waf-ids/people/orangeblossomest)
 * [Tom](https://github.com/orgs/capstone-g41-waf-ids/people/Choski)
 * [Darcy](https://github.com/orgs/capstone-g41-waf-ids/people/ASD-Database)
+* [Fuman](https://github.com/orgs/capstone-g41-waf-ids/people/fumank2)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
