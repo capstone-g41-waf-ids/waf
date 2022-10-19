@@ -127,8 +127,29 @@ Please install the following items before attempting to install / run the projec
 ## WAF Configuration Portal Usage
 
 Please note that the design in these screenshots and the actual product may differ, however the functionality remains the same.
+<br>
+<br>
+### The Login Page
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+<br>
+
+To login to the application use the following credentials:
+<br>
+**Please Change the password for use in a live or internet exposed environment**
+```sh
+username: admin
+password: 12345
+```
+
+After logging in a session is generated with your credentials. You are then redirected to the logs page.
+
+### The Logs Page
+This page shows the communications between the client and the web applications sitting behind the WAF. 
+### The Server Status Page
+
+### The Edit User Page
+
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
