@@ -13,7 +13,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="documentation-images/capstonelogo.png" alt="Logo" width="200" height="200">
   </a>
 
 <h3 align="center">Web Application Firewall</h3>
@@ -69,8 +69,8 @@ This project is developed as part of the Swinburne 2022 Software Engineering Cap
 * [![Docker][Docker.com]][Docker-url]
 * [![Nginx][Nginx.com]][Nginx-url]
 * [![MongoDB][MongoDB.com]][MongoDB-url]
-* [![Angular][Python.org]][Python-url]
-* [![Svelte][Flask]][Flask-url]
+* [![Python][Python.org]][Python-url]
+* [![Flask][Flask]][Flask-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -145,6 +145,8 @@ After logging in a session is generated with your credentials. You are then redi
 
 ### The Logs Page
 This page shows the communications between the client and the web applications sitting behind the WAF. 
+<br>
+It provides the following information: IP Address
 ### The Server Status Page
 
 ### The Edit User Page
