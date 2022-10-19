@@ -180,6 +180,7 @@ It provides the following information: IP Address
 * [Ellen](https://github.com/orgs/capstone-g41-waf-ids/people/orangeblossomest)
 * [Tom](https://github.com/orgs/capstone-g41-waf-ids/people/Choski)
 * [Darcy](https://github.com/orgs/capstone-g41-waf-ids/people/ASD-Database)
+* [Fuman](https://github.com/orgs/capstone-g41-waf-ids/people/fumank2)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
