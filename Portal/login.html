@@ -2,39 +2,25 @@
 <html>
 <head>
 <meta name="login" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="css/main.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 </head>
 <body>
-<h2>WAF login</h2>
 
-<div id="id01" class="form">
-  <form class="content" action="/action_page.php" method="post">
-    <div class="container">
-      <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+<main class="container p-4 w-50">
+  <h2>WAF login</h2>
+    <form action="{{url_for('check_login')}}" method="POST">
+      <div class="mb-3">
+        <label for="uname" class="form-label"><b>Username</b></label>
+        <input type="text" class="form-control" placeholder="Enter Username" id="uname" name="uname" required>
 
-      <label for="pword"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="pword" required>
-        
-      <button type="submit">Login</button>
-    </div>
-    <div class="container" style="background-color:#f1f1f1">
-      <span class="pword"><a href="serverstatus.html">Forgot password?</a></span>
-    </div>
-  </form>
-</div>
+        <label for="pword" class="form-label"><b>Password</b></label>
+        <input type="password" class="form-control" placeholder="Enter Password" id="pword" name="pword" required>
+          
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </div>
+    </form>
+</main>
 
-<script>
-// Get the modal
-var modal = document.getElementById('id01');
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-</script>
 
 </body>
 </html>
