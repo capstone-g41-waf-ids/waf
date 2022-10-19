@@ -217,7 +217,8 @@ def logout():
 def logger():
     mycol = mydb["WAFLogs"]
 
-    f = subprocess.Popen(['tail', '-F', 'var/log/nginx/host.access.log'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    f = subprocess.Popen(['tail', '-F', '/var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
 
@@ -229,7 +230,7 @@ def logger():
 
 
 def update_blacklist_file():
-    #if os.path.exists('/etc/nginx/blacklist'):
+    # if os.path.exists('/etc/nginx/blacklist'):
     #    os.remove("/etc/nginx/blacklist")
     f = open("/etc/nginx/blacklist", "w")
     mycol = mydb["IPBlacklist"]
@@ -261,5 +262,6 @@ if __name__ == '__main__':
     update_geoIP_file()
     logger = Thread(target=logger)
     logger.start()
-    #context = ("../nginx/ssl/webgoat.crt", "../nginx/ssl/webgoat.key")
-    app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc')
+
+    context = ("../nginx/ssl/webgoat.crt", "../nginx/ssl/webgoat.key")
+    app.run(host='172.2.2.4', port=30, debug=True, ssl_context=context)
