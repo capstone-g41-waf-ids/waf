@@ -168,7 +168,6 @@ It provides the following information: IP Address
 - [ ] Blocking Spoofing, Capture Replay and Alternate Channels
 - [ ] Additional Users / Forgot Password Functionality
 - [ ] Develop an IDS to work with the WAF
-    - [ ] Nested Feature
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
