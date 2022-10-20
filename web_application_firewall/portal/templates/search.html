@@ -27,7 +27,7 @@
 	<!-- <include src="header.inc"></include> -->
 
 	<div>
-		<h1 >Log Searched</h1></div>
+		<h1 >Log Search</h1></div>
 
 	<div class="main">
 		<fieldset class="logs">
@@ -41,6 +41,57 @@
 			<col style="width: 200px">
 			</colgroup>
 				<thead>
+					<tr>
+						<th>
+							<form action="{{url_for('search')}}" method="POST">
+								<input type="hidden" name="field" value="ip" readonly>
+								<input type="text" name="searched" placeholder="Search">
+								<button type="submit"><i class="fa fa-search"></i></button>
+							</form>
+						</th>
+						<th>
+							<form action="{{url_for('search')}}" method="POST">
+								<input type="hidden" name="field" value="time_local" readonly>
+								<input type="text" name="searched" placeholder="Search">
+								<button type="submit"><i class="fa fa-search"></i></button>
+							</form>
+						</th>
+						<th>
+							<form action="{{url_for('search')}}" method="POST">
+								<input type="hidden" name="field" value="http_referrer" readonly>
+								<input type="text" name="searched" placeholder="Search">
+								<button type="submit"><i class="fa fa-search"></i></button>
+							</form>
+						</th>
+						<th>
+							<form action="{{url_for('search')}}" method="POST">
+								<input type="hidden" name="field" value="status" readonly>
+								<input type="text" name="searched" placeholder="Search">
+								<button type="submit"><i class="fa fa-search"></i></button>
+							</form>
+						</th>
+						<th>
+							<form action="{{url_for('search')}}" method="POST">
+								<input type="hidden" name="field" value="request" readonly>
+								<input type="text" name="searched" placeholder="Search">
+								<button type="submit"><i class="fa fa-search"></i></button>
+							</form>
+						</th>
+						<th>
+							<form action="{{url_for('search')}}" method="POST">
+								<input type="hidden" name="field" value="path" readonly>
+								<input type="text" name="searched" placeholder="Search">
+								<button type="submit"><i class="fa fa-search"></i></button>
+							</form>
+						</th>
+						<th>
+							<form action="{{url_for('search')}}" method="POST">
+								<input type="hidden" name="field" value="user_agent" readonly>
+								<input type="text" name="searched" placeholder="Search">
+								<button type="submit"><i class="fa fa-search"></i></button>
+							</form>
+						</th>
+					</tr>
 					<tr>
 						<th>IP Address</th>
 						<th>Time</th>
