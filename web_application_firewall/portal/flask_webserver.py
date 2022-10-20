@@ -16,6 +16,7 @@ myclient = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
 mydb = myclient["database"]
 
 
+
 @app.route('/')
 @app.route('/login.html')
 def index():
