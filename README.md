@@ -144,7 +144,6 @@ After logging in a session is generated with your credentials. You are then redi
 ### The Logs Page
 This page shows the communications between the client and the web applications sitting behind the WAF. 
 <br>
-
 <img src="documentation-images/log.png" width="720">
 
 It provides the following information: Source IP Address, Time, HTTP Referrer, Status, Request, Path and User Agent.<br>

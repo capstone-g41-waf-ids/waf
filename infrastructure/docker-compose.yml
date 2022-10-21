@@ -57,7 +57,7 @@ services:
     image: webgoat/webgoat-8.0
     container_name: webgoat
     ports:
-      - "8080:8080"
+      - "8080:8080" #IM PRETTY SURE THIS SHOULD JUST BE EXPOSED, NOT EXTERNAL
     #env_file:
       #- ./opt/secrets.env
     networks:
