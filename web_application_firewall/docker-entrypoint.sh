@@ -2,4 +2,5 @@
 
 service nginx start
 pip install pyopenssl
-python3 flask_webserver.py
+uwsgi portal/wsgi.ini
+#python3 portal/flask_webserver.py # uncomment to allow functionality during testing

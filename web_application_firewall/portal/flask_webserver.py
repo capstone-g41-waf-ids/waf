@@ -11,8 +11,8 @@ from flask import Flask, render_template, request, session
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
 
-connstring = os.environ['MONGODB_CONNSTRING']   # from container env
-myclient = pymongo.MongoClient(connstring)   # connect to mongo
+connstring = os.environ['MONGODB_CONNSTRING']  # from container env
+myclient = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
 mydb = myclient["database"]
 
 
@@ -57,7 +57,7 @@ def serverstatus():
 
 def get_GeoBlacklist_options():
     if "user" in session:
-        with open("country_codes") as json_file:
+        with open("../country_codes") as json_file:
             x = json.load(json_file)
         return x
     else:
@@ -234,7 +234,8 @@ def logout():
 
 def access_logger():
     mycol = mydb["WAFLogs"]
-    f = subprocess.Popen(['tail', '-F', 'var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
+
+    f = subprocess.Popen(['tail', '-F', '/var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
@@ -259,9 +260,9 @@ def audit_logger():
 
 
 def update_blacklist_file():
-    if os.path.exists('/etc/nginx/blacklist'):
-        os.remove("/etc/nginx/blacklist")
-    f = open("/etc/nginx/blacklist", "w+")
+    # if os.path.exists('/etc/nginx/blacklist'):
+    #    os.remove("/etc/nginx/blacklist")
+    f = open("/etc/nginx/blacklist", "w")
     mycol = mydb["IPBlacklist"]
     x = mycol.find()
 
