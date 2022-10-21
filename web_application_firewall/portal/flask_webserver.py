@@ -37,7 +37,7 @@ def check_login():
         for data in x:
             if data["username"] is not None and data["password"] is not None:
                 session["user"] = username_local
-                return render_template('/logsearch.html', results=get_logs())
+                return render_template('/logsearch.html', results=get_access_logs(), results2=get_audit_logs())
             else:
                 return render_template('/login.html')
         return render_template('/login.html')
@@ -175,14 +175,21 @@ def delete_geo():
 @app.route('/logsearch.html')
 def logsearch():
     if "user" in session:
-        return render_template('logsearch.html', results=get_logs())
+        return render_template('logsearch.html', results=get_access_logs(), results2=get_audit_logs())
     else:
         return render_template('/login.html')
 
-
-def get_logs():
+def get_access_logs():
     if "user" in session:
         mycol = mydb["WAFLogs"]
+        x = mycol.find().sort("time", -1)
+        return x
+    else:
+        return render_template('/login.html')
+
+def get_audit_logs():
+    if "user" in session:
+        mycol = mydb["modsec_audit_logs"]
         x = mycol.find().sort("time", -1)
         return x
     else:
@@ -197,10 +204,20 @@ def search():
         mycol = mydb["WAFLogs"]
         myquery = {search_field: {"$regex": search_data}}
         x = mycol.find(myquery)
-        return render_template('search.html', results=x)
+        return render_template('logsearch.html', results=x, results2=get_audit_logs())
     else:
         return render_template('/login.html')
 
+@app.route('/auditlogsearch', methods=['POST'])
+def auditlogsearch():
+    if "user" in session:
+        search_data = request.form['searched']
+        mycol = mydb["modsec_audit_logs"]
+        myquery = {"log": {"$regex": search_data}}
+        x = mycol.find(myquery)
+        return render_template('logsearch.html', results=get_access_logs(), results2=x)
+    else:
+        return render_template('/login.html')
 
 @app.route('/logout')
 def logout():
@@ -215,7 +232,7 @@ def logout():
 # def e():
 #   return render_template('')
 
-def logger():
+def access_logger():
     mycol = mydb["WAFLogs"]
 
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
@@ -225,8 +242,20 @@ def logger():
 
     while True:
         if p.poll(1):
-            print(f.stdout.readline())
             mycol.insert_one(json.loads(f.stdout.readline()))
+        time.sleep(5)
+
+def audit_logger():
+    mycol = mydb["modsec_audit_logs"]
+    f = subprocess.Popen(['tail', '-F', 'var/log/modsec_audit.log'], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+    p = select.poll()
+    p.register(f.stdout)
+
+    while True:
+        if p.poll(1):
+            mydict = {"log": str(f.stdout.readline())}
+            mycol.insert_one(mydict)
         time.sleep(5)
 
 
@@ -261,8 +290,8 @@ def update_geoIP_file():
 if __name__ == '__main__':
     update_blacklist_file()
     update_geoIP_file()
-    logger = Thread(target=logger)
-    logger.start()
-
-    context = ("../nginx/ssl/webgoat.crt", "../nginx/ssl/webgoat.key")
-    app.run(host='172.2.2.4', port=30, debug=True, ssl_context=context)
+    access_logger = Thread(target=access_logger)
+    access_logger.start()
+    audit_logger = Thread(target=audit_logger)
+    audit_logger.start()
+    app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc')

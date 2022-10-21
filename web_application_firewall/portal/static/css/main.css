@@ -183,10 +183,11 @@ margin-bottom: 12px; /* Add some space below the input */
 }
 
 #myTable {
-border-collapse: collapse; /* Collapse borders */
-width: 100%; /* Full-width */
-border: 1px solid #ddd; /* Add a grey border */
-font-size: 18px; /* Increase font-size */
+  display: table;
+  border-collapse: collapse; /* Collapse borders */
+  width: 100%; /* Full-width */
+  border: 1px solid #ddd; /* Add a grey border */
+  font-size: 18px; /* Increase font-size */
 }
 
 #myTable th, #myTable td {
@@ -195,6 +196,18 @@ padding: 12px; /* Add padding */
 }
 
 #myTable tr {
-/* Add a bottom border to all table rows */
-border-bottom: 1px solid #ddd;
+  /* Add a bottom border to all table rows */
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  /* Add a grey background color to the table header and on hover */
+  background-color: #f1f1f1;
+}
+
+#myTable tbody {
+  display: block;
+  height: 500px;      /* Just for the demo          */
+  overflow-y: auto;    /* Trigger vertical scroll    */
+  overflow-x: hidden;  /* Hide the horizontal scroll */
 }
