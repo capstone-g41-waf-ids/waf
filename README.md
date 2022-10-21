@@ -144,20 +144,27 @@ After logging in a session is generated with your credentials. You are then redi
 ### The Logs Page
 This page shows the communications between the client and the web applications sitting behind the WAF. 
 <br>
-
 <img src="documentation-images/log.png" width="720">
 
-It provides the following information: IP Address
+It provides the following information: Source IP Address, Time, HTTP Referrer, Status, Request, Path and User Agent.<br>
+All of these fields of an individual search bar to filter out results
 ### The Server Status Page
 <img src="documentation-images/status.png" width="720" >
+The server status page shows the health of the backend web applications that are connected to the WAF. In the test environment this is Webgoat. Its health is indicated by an emoji (the smiley face) and the "Active". <br><br>
+A web applications health is determined by the response it gives when sending it a http request. This is run every minute.
 
 ### The Settings Page
 <img src="documentation-images/settings.png" width="720" >
+This page provides configurable options that feed into the WAF's functionality. The first option provides the ability to block incoming traffic by IP addresses, allowing the user to prevent malicious IP's from accessing their Web Applications. 
+<br>
+The second option is to block based on Geolocation. By selecting a country the WAF will filter incoming addresses based on the country code they are assigned to. 
+<br>
+Both of these functionalities also allow the user to remove anything they've added should the source IP be valid, or its been decided that the country should be allowed to access their web applications.
 
 ### The Edit User Page
 <img src="documentation-images/edituser.png" width="720" >
 
-
+The edit user page allows the logged in user to change their current password for a new one.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -166,6 +173,7 @@ It provides the following information: IP Address
 ## Roadmap
 
 - [ ] Blocking Spoofing, Capture Replay and Alternate Channels
+- [ ] Ability to add custom rules through the Web Portal
 - [ ] Additional Users / Forgot Password Functionality
 - [ ] Develop an IDS to work with the WAF
 
