@@ -16,14 +16,16 @@
 
 
 <!-- USAGE EXAMPLES -->
-## The Infrastructure Folder
+## The Web Application Firewall Folder
 
-This folder contains files that are used across the infrastructure of this project. <br><br>
-The key file to note is docker-compose.yml. This file, when run, manages the deployment of the WAF, MongoDB and NGINX containers.
-
-<br><br>
-This folder also contains the .env file which contains secrets that shouldn't be publicly accessible (**Please change these secrets before use in a live environment**).
-
+This folder contains files that are used to generate the NGINX reverse proxy and the WAF. <br><br>
+In the base folder there is:<br>
+<li>country_codes which attributes a country code to the country's full name</li>
+<li>docker-entrpoint.sh is responsible for loading the services: nginx, flask, pyopenssl onto the container</li>
+<li>dockerfile, which provides additional configurations to the WAF container outside the docker-compose file</li>
+<li>flask_webserver.py which is responsible for running the WAF configuration portal</li>
+<br> Inside the portal folder is the templates, static pages and uwsgi.ini file use to build the portal.
+<br> and finally the etc folder contains the modsecurity rules and configurations and the nginx configuration. 
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
