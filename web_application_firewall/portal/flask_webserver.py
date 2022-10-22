@@ -7,6 +7,7 @@ import pymongo
 import hashlib
 from threading import Thread
 from flask import Flask, render_template, request, session
+import uwsgidecorators
 
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
@@ -14,7 +15,6 @@ app.secret_key = "hd72bd8a"
 connstring = os.environ['MONGODB_CONNSTRING']  # from container env
 myclient = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
 mydb = myclient["database"]
-
 
 
 @app.route('/')
@@ -82,7 +82,7 @@ def editcurrentuser():
         myquery = {"username": session["user"], "password": current_pword.hexdigest()}
         x = mycol.find(myquery)
         for data in x:
-            if data["username"] != None and data["password"] != None:
+            if data["username"] is not None and data["password"] is not None:
                 updatequery = { "username": session["user"] }
                 newvalues = { "$set": { "password": pword.hexdigest() } }
                 mycol.update_one(updatequery, newvalues)
@@ -232,6 +232,9 @@ def logout():
 # def e():
 #   return render_template('')
 
+
+@uwsgidecorators.postfork
+@uwsgidecorators.thread
 def access_logger():
     mycol = mydb["WAFLogs"]
 
@@ -245,18 +248,30 @@ def access_logger():
             mycol.insert_one(json.loads(f.stdout.readline()))
         time.sleep(5)
 
+
+@uwsgidecorators.postfork
+@uwsgidecorators.thread
 def audit_logger():
     mycol = mydb["modsec_audit_logs"]
-    f = subprocess.Popen(['tail', '-F', 'var/log/modsec_audit.log'], stdout=subprocess.PIPE,
+    f = subprocess.Popen(['tail', '-F', '/var/log/nginx/modsec_audit_log.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
 
     while True:
         if p.poll(1):
-            mydict = {"log": str(f.stdout.readline())}
-            mycol.insert_one(mydict)
+            mycol.insert_one(json.loads(f.stdout.readline()))
         time.sleep(5)
+"""
+    mycol = mydb["WAFLogs"]
+    while True:
+        if p.poll(1):
+            log = json.loads(f.stdout.readline())
+            log_id = log['unique_id']
+            log_message = log['messages']
+            mycol.find_one_and_update({'request_id': log_id}, {'message': log_message})
+        time.sleep(5)
+"""
 
 
 def update_blacklist_file():
@@ -294,4 +309,4 @@ if __name__ == '__main__':
     access_logger.start()
     audit_logger = Thread(target=audit_logger)
     audit_logger.start()
-    app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc')
+    app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc') #FIX THIS SO NOT ADHOC

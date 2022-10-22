@@ -4,7 +4,7 @@
   <a href="https://github.com/capstone-g41-waf-ids/">
     <img src="../documentation-images/capstonelogorectangle.png" alt="Logo" width="600" height="300">
   </a>
-
+</div>
 <h3 align="center">Web Application Firewall</h3>
 
   <p align="center">
