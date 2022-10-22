@@ -4,7 +4,7 @@
   <a href="https://github.com/capstone-g41-waf-ids/">
     <img src="../documentation-images/capstonelogorectangle.png" alt="Logo" width="600" height="300">
   </a>
-
+</div>
 <h3 align="center">Web Application Firewall</h3>
 
   <p align="center">
@@ -33,4 +33,3 @@ This folder contains initialisation and configuration files for the Mongo Databa
 * [Darcy](https://github.com/orgs/capstone-g41-waf-ids/people/ASD-Database)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
