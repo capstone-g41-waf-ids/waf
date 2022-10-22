@@ -28,7 +28,7 @@
 			<div class="search-container">
 				<form action="{{url_for('blacklistIP')}}" method="POST">
 					<label for="ip_blacked" class="formbuilder-text-label">Block by IP address</label>
-				  <input type="text" placeholder="add IP or IP with subnet eg: 192.168.0.1 or 192.168.0.1/24" id="ip_blacked" name="ip_blacked">
+				  <input type="text" placeholder="add IP or IP with subnet eg: 192.168.0.1 or 192.168.0.1/24" id="ip_blacked" name="ip_blacked" pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}(\/(3[0-2]|[1-2]\d|\d))?">
 				  <button type="submit">add IP</button>
 				</form>
 		</div>
