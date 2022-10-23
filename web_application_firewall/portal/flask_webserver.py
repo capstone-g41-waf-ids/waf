@@ -123,12 +123,13 @@ def firewall():
 @app.route('/blacklistIP', methods=['POST'])
 def blacklistIP():
     if "user" in session:
-        ipBLACK = request.form['ip_blacked']
+        ip = request.form['ip_blacked']
         mycol = mydb["IPBlacklist"]
-        mycol.insert_one({"ip": ipBLACK})
+        myquery = {"ip": ip}
+        mycol.replace_one(myquery, myquery, upsert=True)
         update_blacklist_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
-                               results_3=get_GeoBlacklist_options())
+                        results_3=get_GeoBlacklist_options())                        
     else:
         return render_template('/login.html')
 
@@ -136,9 +137,10 @@ def blacklistIP():
 @app.route('/blacklistGEO', methods=['POST'])
 def blacklistGEO():
     if "user" in session:
-        geoip_blacked = request.form['geoip_blacked']
+        geolocation = request.form['geoip_blacked']
         mycol = mydb["GEOIP_blacklist"]
-        mycol.insert_one({"country_code": geoip_blacked})
+        myquery = {"country_code": geolocation}
+        mycol.replace_one(myquery, myquery, upsert=True)
         update_geoIP_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
