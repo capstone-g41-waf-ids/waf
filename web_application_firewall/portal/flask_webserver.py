@@ -1,4 +1,3 @@
-from cgitb import reset
 import json
 import os
 import time
@@ -130,7 +129,7 @@ def blacklistIP():
         mycol.replace_one(myquery, myquery, upsert=True)
         update_blacklist_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
-                                results_3=get_GeoBlacklist_options())                        
+                        results_3=get_GeoBlacklist_options())                        
     else:
         return render_template('/login.html')
 
