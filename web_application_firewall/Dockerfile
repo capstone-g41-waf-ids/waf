@@ -15,6 +15,7 @@ RUN apt-get update \
      && apt-get install -y python3-pip geoip-database libgeoip1 openssl libssl-dev libpcre3 libpcre3-dev \
      && pip3 install -r requirements.txt
 
+#RUN chgrp /etc/nginx
 RUN chmod 700 /etc/nginx/ssl
 RUN chmod 755 /etc/nginx/GEOIP_blacklist
 RUN chmod 755 /etc/nginx/blacklist
