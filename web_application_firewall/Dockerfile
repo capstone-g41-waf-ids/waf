@@ -23,7 +23,7 @@ RUN chmod 740 /etc/nginx/blacklist
 RUN chmod 740 /etc/nginx/ssl
 
 RUN openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/webgoat.key -out /etc/nginx/ssl/webgoat.crt -sha256 -days 365\
-     -subj "/C=AU/ST=VICTORIA/L=MELBOURNE/O=SWINBURNE/OU=GROUP 41/CN=WebGoat.com"
+     -subj "/C=AU/ST=VICTORIA/L=MELBOURNE/O=SWINBURNE/OU=GROUP 41/CN=WebGoat.com" # FIX THIS NOT WEBGOAT
 CMD ["nginx", "-g", "daemon off;"]
 
 RUN chmod +x /docker-entrypoint.sh
