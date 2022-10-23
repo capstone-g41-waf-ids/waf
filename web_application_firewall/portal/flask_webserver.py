@@ -123,12 +123,13 @@ def firewall():
 @app.route('/blacklistIP', methods=['POST'])
 def blacklistIP():
     if "user" in session:
-        ipBLACK = request.form['ip_blacked']
+        ip = request.form['ip_blacked']
         mycol = mydb["IPBlacklist"]
-        mycol.insert_one({"ip": ipBLACK})
+        myquery = {"ip": ip}
+        mycol.replace_one(myquery, myquery, upsert=True)
         update_blacklist_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
-                               results_3=get_GeoBlacklist_options())
+                        results_3=get_GeoBlacklist_options())                        
     else:
         return render_template('/login.html')
 
@@ -136,9 +137,10 @@ def blacklistIP():
 @app.route('/blacklistGEO', methods=['POST'])
 def blacklistGEO():
     if "user" in session:
-        geoip_blacked = request.form['geoip_blacked']
+        geolocation = request.form['geoip_blacked']
         mycol = mydb["GEOIP_blacklist"]
-        mycol.insert_one({"country_code": geoip_blacked})
+        myquery = {"country_code": geolocation}
+        mycol.replace_one(myquery, myquery, upsert=True)
         update_geoIP_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
@@ -237,41 +239,30 @@ def logout():
 @uwsgidecorators.thread
 def access_logger():
     mycol = mydb["WAFLogs"]
-
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
-
     while True:
         if p.poll(1):
-            mycol.insert_one(json.loads(f.stdout.readline()))
+            mydoc = json.loads(f.stdout.readline())
+            mycol.update_one({'request_id': mydoc['request_id']}, {'$set': mydoc}, upsert=True)
         time.sleep(5)
 
 
 @uwsgidecorators.postfork
 @uwsgidecorators.thread
 def audit_logger():
-    mycol = mydb["modsec_audit_logs"]
+    mycol = mydb["WAFLogs"]
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/modsec_audit_log.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
-
     while True:
         if p.poll(1):
-            mycol.insert_one(json.loads(f.stdout.readline()))
+            mydoc = json.loads(f.stdout.readline())
+            mycol.update_one({'request_id': mydoc['transaction']['unique_id']}, {'$set': {'messages': mydoc['transaction']['messages']}}, upsert=True)
         time.sleep(5)
-"""
-    mycol = mydb["WAFLogs"]
-    while True:
-        if p.poll(1):
-            log = json.loads(f.stdout.readline())
-            log_id = log['unique_id']
-            log_message = log['messages']
-            mycol.find_one_and_update({'request_id': log_id}, {'message': log_message})
-        time.sleep(5)
-"""
 
 
 def update_blacklist_file():

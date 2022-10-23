@@ -26,6 +26,7 @@ services:
       - ../web_application_firewall/etc/modsecurity.d/setup.conf:/etc/nginx/templates/modsecurity.d/setup.conf.template:rw
       - ../web_application_firewall/portal/:/portal:rw
       #- ../web_application_firewall/etc/modsecurity.d/:/etc/modsecurity.d/:rw #REMOVE THIS, JUST FOR TESTING
+      - ../web_application_firewall/portal:/portal:rw
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
@@ -42,9 +43,6 @@ services:
       - db:/data/db
       - ../database/seed:/seed
       - ../database/init:/docker-entrypoint-initdb.d
-    ports:
-      - "27017:27017"
-      - "27018:27018"
       #This is mongo default port, would recommend changing this
     expose: #may or may not do anything
       - "27017"
@@ -57,8 +55,8 @@ services:
     build: ../webgoat
     image: webgoat/webgoat-8.0
     container_name: webgoat
-    ports:
-      - "8080:8080" #IM PRETTY SURE THIS SHOULD JUST BE EXPOSED, NOT EXTERNAL
+    expose:
+      - "8080" #IM PRETTY SURE THIS SHOULD JUST BE EXPOSED, NOT EXTERNAL
     #env_file:
       #- ./opt/secrets.env
     networks:
