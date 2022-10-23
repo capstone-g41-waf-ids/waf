@@ -126,15 +126,13 @@ def blacklistIP():
     if "user" in session:
         ipBLACK = request.form['ip_blacked']
         mycol = mydb["IPBlacklist"]
-        myquery = { "ip": ipBLACK }
-        x = mycol.find(myquery)
-        for data in x:
-            if data["ip"] != ipBLACK:
-                mycol.insert_one({"ip": ipBLACK})
-                update_blacklist_file()
-
+        x = mycol.find({"ip": ipBLACK})
+        x = list(x)
+        if len(x)==0:
+            mycol.insert_one({"ip": ipBLACK})
+            update_blacklist_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
-                                results_3=get_GeoBlacklist_options())                        
+                        results_3=get_GeoBlacklist_options())                        
     else:
         return render_template('/login.html')
 
@@ -144,12 +142,11 @@ def blacklistGEO():
     if "user" in session:
         geoip_blacked = request.form['geoip_blacked']
         mycol = mydb["GEOIP_blacklist"]
-        myquery = { "country_code": geoip_blacked }
-        x = mycol.find(myquery)
-        for data in x:
-            if data["country_code"] != geoip_blacked:
-                mycol.insert_one({"country_code": geoip_blacked})
-                update_geoIP_file()
+        x = mycol.find({ "country_code": geoip_blacked })
+        x = list(x)
+        if len(x)==0:
+            mycol.insert_one({"country_code": geoip_blacked})
+            update_geoIP_file()
             
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
