@@ -16,6 +16,12 @@ connstring = os.environ['MONGODB_CONNSTRING']  # from container env
 myclient = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
 mydb = myclient["database"]
 
+@app.before_request
+def before_request():
+    if not request.is_secure:
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
 
 @app.route('/')
 @app.route('/login.html')
