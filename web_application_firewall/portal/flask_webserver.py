@@ -262,26 +262,20 @@ def audit_logger():
 
 
 def update_blacklist_file():
-    # if os.path.exists('/etc/nginx/blacklist'):
-    #    os.remove("/etc/nginx/blacklist")
-    f = open("/etc/nginx/blacklist", "w")
+    f = open("/etc/nginx/blacklist/ip_blacklist", "w")
     mycol = mydb["IPBlacklist"]
     x = mycol.find()
-
     for data in x:
         if data["ip"] is not None:
             f.write("deny " + data["ip"] + ";\n")
     f.close()
-    os.system('service nginx reload')
+    subprocess.call('/usr/sbin/nginx -s reload', shell=True)
 
 
 def update_geoIP_file():
-    if os.path.exists('/etc/nginx/GEOIP_blacklist'):
-        os.remove("/etc/nginx/GEOIP_blacklist")
-    f = open("/etc/nginx/GEOIP_blacklist", "w+")
+    f = open("/etc/nginx/blacklist/geo_blacklist", "w")
     mycol = mydb["GEOIP_blacklist"]
     x = mycol.find()
-
     for data in x:
         if data["country_code"] is not None:
             f.write(data["country_code"] + " no;\n")
