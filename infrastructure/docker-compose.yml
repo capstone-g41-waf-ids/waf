@@ -25,8 +25,7 @@ services:
       - ../web_application_firewall/etc/nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
       - ../web_application_firewall/etc/modsecurity.d/setup.conf:/etc/nginx/templates/modsecurity.d/setup.conf.template:rw
       - ../web_application_firewall/portal/:/portal:rw
-      #- ../web_application_firewall/etc/modsecurity.d/:/etc/modsecurity.d/:rw #REMOVE THIS, JUST FOR TESTING
-      - ../web_application_firewall/portal:/portal:rw
+      - ../web_application_firewall/etc/modsecurity.d/:/etc/modsecurity.d/:rw #REMOVE THIS, JUST FOR TESTING
     networks:
       projectNetwork:
         ipv4_address: 172.2.2.4
