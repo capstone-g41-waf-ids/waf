@@ -1,27 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<!-- meta info -->
-    <meta charset="utf-8" />
-    <meta name="description" content="Firewall page" />
-    <meta name="keywords" content="Apply" />
-    <meta name="author" content="Darcy" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-<body>
-	<h2>WAF Portal</h2>
+{% extends "layout.html" %}
+{% block content %}
 
-	<nav class="nav1"><!-- nav menu -->
-		<a href="serverstatus.html">Server Status</a>
-		<a href="logsearch.html">Log Search</a>
-		<a href="firewall.html">Firewall Settings</a>
-		<div class="nav2">
-			<a href="edituser.html">Edit User</a>
-			<a href="{{url_for('logout')}}">Logout</a>
-		</div>
-	</nav>
+<div><h1>Configure Firewall</h1></div>
 
 	<div class="rendered-form">
 		<form id="confirm" action="" method="post"></form> <!-- put database link in action -->
@@ -96,5 +76,4 @@
 			</table>
 		</fieldset>
 	</div>
-</body>
-</html>
+{% endblock %}

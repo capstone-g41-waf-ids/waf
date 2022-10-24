@@ -1,31 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<!-- meta info -->
-	<meta charset="utf-8" />
-	<meta name="description" content="Firewall page" />
-	<meta name="keywords" content="Apply" />
-	<meta name="author" content="Darcy" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-</head>
-<body>
-	<h2>WAF Portal</h2>
-
-	<nav class="nav1"><!-- nav menu -->
-		<a href="serverstatus.html">Server Status</a>
-		<a href="logsearch.html">Log Search</a>
-		<a href="firewall.html">Firewall Settings</a>
-		<div class="nav2">
-			<a href="edituser.html">Edit user</a>
-			<a href="{{url_for('logout')}}">Logout</a>
-		</div>
-	</nav>
-	<h2> <!--suppress XmlDeprecatedElement -->
-		<center> &#128578 Webgoat | Active </center></h2>
-
-</body>
-</html>
+{% extends "layout.html" %}
+{% block content %}
+<div><h1 >Server Status</h1></div>
+	<h2><center> &#128578 Server | Active </center></h2>
+{% endblock %}
 
 
 
