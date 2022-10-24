@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="forgot-password" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
 <h2>Edit User</h2>
 
 <div id="id01" class="form">
@@ -23,7 +18,4 @@
     <div class="container" style="background-color:#f1f1f1"></div>
   </form>
 </div>
-
-</body>
-</html>
-
+{% endblock %}

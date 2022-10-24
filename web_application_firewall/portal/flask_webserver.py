@@ -6,7 +6,7 @@ import select
 import pymongo
 import hashlib
 from threading import Thread
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 import uwsgidecorators
 
 app = Flask(__name__)
@@ -18,7 +18,7 @@ mydb = myclient["database"]
 
 
 @app.route('/')
-@app.route('/login.html')
+@app.route('/login')
 def index():
     return render_template('login.html')
 
@@ -39,11 +39,11 @@ def check_login():
                 session["user"] = username_local
                 return render_template('/logsearch.html', results=get_access_logs(), results2=get_audit_logs())
             else:
-                return render_template('/login.html')
-        return render_template('/login.html')
+                return redirect('/login')
+        return redirect('/login')
 
 
-@app.route('/serverstatus.html')
+@app.route('/serverstatus')
 def serverstatus():
     if "user" in session:
         response = os.popen(f"curl --max-time 2 -I http://webgoat:8080/WebGoat").read()
@@ -52,24 +52,16 @@ def serverstatus():
         else:
             return render_template('serverstatusunsuccessfull.html')
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
-def get_GeoBlacklist_options():
-    if "user" in session:
-        with open("../country_codes") as json_file:
-            x = json.load(json_file)
-        return x
-    else:
-        return render_template('/login.html')
-
-
-@app.route('/edituser.html')
+@app.route('/edituser')
 def edituser():
     if "user" in session:
-        return render_template('edituser.html', result = session["user"])
+        return render_template('edituser.html', result=session["user"])
     else:
-        return render_template('/login.html')
+        return redirect('/login')
+
 
 @app.route('/editcurrentuser', methods=['POST'])
 def editcurrentuser():
@@ -83,14 +75,23 @@ def editcurrentuser():
         x = mycol.find(myquery)
         for data in x:
             if data["username"] is not None and data["password"] is not None:
-                updatequery = { "username": session["user"] }
-                newvalues = { "$set": { "password": pword.hexdigest() } }
+                updatequery = {"username": session["user"]}
+                newvalues = {"$set": {"password": pword.hexdigest()}}
                 mycol.update_one(updatequery, newvalues)
                 return render_template('/update_user_success.html')
-        
+
         return render_template('/update_user_fail.html')
     else:
-        return render_template('/login.html')
+        return redirect('/login')
+
+
+def get_GeoBlacklist_options():
+    if "user" in session:
+        with open("../country_codes") as json_file:
+            x = json.load(json_file)
+        return x
+    else:
+        return redirect('/login')
 
 
 def get_blacklist():
@@ -99,7 +100,7 @@ def get_blacklist():
         x = mycol.find()
         return x
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
 def get_GeoBlacklist():
@@ -108,16 +109,16 @@ def get_GeoBlacklist():
         x = mycol.find()
         return x
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
-@app.route('/firewall.html')
+@app.route('/firewall')
 def firewall():
     if "user" in session:
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
 @app.route('/blacklistIP', methods=['POST'])
@@ -129,9 +130,9 @@ def blacklistIP():
         mycol.replace_one(myquery, myquery, upsert=True)
         update_blacklist_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
-                        results_3=get_GeoBlacklist_options())                        
+                               results_3=get_GeoBlacklist_options())
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
 @app.route('/blacklistGEO', methods=['POST'])
@@ -145,7 +146,7 @@ def blacklistGEO():
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
 @app.route('/deleteIP', methods=['POST'])
@@ -158,7 +159,7 @@ def deleteIP():
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
 @app.route('/delete_geo', methods=['POST'])
@@ -171,15 +172,16 @@ def delete_geo():
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
-@app.route('/logsearch.html')
+@app.route('/logsearch')
 def logsearch():
     if "user" in session:
         return render_template('logsearch.html', results=get_access_logs(), results2=get_audit_logs())
     else:
-        return render_template('/login.html')
+        return redirect('/login')
+
 
 def get_access_logs():
     if "user" in session:
@@ -187,7 +189,8 @@ def get_access_logs():
         x = mycol.find().sort("time", -1)
         return x
     else:
-        return render_template('/login.html')
+        return redirect('/login')
+
 
 def get_audit_logs():
     if "user" in session:
@@ -195,7 +198,7 @@ def get_audit_logs():
         x = mycol.find().sort("time", -1)
         return x
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
 @app.route('/search', methods=['POST'])
@@ -208,7 +211,8 @@ def search():
         x = mycol.find(myquery)
         return render_template('logsearch.html', results=x, results2=get_audit_logs())
     else:
-        return render_template('/login.html')
+        return redirect('/login')
+
 
 @app.route('/auditlogsearch', methods=['POST'])
 def auditlogsearch():
@@ -219,15 +223,16 @@ def auditlogsearch():
         x = mycol.find(myquery)
         return render_template('logsearch.html', results=get_access_logs(), results2=x)
     else:
-        return render_template('/login.html')
+        return redirect('/login')
+
 
 @app.route('/logout')
 def logout():
     if "user" in session:
         session.pop("user", None)
-        return render_template('/login.html')
+        return redirect('/login')
     else:
-        return render_template('/login.html')
+        return redirect('/login')
 
 
 # @app.route('/')
@@ -261,7 +266,8 @@ def audit_logger():
     while True:
         if p.poll(1):
             mydoc = json.loads(f.stdout.readline())
-            mycol.update_one({'request_id': mydoc['transaction']['unique_id']}, {'$set': {'messages': mydoc['transaction']['messages']}}, upsert=True)
+            mycol.update_one({'request_id': mydoc['transaction']['unique_id']},
+                             {'$set': {'messages': mydoc['transaction']['messages']}}, upsert=True)
         time.sleep(5)
 
 
@@ -300,4 +306,4 @@ if __name__ == '__main__':
     access_logger.start()
     audit_logger = Thread(target=audit_logger)
     audit_logger.start()
-    app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc') #FIX THIS SO NOT ADHOC
+    app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc')  # FIX THIS SO NOT ADHOC
