@@ -36,10 +36,16 @@ button:hover {
 	background-color: #f44336;
 }
 
-.container {
-	padding: 16px;
+.main .user_form {
+    margin: auto;
+    padding: 16px;
+	max-width: 420px;
+
 }
 
+.centre h1 {
+    text-align: center;
+}
 .content {
 	width: 50%;
 }
@@ -62,7 +68,7 @@ span.pword {
 	}
 }
 
-.nav1 {
+nav {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
@@ -72,7 +78,7 @@ span.pword {
 	background-color: #083AA9;
 }
 
-.nav1 a {
+nav a {
 	display: inline-block;
 	color: #DFF6FF;
 	text-align: center;
@@ -81,12 +87,20 @@ span.pword {
 	font-size: large;
 }
 
-.nav1 div {
-	float: left;
-	font-size: large;
+.nav0 a {
+    font-weight: bold;
 }
 
-.nav1 .nav2 {
+.nav0 {
+    float: left;
+}
+
+.nav1 {
+    display: inline-block;
+    overflow: hidden;
+}
+
+.nav2 {
 	float: right;
 }
 
@@ -121,7 +135,6 @@ span.pword {
 /* Add a black background color to the top navigation bar */
 .topnav {
 	overflow: hidden;
-	background-color: white;
 }
 
 /* Style the links inside the navigation bar */
@@ -197,14 +210,14 @@ span.pword {
 	width: 100%; /* Full-width */
 	font-size: 16px; /* Increase font-size */
 	padding: 12px 20px 12px 40px; /* Add some padding */
-	border: 1px solid #ddd; /* Add a grey border */
+	border: 1px solid #1e3d50; /* Add a grey border */
 	margin-bottom: 12px; /* Add some space below the input */
 }
 
 #myTable {
 	border-collapse: collapse; /* Collapse borders */
 	width: 100%; /* Full-width */
-	border: 1px solid #ddd; /* Add a grey border */
+	border: 1px solid #1e3d50; /* Add a grey border */
 	font-size: 12px; /* Increase font-size */
 }
 
@@ -216,10 +229,6 @@ span.pword {
 
 #myTable tr {
 	/* Add a bottom border to all table rows */
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid #1e3d50;
 }
 
-#myTable tr.header {
-	/* Add a grey background color to the table header */
-	background-color: #f1f1f1;
-}

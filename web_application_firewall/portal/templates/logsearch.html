@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block head_more %}
+{% block extended_head %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
@@ -60,15 +60,23 @@
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
+				<th>
+					<form action="{{url_for('search')}}" method="POST">
+						<input type="hidden" name="field" value="waf_result" readonly>
+						<input type="text" name="searched" placeholder="User Agent">
+						<button type="submit"><i class="fa fa-search"></i></button>
+					</form>
+				</th>
 			</tr>
 			<tr>
 				<th>IP Address</th>
 				<th>Time</th>
-				<th>HTTP referrer</th>
+				<th>HTTP Referrer</th>
 				<th>Status</th>
 				<th>Request</th>
 				<th>Path</th>
-				<th>User_agent</th>
+				<th>User Agent</th>
+				<th>WAF Message</th>
 			</tr>
 			{% for x in results %}
 			<tr>
@@ -79,32 +87,9 @@
 				<td>{{x["request"]}}</td>
 				<td>{{x["path"]}}</td>
 				<td>{{x["user_agent"]}}</td>
+				<td>{{x["messages"]}}</td>
 			</tr>
 			{% endfor %}
-		</table>
-	</fieldset>
-	<fieldset class="logs">
-		<table id="myTable" style="table-layout: fixed;">
-			<thead>
-				<tr>
-					<th>
-						<form action="{{url_for('auditlogsearch')}}" method="POST">
-							<input type="text" name="searched" placeholder="Search">
-							<button type="submit"><i class="fa fa-search"></i></button>
-						</form>
-					</th>
-				</tr>
-				<tr>
-					<th>Mod security audit logs</th>
-				</tr>
-			</thead>
-			<tbody>
-					{% for x in results2 %}
-					<tr>
-						<td>{{x["log"]}}</td>
-					</tr>
-					{% endfor %}
-			</tbody>
 		</table>
 	</fieldset>
 </div>
