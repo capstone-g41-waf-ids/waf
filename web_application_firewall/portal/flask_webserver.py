@@ -6,11 +6,12 @@ import select
 import pymongo
 import hashlib
 from threading import Thread
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 import uwsgidecorators
 
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
+data = request.DATA
 
 connstring = os.environ['MONGODB_CONNSTRING']  # from container env
 myclient = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
@@ -21,6 +22,7 @@ def before_request():
     if not request.is_secure:
         url = request.url.replace('http://', 'https://', 1)
         code = 301
+        print(url)
         return redirect(url, code=code)
 
 @app.route('/')

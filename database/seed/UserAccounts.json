@@ -2,4 +2,8 @@
   "_id": 1,
   "username" : "roy",
   "password" : "81dc9bdb52d04dc20036dbd8313ed055"
+}, {
+  "_id": 2,
+  "username" : "admin",
+  "password" : "827ccb0eea8a706c4c34a16891f84e7b"
 }]
