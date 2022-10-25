@@ -30,27 +30,22 @@ def check_login():
     else:
         username_local = request.form['uname']
         password_local = request.form['pword']
-        password_local = hashlib.md5(password_local.encode('utf-8'))
-        mycol = mydb["UserAccounts"]
-        myquery = {"username": username_local, "password": password_local.hexdigest()}
-        x = mycol.find(myquery)
-        for data in x:
-            if data["username"] is not None and data["password"] is not None:
-                session["user"] = username_local
-                return render_template('/logsearch.html', results=get_access_logs(), results2=get_audit_logs())
-            else:
-                return redirect('/login')
+        myquery = {"username": username_local, "password": hash(password_local)}
+        user = mydb.UserAccounts.find_one(myquery)
+        if user is not None:
+            session["user"] = username_local
+            return render_template('/logsearch.html', results=get_access_logs(), results2=get_audit_logs())
         return redirect('/login')
 
 
 @app.route('/serverstatus')
 def serverstatus():
     if "user" in session:
-        response = os.popen(f"curl --max-time 2 -I http://webgoat:8080/WebGoat").read()
+        response = os.popen(f"curl --max-time 2 -I http://webgoat:8080/WebGoat").read() #HARDCODED WEBGOAT
         if "HTTP/1.1 302 Found" in response:
-            return render_template('serverstatussuccess.html')
+            return render_template('serverstatus.html', status="Active", emote="&#128578")
         else:
-            return render_template('serverstatusunsuccessfull.html')
+            return render_template('serverstatus.html', status="Inactive", emote="&#128577")
     else:
         return redirect('/login')
 
@@ -62,25 +57,25 @@ def edituser():
     else:
         return redirect('/login')
 
+def hash(var):
+    return hashlib.md5(var.encode('utf-8')).hexdigest()
 
 @app.route('/editcurrentuser', methods=['POST'])
 def editcurrentuser():
     if "user" in session:
-        current_pword = request.form['current_pword']
-        pword = request.form['pword']
-        current_pword = hashlib.md5(current_pword.encode('utf-8'))
-        pword = hashlib.md5(pword.encode('utf-8'))
         mycol = mydb["UserAccounts"]
-        myquery = {"username": session["user"], "password": current_pword.hexdigest()}
-        x = mycol.find(myquery)
-        for data in x:
-            if data["username"] is not None and data["password"] is not None:
-                updatequery = {"username": session["user"]}
-                newvalues = {"$set": {"password": pword.hexdigest()}}
-                mycol.update_one(updatequery, newvalues)
-                return render_template('/update_user_success.html')
 
-        return render_template('/update_user_fail.html')
+        old_pword = hash(request.form['current_pword'])
+        new_pword = hash(request.form['pword'])
+        old_user = {"username": session["user"], "password": old_pword}
+
+        result = mycol.update_one(old_user, {"$set": {"password": new_pword}})
+
+        if result.modified_count > 0:
+            message = "SUCCESS! User updated successfully."
+        message = "ERROR! User did not update. Please try again."
+
+        return render_template('/updateuser.html', message=message)
     else:
         return redirect('/login')
 
@@ -88,26 +83,21 @@ def editcurrentuser():
 def get_GeoBlacklist_options():
     if "user" in session:
         with open("../country_codes") as json_file:
-            x = json.load(json_file)
-        return x
+            return json.load(json_file)
     else:
         return redirect('/login')
 
 
 def get_blacklist():
     if "user" in session:
-        mycol = mydb["IPBlacklist"]
-        x = mycol.find()
-        return x
+        return mydb.IPBlacklist.find()
     else:
         return redirect('/login')
 
 
 def get_GeoBlacklist():
     if "user" in session:
-        mycol = mydb["GEOIP_blacklist"]
-        x = mycol.find()
-        return x
+        return mydb.GEOIP_blacklist.find()
     else:
         return redirect('/login')
 
@@ -125,9 +115,8 @@ def firewall():
 def blacklistIP():
     if "user" in session:
         ip = request.form['ip_blacked']
-        mycol = mydb["IPBlacklist"]
-        myquery = {"ip": ip}
-        mycol.replace_one(myquery, myquery, upsert=True)
+        myquery = {'ip': ip}
+        mydb.IPBlacklist.replace_one(myquery, myquery, upsert=True)
         update_blacklist_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
@@ -139,9 +128,8 @@ def blacklistIP():
 def blacklistGEO():
     if "user" in session:
         geolocation = request.form['geoip_blacked']
-        mycol = mydb["GEOIP_blacklist"]
         myquery = {"country_code": geolocation}
-        mycol.replace_one(myquery, myquery, upsert=True)
+        mydb.GEOIP_blacklist.replace_one(myquery, myquery, upsert=True)
         update_geoIP_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
@@ -152,9 +140,8 @@ def blacklistGEO():
 @app.route('/deleteIP', methods=['POST'])
 def deleteIP():
     if "user" in session:
-        deleteIP = request.form['deleteIP']
-        mycol = mydb["IPBlacklist"]
-        mycol.delete_one({"ip": deleteIP})
+        delete_ip = request.form['deleteIP']
+        mydb.IPBlacklist.delete_one({"ip": delete_ip})
         update_blacklist_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
@@ -166,8 +153,7 @@ def deleteIP():
 def delete_geo():
     if "user" in session:
         delete_geo = request.form['delete_geo']
-        mycol = mydb["GEOIP_blacklist"]
-        mycol.delete_one({"country_code": delete_geo})
+        mydb.GEOIP_blacklist.delete_one({"country_code": delete_geo})
         update_geoIP_file()
         return render_template('firewall.html', results_1=get_blacklist(), results_2=get_GeoBlacklist(),
                                results_3=get_GeoBlacklist_options())
@@ -185,18 +171,14 @@ def logsearch():
 
 def get_access_logs():
     if "user" in session:
-        mycol = mydb["WAFLogs"]
-        x = mycol.find().sort("time", -1)
-        return x
+        return mydb.WAFLogs.find().sort("time", -1)
     else:
         return redirect('/login')
 
 
 def get_audit_logs():
     if "user" in session:
-        mycol = mydb["modsec_audit_logs"]
-        x = mycol.find().sort("time", -1)
-        return x
+        return mydb.modsec_audit_logs.find().sort("time", -1)
     else:
         return redirect('/login')
 
@@ -206,10 +188,9 @@ def search():
     if "user" in session:
         search_data = request.form['searched']
         search_field = request.form['field']
-        mycol = mydb["WAFLogs"]
         myquery = {search_field: {"$regex": search_data}}
-        x = mycol.find(myquery)
-        return render_template('logsearch.html', results=x, results2=get_audit_logs())
+        result = mydb.WAFLogs.find(myquery)
+        return render_template('logsearch.html', results=result, results2=get_audit_logs())
     else:
         return redirect('/login')
 
@@ -218,10 +199,9 @@ def search():
 def auditlogsearch():
     if "user" in session:
         search_data = request.form['searched']
-        mycol = mydb["modsec_audit_logs"]
         myquery = {"log": {"$regex": search_data}}
-        x = mycol.find(myquery)
-        return render_template('logsearch.html', results=get_access_logs(), results2=x)
+        result = mydb.modsec_audit_logs.find(myquery)
+        return render_template('logsearch.html', results=get_access_logs(), results2=result)
     else:
         return redirect('/login')
 
@@ -235,49 +215,38 @@ def logout():
         return redirect('/login')
 
 
-# @app.route('/')
-# def e():
-#   return render_template('')
-
-
 @uwsgidecorators.postfork
 @uwsgidecorators.thread
 def access_logger():
-    mycol = mydb["WAFLogs"]
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
     while True:
         if p.poll(1):
-            mydoc = json.loads(f.stdout.readline())
-            mycol.update_one({'request_id': mydoc['request_id']}, {'$set': mydoc}, upsert=True)
+            log = json.loads(f.stdout.readline())
+            mydb.WAFLogs.update_one({'request_id': log['request_id']}, {'$set': log}, upsert=True)
         time.sleep(5)
 
 
 @uwsgidecorators.postfork
 @uwsgidecorators.thread
 def audit_logger():
-    mycol = mydb["WAFLogs"]
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/modsec_audit_log.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
     while True:
         if p.poll(1):
-            mydoc = json.loads(f.stdout.readline())
-            mycol.update_one({'request_id': mydoc['transaction']['unique_id']},
-                             {'$set': {'messages': mydoc['transaction']['messages']}}, upsert=True)
+            log = json.loads(f.stdout.readline())
+            mydb.WAFLogs.update_one({'request_id': log['transaction']['unique_id']},
+                             {'$set': {'messages': log['transaction']['messages']}}, upsert=True)
         time.sleep(5)
 
 
 def update_blacklist_file():
-    # if os.path.exists('/etc/nginx/blacklist'):
-    #    os.remove("/etc/nginx/blacklist")
     f = open("/etc/nginx/blacklist", "w")
-    mycol = mydb["IPBlacklist"]
-    x = mycol.find()
-
+    x = mydb.IPBlacklist.find()
     for data in x:
         if data["ip"] is not None:
             f.write("deny " + data["ip"] + ";\n")
@@ -286,12 +255,8 @@ def update_blacklist_file():
 
 
 def update_geoIP_file():
-    if os.path.exists('/etc/nginx/GEOIP_blacklist'):
-        os.remove("/etc/nginx/GEOIP_blacklist")
-    f = open("/etc/nginx/GEOIP_blacklist", "w+")
-    mycol = mydb["GEOIP_blacklist"]
-    x = mycol.find()
-
+    f = open("/etc/nginx/GEOIP_blacklist", "w")
+    x = mydb.GEOIP_blacklist.find()
     for data in x:
         if data["country_code"] is not None:
             f.write(data["country_code"] + " no;\n")
@@ -306,4 +271,5 @@ if __name__ == '__main__':
     access_logger.start()
     audit_logger = Thread(target=audit_logger)
     audit_logger.start()
-    app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc')  # FIX THIS SO NOT ADHOC
+    context = ('/etc/nginx/ssl/secret.crt', '/etc/nginx/ssl/secret.key')
+    app.run(host='172.2.2.4', port=30, debug=True, ssl_context=context)
