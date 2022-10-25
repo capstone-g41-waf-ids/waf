@@ -13,11 +13,10 @@ app = Flask(__name__)
 app.secret_key = "hd72bd8a"
 
 connstring = os.environ['MONGODB_CONNSTRING']  # from container env
-myclient = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
-mydb = myclient["database"]
+client = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
+db = client["database"]
 
 
-@app.route('/')
 @app.route('/login')
 def index():
     return render_template('login.html')
@@ -30,7 +29,7 @@ def check_login():
     else:
         username_local = request.form['uname']
         password_local = request.form['pword']
-        account = mydb.UserAccounts.find_one({"username": username_local, "password": hash_pword(password_local)})
+        account = db.UserAccounts.find_one({"username": username_local, "password": hash_pword(password_local)})
         if account is not None:
             session["user"] = username_local
             return redirect('/logsearch')
@@ -56,7 +55,7 @@ def edituser():
 @app.route('/editcurrentuser', methods=['POST'])
 def editcurrentuser():
     if "user" in session:
-        mycol = mydb["UserAccounts"]
+        mycol = db["UserAccounts"]
 
         old_pword = hash_pword(request.form['current_pword'])
         new_pword = hash_pword(request.form['pword'])
@@ -71,6 +70,7 @@ def editcurrentuser():
         return redirect('/login')
 
 
+@app.route('/')
 @app.route('/serverstatus')
 def serverstatus():
     if "user" in session:
@@ -93,7 +93,7 @@ def firewall():
 
 def get_blacklist():
     if "user" in session:
-        return mydb.IPBlacklist.find()
+        return db.IPBlacklist.find()
     return redirect('/login')
 
 
@@ -102,7 +102,7 @@ def blacklist_ip():
     if "user" in session:
         ip = request.form['block_ip']
         myquery = {'ip': ip}
-        mydb.IPBlacklist.replace_one(myquery, myquery, upsert=True)
+        db.IPBlacklist.replace_one(myquery, myquery, upsert=True)
         update_blacklist_file()
         return redirect('/firewall')
     else:
@@ -113,7 +113,7 @@ def blacklist_ip():
 def delete_ip():
     if "user" in session:
         ip = request.form['delete_ip']
-        mydb.IPBlacklist.delete_one({"ip": ip})
+        db.IPBlacklist.delete_one({"ip": ip})
         update_blacklist_file()
         return redirect('/firewall')
     else:
@@ -121,8 +121,8 @@ def delete_ip():
 
 
 def update_blacklist_file():
-    f = open("/etc/nginx/blacklist", "w")
-    x = mydb.IPBlacklist.find()
+    f = open("/etc/nginx/ipblacklist", "w")
+    x = db.IPBlacklist.find()
     for data in x:
         if data["ip"] is not None:
             f.write("deny " + data["ip"] + ";\n")
@@ -132,7 +132,7 @@ def update_blacklist_file():
 
 def get_geoblacklist():
     if "user" in session:
-        return mydb.GEOIP_blacklist.find()
+        return db.GEOBlacklist.find()
     return redirect('/login')
 
 
@@ -148,7 +148,7 @@ def blacklist_geo():
     if "user" in session:
         geolocation = request.form['block_geo']
         myquery = {"country_code": geolocation}
-        mydb.GEOIP_blacklist.replace_one(myquery, myquery, upsert=True)
+        db.GEOBlacklist.replace_one(myquery, myquery, upsert=True)
         update_geo_file()
         return redirect('/firewall')
     else:
@@ -159,7 +159,7 @@ def blacklist_geo():
 def delete_geo():
     if "user" in session:
         geo = request.form['delete_geo']
-        mydb.GEOIP_blacklist.delete_one({"country_code": geo})
+        db.GEOBlacklist.delete_one({"country_code": geo})
         update_geo_file()
         return redirect('/firewall')
     else:
@@ -167,8 +167,8 @@ def delete_geo():
 
 
 def update_geo_file():
-    f = open("/etc/nginx/GEOIP_blacklist", "w")
-    x = mydb.GEOIP_blacklist.find()
+    f = open("/etc/nginx/geoblacklist", "w")
+    x = db.GEOBlacklist.find()
     for data in x:
         if data["country_code"] is not None:
             f.write(data["country_code"] + " no;\n")
@@ -178,7 +178,7 @@ def update_geo_file():
 
 def get_custom_rules():
     if "user" in session:
-        return mydb.ModsecCustomRules.find()
+        return db.ModsecCustomRules.find()
     return redirect('/login')
 
 
@@ -187,7 +187,7 @@ def add_rule():
     if "user" in session:
         rule = request.form['add_rule']
         myquery = {"rule": rule}
-        mydb.ModsecCustomRules.replace_one(myquery, myquery, upsert=True)
+        db.ModsecCustomRules.replace_one(myquery, myquery, upsert=True)
         update_rule_file()
         return redirect('/firewall')
     else:
@@ -198,7 +198,7 @@ def add_rule():
 def delete_rule():
     if "user" in session:
         rule = request.form['delete_rule']
-        mydb.ModsecCustomRules.delete_one({"rule": rule})
+        db.ModsecCustomRules.delete_one({"rule": rule})
         update_rule_file()
         return redirect('/firewall')
     else:
@@ -207,7 +207,7 @@ def delete_rule():
 
 def update_rule_file():
     f = open("/etc/modsecurity.d/custom_rules.conf", "w")
-    x = mydb.ModsecCustomRules.find()
+    x = db.ModsecCustomRules.find()
     for data in x:
         if data["rule"] is not None:
             f.write(data["rule"] + "\n")
@@ -224,13 +224,13 @@ def logsearch():
 
 def get_access_logs():
     if "user" in session:
-        return mydb.WAFLogs.find().sort("time", -1)
+        return db.WAFLogs.find().sort("time", -1)
     return redirect('/login')
 
 
 def get_audit_logs():
     if "user" in session:
-        return mydb.modsec_audit_logs.find().sort("time", -1)
+        return db.modsec_audit_logs.find().sort("time", -1)
     return redirect('/login')
 
 
@@ -240,7 +240,7 @@ def search():
         search_data = request.form['searched']
         search_field = request.form['field']
         myquery = {search_field: {"$regex": search_data}}
-        result = mydb.WAFLogs.find(myquery).sort("time", -1)
+        result = db.WAFLogs.find(myquery).sort("time", -1)
         return render_template('logsearch.html', results=result)
     else:
         return redirect('/login')
@@ -256,7 +256,7 @@ def nginx_logger():
     while True:
         if p.poll(1):
             log = json.loads(f.stdout.readline())
-            mydb.WAFLogs.update_one({'request_id': log['request_id']}, {'$set': log}, upsert=True)
+            db.WAFLogs.update_one({'request_id': log['request_id']}, {'$set': log}, upsert=True)
         time.sleep(5)
 
 
@@ -270,8 +270,16 @@ def modsec_logger():
     while True:
         if p.poll(1):
             log = json.loads(f.stdout.readline())
-            mydb.WAFLogs.update_one({'request_id': log['transaction']['unique_id']}, {'$set': {'messages': log['transaction']['messages']}}, upsert=True)
+            db.WAFLogs.update_one({'request_id': log['transaction']['unique_id']}, {'$set': {'messages': modsec_log_parser(log)}}, upsert=True)
         time.sleep(5)
+
+
+def modsec_log_parser(log):
+    if len(log['transaction']['messages']) > 0:
+        message = log['transaction']['messages'][0]['message']
+        rule = log['transaction']['messages'][0]['details']['ruleId']
+        return "Rule:" + rule + " (" + message + ")"
+    return ""
 
 
 def hash_pword(var):

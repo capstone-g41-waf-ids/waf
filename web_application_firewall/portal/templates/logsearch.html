@@ -5,65 +5,65 @@
 {% endblock %}
 
 {% block content %}
-<div><h1 >Log Search</h1></div>
+<h1>Log Search</h1>
 
 <div class="main">
 	<fieldset class="logs">
-		<table id="myTable" style="table-layout: auto;">
+		<table id="myTable">
 			<tr>
-				<th>
+				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
 						<input type="hidden" name="field" value="ip" readonly>
 						<input type="text" name="searched" placeholder="IP Address">
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
-				<th>
+				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
 						<input type="hidden" name="field" value="time_local" readonly>
 						<input type="text" name="searched" placeholder="Time">
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
-				<th>
+				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
 						<input type="hidden" name="field" value="http_referrer" readonly>
 						<input type="text" name="searched" placeholder="HTTP Referrer">
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
-				<th>
+				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
 						<input type="hidden" name="field" value="status" readonly>
 						<input type="text" name="searched" placeholder="Status">
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
-				<th>
+				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
 						<input type="hidden" name="field" value="request" readonly>
 						<input type="text" name="searched" placeholder="Request">
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
-				<th>
+				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
 						<input type="hidden" name="field" value="path" readonly>
 						<input type="text" name="searched" placeholder="Path">
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
-				<th>
+				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
 						<input type="hidden" name="field" value="user_agent" readonly>
 						<input type="text" name="searched" placeholder="User Agent">
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
-				<th>
+				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
-						<input type="hidden" name="field" value="waf_result" readonly>
-						<input type="text" name="searched" placeholder="User Agent">
+						<input type="hidden" name="field" value="messages" readonly>
+						<input type="text" name="searched" placeholder="WAF Result">
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>

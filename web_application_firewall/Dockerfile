@@ -9,16 +9,17 @@ EXPOSE 80
 EXPOSE 30
 EXPOSE 443
 
-RUN touch /etc/nginx/GEOIP_blacklist
-RUN touch /etc/nginx/blacklist
+RUN touch /etc/nginx/geoblacklist
+RUN touch /etc/nginx/ipblacklist
+
 RUN apt-get update \
      && apt-get install -y python3-pip geoip-database libgeoip1 openssl libssl-dev libpcre3 libpcre3-dev \
      && pip3 install -r requirements.txt
 
 #RUN chgrp /etc/nginx
 RUN chmod 700 /etc/nginx/ssl
-RUN chmod 755 /etc/nginx/GEOIP_blacklist
-RUN chmod 755 /etc/nginx/blacklist
+#RUN chmod 755 /etc/nginx/geoblacklist
+#RUN chmod 755 /etc/nginx/ipblacklist
 
 RUN openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/secret.key -out /etc/nginx/ssl/secret.crt -sha256 -days 365\
      -subj "/C=AU/ST=VICTORIA/L=MELBOURNE/O=SWINBURNE/OU=GROUP 41/CN=website.com"
