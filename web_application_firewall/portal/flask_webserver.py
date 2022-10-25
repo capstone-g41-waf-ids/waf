@@ -7,11 +7,11 @@ import pymongo
 import hashlib
 from threading import Thread
 from flask import Flask, render_template, request, session, redirect
-import uwsgidecorators
+#import uwsgidecorators
 
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
-data = request.DATA
+
 
 connstring = os.environ['MONGODB_CONNSTRING']  # from container env
 myclient = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
@@ -243,8 +243,8 @@ def logout():
 #   return render_template('')
 
 
-@uwsgidecorators.postfork
-@uwsgidecorators.thread
+#@uwsgidecorators.postfork
+#@uwsgidecorators.thread
 def access_logger():
     mycol = mydb["WAFLogs"]
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
@@ -258,8 +258,8 @@ def access_logger():
         time.sleep(5)
 
 
-@uwsgidecorators.postfork
-@uwsgidecorators.thread
+#@uwsgidecorators.postfork
+#@uwsgidecorators.thread
 def audit_logger():
     mycol = mydb["WAFLogs"]
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/modsec_audit_log.log'], stdout=subprocess.PIPE,
