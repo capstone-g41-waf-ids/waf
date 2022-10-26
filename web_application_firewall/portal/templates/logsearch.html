@@ -11,6 +11,17 @@
 	<fieldset class="logs">
 		<table id="myTable">
 			<tr>
+				<th>IP Address</th>
+				<th>Time</th>
+				<th>HTTP Referrer</th>
+				<th>Status</th>
+				<th>Request</th>
+				<th>Path</th>
+				<th>User Agent</th>
+				<th>WAF Message</th>
+				<th>Flagged</th>
+			</tr>
+						<tr>
 				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
 						<input type="hidden" name="field" value="ip" readonly>
@@ -70,21 +81,10 @@
 				<th class="myTableSearch">
 					<form action="{{url_for('search')}}" method="POST">
 						<input type="hidden" name="field" value="flag" readonly>
-						<input type="text" name="searched" placeholder="Flagged">
+						<input type="text" name="flag-search" placeholder="Flagged">
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
-			</tr>
-			<tr>
-				<th>IP Address</th>
-				<th>Time</th>
-				<th>HTTP Referrer</th>
-				<th>Status</th>
-				<th>Request</th>
-				<th>Path</th>
-				<th>User Agent</th>
-				<th>WAF Message</th>
-				<th>Flagged</th>
 			</tr>
 			{% for x in results %}
 			<tr>
@@ -97,12 +97,12 @@
 				<td>{{x['user_agent']}}</td>
 				<td>{{x['messages']}}</td>
 				<td>
-					{{x['flag']}}
 					<form action="{{url_for('flag_log')}}" method="POST">
 						<input type=hidden value="{{x['request_id']}}" name="request_id" readonly>
-						<select name="new_flag">
+						<select name="new_flag" id="flagSelect">
+							<option value="" selected disabled>{{x['flag']}}</option>
 							{% for x in flag_list %}
-							<option value="{{x}}" name="new_flag">{{ flag }}</option>
+							<option value="{{x}}" name="new_flag">{{x}}</option>
 							{% endfor %}
 						</select>
 						<button class="btn-flag" type="submit"><i class="fa fa-flag"></i></button>
