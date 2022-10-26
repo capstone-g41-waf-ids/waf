@@ -148,6 +148,10 @@ nav a {
    text-align: center;
 }
 
+.btn-flag {
+    width: 24px
+}
+
 /* table stuff */
 #myInput {
    width: 100%;
@@ -272,3 +276,4 @@ fieldset table {
 .user_form button {
    border-radius: 6px;
 }
+

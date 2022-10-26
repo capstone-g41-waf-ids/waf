@@ -67,6 +67,13 @@
 						<button type="submit"><i class="fa fa-search"></i></button>
 					</form>
 				</th>
+				<th class="myTableSearch">
+					<form action="{{url_for('search')}}" method="POST">
+						<input type="hidden" name="field" value="flag" readonly>
+						<input type="text" name="searched" placeholder="Flagged">
+						<button type="submit"><i class="fa fa-search"></i></button>
+					</form>
+				</th>
 			</tr>
 			<tr>
 				<th>IP Address</th>
@@ -77,17 +84,30 @@
 				<th>Path</th>
 				<th>User Agent</th>
 				<th>WAF Message</th>
+				<th>Flagged</th>
 			</tr>
 			{% for x in results %}
 			<tr>
-				<td>{{x["ip"]}}</td>
-				<td>{{x["time_local"]}}</td>
-				<td>{{x["http_referrer"]}}</td>
-				<td>{{x["status"]}}</td>
-				<td>{{x["request"]}}</td>
-				<td>{{x["path"]}}</td>
-				<td>{{x["user_agent"]}}</td>
-				<td>{{x["messages"]}}</td>
+				<td>{{x['ip']}}</td>
+				<td>{{x['time_local']}}</td>
+				<td>{{x['http_referrer']}}</td>
+				<td>{{x['status']}}</td>
+				<td>{{x['request']}}</td>
+				<td>{{x['path']}}</td>
+				<td>{{x['user_agent']}}</td>
+				<td>{{x['messages']}}</td>
+				<td>
+					{{x['flag']}}
+					<form action="{{url_for('flag_log')}}" method="POST">
+						<input type=hidden value="{{x['request_id']}}" name="request_id" readonly>
+						<select name="new_flag">
+							{% for x in flag_list %}
+							<option value="{{x}}" name="new_flag">{{ flag }}</option>
+							{% endfor %}
+						</select>
+						<button class="btn-flag" type="submit"><i class="fa fa-flag"></i></button>
+					</form>
+				</td>
 			</tr>
 			{% endfor %}
 		</table>

@@ -218,7 +218,7 @@ def update_rule_file():
 @app.route('/logsearch')
 def logsearch():
     if "user" in session:
-        return render_template('logsearch.html', results=get_access_logs())
+        return render_template('logsearch.html', results=get_access_logs(), flag_list=["Malicious", "Suspicious", "Benign", "Undefined"])
     return redirect('/login')
 
 
@@ -242,6 +242,16 @@ def search():
         myquery = {search_field: {"$regex": search_data}}
         result = db.WAFLogs.find(myquery).sort("time", -1)
         return render_template('logsearch.html', results=result)
+    else:
+        return redirect('/login')
+
+@app.route('/flag_log', methods=['POST'])
+def flag_log():
+    if "user" in session:
+        new_flag = request.form['new_flag']
+        request_id = request.form['request_id']
+        db.WAFLogs.update_one({'request_id': request_id}, {'$set': {'flag': new_flag}})
+        return redirect('/logsearch')
     else:
         return redirect('/login')
 
