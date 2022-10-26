@@ -237,11 +237,13 @@ def get_audit_logs():
 @app.route('/search', methods=['POST'])
 def search():
     if "user" in session:
-        search_data = request.form['searched']
-        search_field = request.form['field']
-        myquery = {search_field: {"$regex": search_data}}
-        result = db.WAFLogs.find(myquery).sort("time", -1)
-        return render_template('logsearch.html', results=result)
+        fields = request.form.getlist('field')
+        queries = request.form.getlist('query')
+        search_query = {}
+        for i, field in enumerate(fields):
+            search_query.update({field: {"$regex": queries[i], '$options': 'i'}})
+        result = db.WAFLogs.find(search_query).sort("time", -1)
+        return render_template('logsearch.html', results=result, flag_list=["Malicious", "Suspicious", "Benign", "Undefined"])
     else:
         return redirect('/login')
 
@@ -266,6 +268,7 @@ def nginx_logger():
     while True:
         if p.poll(1):
             log = json.loads(f.stdout.readline())
+            log.update({'flag': 'Undefined'})
             db.WAFLogs.update_one({'request_id': log['request_id']}, {'$set': log}, upsert=True)
         time.sleep(5)
 
