@@ -13,19 +13,14 @@
 			</form>
 		</div>
 		<fieldset>
-			<table style="table-layout: fixed; width: 500px">
-				<colgroup>
-					<col style="width: 100px">
-						<col style="width: 77px">
-				</colgroup>
+			<table>
 				<thead>
 					<tr>
 						<th>IP Addresses</th>
 					</tr>
 				</thead>
 				<tbody>
-					<div class="scrollit"> {% for x in ip_blacklist %}
-						<tr>
+						<tr> {% for x in ip_blacklist %}
 							<form action="{{url_for('delete_ip')}}" method="POST">
 								<td>
 									<input type="text" class="readonly" value="{{x['ip']}}" name="delete_ip" readonly>
@@ -33,8 +28,8 @@
 								<td>
 									<button type="submit" style="default" class="btn-del" name="delete_ip">✖</button>
 								</td>
-							</form>
-						</tr> {% endfor %} </div>
+							</form>{% endfor %}
+						</tr>
 				</tbody>
 			</table>
 		</fieldset>
@@ -51,18 +46,14 @@
 			</form>
 			</div>
 		<fieldset>
-			<table style="undefined;table-layout: fixed; width: 600px">
-				<colgroup>
-					<col style="width: 100px">
-						<col style="width: 77px">
-				</colgroup>
+			<table>
 				<thead>
 					<tr>
 						<th>Geolocations</th>
 					</tr>
 				</thead>
 				<tbody>
-					<div class="scrollit"> {% for x in geo_blacklist %}
+					<div> {% for x in geo_blacklist %}
 						<tr>
 							<form action="{{url_for('delete_geo')}}" method="POST">
 								<td>
@@ -95,7 +86,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<div class="scrollit"> {% for x in rule_list %}
+					<div> {% for x in rule_list %}
 						<tr>
 							<form action="{{url_for('delete_rule')}}" method="POST">
 								<td>

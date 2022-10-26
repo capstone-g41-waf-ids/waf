@@ -247,6 +247,7 @@ def search():
     else:
         return redirect('/login')
 
+
 @app.route('/flag_log', methods=['POST'])
 def flag_log():
     if "user" in session:
@@ -269,7 +270,7 @@ def nginx_logger():
         if p.poll(1):
             log = json.loads(f.stdout.readline())
             log.update({'flag': 'Undefined'})
-            db.WAFLogs.update_one({'request_id': log['request_id']}, {'$set': log}, upsert=True)
+            db.WAFLogs.update_one({'request_id': log['request_id']}, {'$setOnInsert': {'messages': '[]'}, '$set': log}, upsert=True)
         time.sleep(5)
 
 

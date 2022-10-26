@@ -277,3 +277,10 @@ fieldset table {
    border-radius: 6px;
 }
 
+#flag-select select {
+    background: transparent;
+}
+
+#serverStatus {
+    text-align: center;
+}

@@ -11,7 +11,10 @@
 	<fieldset class="logs">
 		<table id="myTable">
 			<tr>
-				<th>IP Address</th>
+				<th>Source IP</th>
+				<th>Destination IP</th>
+				<th>Destination Port</th>
+				<th>Geolocation</th>
 				<th>Time</th>
 				<th>HTTP Referrer</th>
 				<th>Status</th>
@@ -26,7 +29,19 @@
 				<form action="{{url_for('search')}}" method="POST">
 				<th class="myTableSearch">
 					<input type="hidden" name="field" value="ip" readonly>
-					<input type="text" name="query" placeholder="IP Address">
+					<input type="text" name="query" placeholder="Source IP">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="server_addr" readonly>
+					<input type="text" name="query" placeholder="Destination IP">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="server_port" readonly>
+					<input type="text" name="query" placeholder="Destination Port">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="geoip_country_code" readonly>
+					<input type="text" name="query" placeholder="Geolocation">
 				</th>
 				<th class="myTableSearch">
 					<input type="hidden" name="field" value="time_local" readonly>
@@ -68,6 +83,9 @@
 			{% for x in results %}
 			<tr>
 				<td>{{x['ip']}}</td>
+				<td>{{x['server_addr']}}</td>
+				<td>{{x['server_port']}}</td>
+				<td>{{x['geoip_country_code']}}</td>
 				<td>{{x['time_local']}}</td>
 				<td>{{x['http_referrer']}}</td>
 				<td>{{x['status']}}</td>
