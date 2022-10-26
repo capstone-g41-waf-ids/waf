@@ -3,6 +3,8 @@ FROM owasp/modsecurity:nginx
 WORKDIR /
 COPY . .
 
+HEALTHCHECK NONE
+
 EXPOSE 8000
 EXPOSE 80
 EXPOSE 30
