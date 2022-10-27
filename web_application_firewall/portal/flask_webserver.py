@@ -307,4 +307,4 @@ if __name__ == '__main__':
     audit_logger = Thread(target=audit_logger)
     audit_logger.start()
     context = ('../etc/nginx/ssl/webgoat.crt', '../etc/nginx/ssl/webgoat.key')
-    app.run(host='172.2.2.4', port=30, debug=True, ssl_context=context)
+    app.run(host='0.0.0.0')
