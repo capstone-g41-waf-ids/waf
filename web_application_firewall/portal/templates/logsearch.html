@@ -1,110 +1,114 @@
 {% extends "layout.html" %}
 
-{% block head_more %}
+{% block extended_head %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
 {% block content %}
-<div><h1 >Log Search</h1></div>
+<h1>Log Search</h1>
 
 <div class="main">
 	<fieldset class="logs">
-		<table id="myTable" style="table-layout: auto;">
+		<table id="myTable">
 			<tr>
-				<th>
-					<form action="{{url_for('search')}}" method="POST">
-						<input type="hidden" name="field" value="ip" readonly>
-						<input type="text" name="searched" placeholder="IP Address">
-						<button type="submit"><i class="fa fa-search"></i></button>
-					</form>
-				</th>
-				<th>
-					<form action="{{url_for('search')}}" method="POST">
-						<input type="hidden" name="field" value="time_local" readonly>
-						<input type="text" name="searched" placeholder="Time">
-						<button type="submit"><i class="fa fa-search"></i></button>
-					</form>
-				</th>
-				<th>
-					<form action="{{url_for('search')}}" method="POST">
-						<input type="hidden" name="field" value="http_referrer" readonly>
-						<input type="text" name="searched" placeholder="HTTP Referrer">
-						<button type="submit"><i class="fa fa-search"></i></button>
-					</form>
-				</th>
-				<th>
-					<form action="{{url_for('search')}}" method="POST">
-						<input type="hidden" name="field" value="status" readonly>
-						<input type="text" name="searched" placeholder="Status">
-						<button type="submit"><i class="fa fa-search"></i></button>
-					</form>
-				</th>
-				<th>
-					<form action="{{url_for('search')}}" method="POST">
-						<input type="hidden" name="field" value="request" readonly>
-						<input type="text" name="searched" placeholder="Request">
-						<button type="submit"><i class="fa fa-search"></i></button>
-					</form>
-				</th>
-				<th>
-					<form action="{{url_for('search')}}" method="POST">
-						<input type="hidden" name="field" value="path" readonly>
-						<input type="text" name="searched" placeholder="Path">
-						<button type="submit"><i class="fa fa-search"></i></button>
-					</form>
-				</th>
-				<th>
-					<form action="{{url_for('search')}}" method="POST">
-						<input type="hidden" name="field" value="user_agent" readonly>
-						<input type="text" name="searched" placeholder="User Agent">
-						<button type="submit"><i class="fa fa-search"></i></button>
-					</form>
-				</th>
-			</tr>
-			<tr>
-				<th>IP Address</th>
+				<th>Source IP</th>
+				<th>Destination IP</th>
+				<th>Destination Port</th>
+				<th>Geolocation</th>
 				<th>Time</th>
-				<th>HTTP referrer</th>
+				<th>HTTP Referrer</th>
 				<th>Status</th>
 				<th>Request</th>
 				<th>Path</th>
-				<th>User_agent</th>
+				<th>User Agent</th>
+				<th>WAF Message</th>
+				<th>Flagged</th>
+				<th></th>
+			</tr>
+			<tr>
+				<form action="{{url_for('search')}}" method="POST">
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="ip" readonly>
+					<input type="text" name="query" placeholder="Source IP">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="server_addr" readonly>
+					<input type="text" name="query" placeholder="Destination IP">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="server_port" readonly>
+					<input type="text" name="query" placeholder="Destination Port">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="geoip_country_code" readonly>
+					<input type="text" name="query" placeholder="Geolocation">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="time_local" readonly>
+					<input type="text" name="query" placeholder="Time">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="http_referrer" readonly>
+					<input type="text" name="query" placeholder="HTTP Referrer">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="status" readonly>
+					<input type="text" name="query" placeholder="Status">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="request" readonly>
+					<input type="text" name="query" placeholder="Request">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="path" readonly>
+					<input type="text" name="query" placeholder="Path">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="user_agent" readonly>
+					<input type="text" name="query" placeholder="User Agent">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="messages" readonly>
+					<input type="text" name="query" placeholder="WAF Result">
+				</th>
+				<th class="myTableSearch">
+					<input type="hidden" name="field" value="flag" readonly>
+					<input type="text" name="query" placeholder="Flagged">
+				</th>
+				<th>
+					<button type="submit"><i class="fa fa-search"></i></button>
+				</th>
+				</form>
 			</tr>
 			{% for x in results %}
 			<tr>
-				<td>{{x["ip"]}}</td>
-				<td>{{x["time_local"]}}</td>
-				<td>{{x["http_referrer"]}}</td>
-				<td>{{x["status"]}}</td>
-				<td>{{x["request"]}}</td>
-				<td>{{x["path"]}}</td>
-				<td>{{x["user_agent"]}}</td>
+				<td>{{x['ip']}}</td>
+				<td>{{x['server_addr']}}</td>
+				<td>{{x['server_port']}}</td>
+				<td>{{x['geoip_country_code']}}</td>
+				<td>{{x['time_local']}}</td>
+				<td>{{x['http_referrer']}}</td>
+				<td>{{x['status']}}</td>
+				<td>{{x['request']}}</td>
+				<td>{{x['path']}}</td>
+				<td>{{x['user_agent']}}</td>
+				<td>{{x['messages']}}</td>
+				<form action="{{url_for('flag_log')}}" method="POST">
+				<td>
+					<input type=hidden value="{{x['request_id']}}" name="request_id" readonly>
+					<select name="new_flag" id="flagSelect">
+						<option value="" selected disabled>{{x['flag']}}</option>
+						{% for x in flag_list %}
+						<option value="{{x}}" name="new_flag">{{x}}</option>
+						{% endfor %}
+					</select>
+				</td>
+				<td>
+					<button class="btn-flag" type="submit"><i class="fa fa-flag"></i></button>
+				</td>
+				</form>
 			</tr>
 			{% endfor %}
-		</table>
-	</fieldset>
-	<fieldset class="logs">
-		<table id="myTable" style="table-layout: fixed;">
-			<thead>
-				<tr>
-					<th>
-						<form action="{{url_for('auditlogsearch')}}" method="POST">
-							<input type="text" name="searched" placeholder="Search">
-							<button type="submit"><i class="fa fa-search"></i></button>
-						</form>
-					</th>
-				</tr>
-				<tr>
-					<th>Mod security audit logs</th>
-				</tr>
-			</thead>
-			<tbody>
-					{% for x in results2 %}
-					<tr>
-						<td>{{x["log"]}}</td>
-					</tr>
-					{% endfor %}
-			</tbody>
 		</table>
 	</fieldset>
 </div>

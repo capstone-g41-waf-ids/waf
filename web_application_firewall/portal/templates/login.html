@@ -1,28 +1,14 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-	<!-- meta info -->
-    <meta name="login" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8" />
-	<meta name="description" content="Firewall page" />
-	<meta name="keywords" content="Apply" />
-	<meta name="author" content="Darcy" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-
-<!-- <head>
-<meta name="login" content="width=device-width, initial-scale=1">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-</head> -->
-<body>
-
-<main class="container p-4 w-50">
-  <h2>WAF login</h2>
+{% extends "layout.html" %}
+{% block extended_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+{% block nav %}
+{% endblock %}
+{% block content %}
+<div class="main">
+  <div class="user_form">
     <form action="{{url_for('check_login')}}" method="POST">
-      <div class="mb-3">
+        <h1 class="centre">WAF Login</h1>
         <label for="uname" class="form-label"><b>Username</b></label>
         <input type="text" class="form-control" placeholder="Enter Username" id="uname" name="uname" required>
 
@@ -30,9 +16,7 @@
         <input type="password" class="form-control" placeholder="Enter Password" id="pword" name="pword" required>
           
         <button type="submit" class="btn btn-primary w-100">Login</button>
-      </div>
     </form>
-</main>
-</body>
-</html>
-
+  </div>
+</div>
+{% endblock %}

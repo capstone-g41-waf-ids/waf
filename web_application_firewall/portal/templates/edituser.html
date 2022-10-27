@@ -1,21 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>Edit User</h2>
+<h1>Edit User</h1>
 
 <div id="id01" class="form">
   <form class="content" action="{{url_for('editcurrentuser')}}" method="post">
-    <div class="container">
+    <div class="user_form">
       <h2>Hello {{result}}</h2>
 
       <label for="seckey"><b>Current Password</b></label>
-      <input type="text" placeholder="Enter current password" id="seckey" name="current_pword">
+      <input type="password" placeholder="Enter current password" id="seckey" name="current_pword">
 
       <label for="pword"><b>New Password</b></label>
       <input type="password" placeholder="Enter Password" id="pword" name="pword">
 
       <button type="submit">Submit</button>
     </div>
-    <div class="container" style="background-color:#f1f1f1"></div>
+    <h3>{{ message }}</h3>
   </form>
 </div>
 {% endblock %}
