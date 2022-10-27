@@ -48,7 +48,7 @@ def logout():
 @app.route('/edituser')
 def edituser():
     if "user" in session:
-        return render_template('edituser.html', result=session["user"])
+        return render_template('edituser.html', result=session['user'], message='')
     return redirect('/login')
 
 
@@ -63,9 +63,10 @@ def editcurrentuser():
 
         result = mycol.update_one(old_user, {"$set": {"password": new_pword}})
 
+        message = "ERROR! User did not update. Please try again."
         if result.modified_count > 0:
-            return render_template('/updateuser.html', message="SUCCESS! User updated successfully.")
-        return render_template('/updateuser.html', message="ERROR! User did not update. Please try again.")
+            message="SUCCESS! User updated successfully."
+        return render_template('edituser.html', result=session['user'], message=message)
     else:
         return redirect('/login')
 
