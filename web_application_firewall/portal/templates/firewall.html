@@ -19,8 +19,8 @@
 						<th>IP Addresses</th>
 					</tr>
 				</thead>
-				<tbody>
-						<tr> {% for x in ip_blacklist %}
+				<tbody>{% for x in ip_blacklist %}
+						<tr>
 							<form action="{{url_for('delete_ip')}}" method="POST">
 								<td>
 									<input type="text" class="readonly" value="{{x['ip']}}" name="delete_ip" readonly>
