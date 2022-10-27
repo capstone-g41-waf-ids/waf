@@ -308,5 +308,4 @@ if __name__ == '__main__':
     nginx_logger.start()
     modsec_logger = Thread(target=modsec_logger)
     modsec_logger.start()
-    context = ('/etc/nginx/ssl/secret.crt', '/etc/nginx/ssl/secret.key')
-    app.run(host='172.2.2.4', port=30, debug=True, ssl_context=context)
+    app.run(host='0.0.0.0')
