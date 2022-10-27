@@ -306,4 +306,4 @@ if __name__ == '__main__':
     access_logger.start()
     audit_logger = Thread(target=audit_logger)
     audit_logger.start()
-    app.run(host='172.2.2.4', port=30, debug=True, ssl_context='adhoc')  # FIX THIS SO NOT ADHOC
+    app.run(host='0.0.0.0')
