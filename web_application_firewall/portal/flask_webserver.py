@@ -12,8 +12,13 @@ import uwsgidecorators
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
 
-connstring = os.environ['MONGODB_CONNSTRING']  # from container env
-client = pymongo.MongoClient(connstring, connect=False)  # connect to mongo
+CONNSTRING = os.environ['MONGODB_CONNSTRING']  # from container env
+SERVER = os.environ['SERVER_NAME']  # from container env
+PORTAL = os.environ['IP']  # from container env
+PORTAL_PORT = os.environ['PORTAL_PORT']
+FLAG_LIST = ["Malicious", "Suspicious", "Benign", "Undefined"]
+
+client = pymongo.MongoClient(CONNSTRING, connect=False)  # connect to mongo
 db = client["database"]
 
 
@@ -77,8 +82,8 @@ def serverstatus():
     if "user" in session:
         response = os.popen(f"curl --max-time 2 -I http://webgoat:8080/WebGoat").read()  # HARDCODED WEBGOAT MUST FIX
         if "HTTP/1.1 302 Found" in response:
-            return render_template('serverstatus.html', status="Active", emote="\U0001F642")
-        return render_template('serverstatus.html', status="Inactive", emote="\U0001F641")
+            return render_template('serverstatus.html', status="Active", server=SERVER, emote="\U0001F642")
+        return render_template('serverstatus.html', status="Inactive", server=SERVER, emote="\U0001F641")
     else:
         return redirect('/login')
 
@@ -219,19 +224,18 @@ def update_rule_file():
 @app.route('/logsearch')
 def logsearch():
     if "user" in session:
-        return render_template('logsearch.html', results=get_access_logs(), flag_list=["Malicious", "Suspicious", "Benign", "Undefined"])
+        if "displaylogs" not in session:
+            session["displaylogs"] = False
+        return render_template('logsearch.html', results=get_access_logs({}), flag_list=FLAG_LIST)
     return redirect('/login')
 
 
-def get_access_logs():
+def get_access_logs(i):
     if "user" in session:
-        return db.WAFLogs.find().sort("time", -1)
-    return redirect('/login')
-
-
-def get_audit_logs():
-    if "user" in session:
-        return db.modsec_audit_logs.find().sort("time", -1)
+        query = i
+        if not session["displaylogs"]:
+            query.update({'$nor': [{'server_addr': PORTAL ,'server_port': PORTAL_PORT}]})
+        return db.WAFLogs.find(query).sort("time", -1)
     return redirect('/login')
 
 
@@ -243,8 +247,7 @@ def search():
         search_query = {}
         for i, field in enumerate(fields):
             search_query.update({field: {"$regex": queries[i], '$options': 'i'}})
-        result = db.WAFLogs.find(search_query).sort("time", -1)
-        return render_template('logsearch.html', results=result, flag_list=["Malicious", "Suspicious", "Benign", "Undefined"])
+        return render_template('logsearch.html', results=get_access_logs(search_query), flag_list=FLAG_LIST)
     else:
         return redirect('/login')
 
@@ -259,6 +262,13 @@ def flag_log():
     else:
         return redirect('/login')
 
+@app.route('/hide_log', methods=['POST'])
+def hide_log():
+    if "user" in session:
+        session["displaylogs"] ^= True
+        return redirect('/logsearch')
+    else:
+        return redirect('/login')
 
 @uwsgidecorators.postfork
 @uwsgidecorators.thread
@@ -271,7 +281,7 @@ def nginx_logger():
         if p.poll(1):
             log = json.loads(f.stdout.readline())
             log.update({'flag': 'Undefined'})
-            db.WAFLogs.update_one({'request_id': log['request_id']}, {'$setOnInsert': {'messages': '[]'}, '$set': log}, upsert=True)
+            db.WAFLogs.update_one({'request_id': log['request_id']}, {'$setOnInsert': {'messages': ' '}, '$set': log}, upsert=True)
         time.sleep(5)
 
 

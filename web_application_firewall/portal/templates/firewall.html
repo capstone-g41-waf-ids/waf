@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 {% block content %}
 <h1>Configure Firewall</h1>
 <div class="rendered-form">
@@ -25,7 +25,7 @@
 								<td>
 									<input type="text" class="readonly" value="{{x['ip']}}" name="delete_ip" readonly>
 								</td>
-								<td>
+								<td class="btn">
 									<button type="submit" style="default" class="btn-del" name="delete_ip">✖</button>
 								</td>
 							</form>{% endfor %}
@@ -59,7 +59,7 @@
 								<td>
 									<input type="text" class="readonly" value="{{x['country_code']}}" name="delete_geo" readonly>
 								</td>
-								<td>
+								<td class="btn">
 									<button type="submit" style="default" class="btn-del" name="delete_geo">✖</button>
 								</td>
 							</form>
@@ -76,7 +76,8 @@
 				<input type="text" placeholder="Add a WAF rule" id="add_rule" name="add_rule" required>
 				<button type="submit" class="btn-add">add Rule</button>
 			</form>
-			<p>WARNING: SUBMIT CUSTOM RULES AT YOUR OWN RISK. Incorrectly formatted rules will at best have no effect, and at worst prevent your WAF from functioning.</p>
+			<p>WARNING: SUBMIT CUSTOM RULES AT YOUR OWN RISK.</p>
+			<p>Incorrectly formatted rules will at best have no effect, and at worst prevent your WAF from functioning.</p>
 		</div>
 		<fieldset>
 			<table>
@@ -92,7 +93,7 @@
 								<td>
 									<input type="text" class="readonly" value="{{x['rule']}}" name="delete_rule" readonly>
 								</td>
-								<td>
+								<td class="btn">
 									<button type="submit" style="default" class="btn-del" name="delete_rule">✖</button>
 								</td>
 							</form>
