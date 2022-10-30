@@ -1,18 +1,14 @@
 {% extends "base.html" %}
-
-{% block extended_head %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-{% endblock %}
-
+{% block title %}View Logs{% endblock %}
 {% block content %}
-<h1>Log Search</h1>
+<h1>View Logs</h1>
 
 <div class="main">
 	<div class="caption">
 		<div class="left">
 			<form id="show_portal_logs" action="{{url_for('hide_log')}}" method="POST">
 			<label for="show_portal_logs">Show/Hide Web Portal traffic logs:</label>
-			<button class="btn-icon" type="submit"><i class="fa fa-check-square"></i></button>
+			<button class="btn icon" type="submit"><i class="fa fa-check-square"></i></button>
 			</form>
 		</div>
 		<div class="right">Click a table heading and type to search</div>
@@ -40,58 +36,58 @@
 					<form action="{{url_for('search')}}" method="POST">
 					<th>
 						<input type="hidden" name="field" value="ip" readonly>
-						<input class="sourceip" type="text" name="query" placeholder="Source IP">
+						<input class="fa sourceip" type="text" name="query" placeholder="Src IP"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="server_addr" readonly>
-						<input class="destip" type="text" name="query" placeholder="Dest. IP">
+						<input class="fa destip" type="text" name="query" placeholder="Dst IP"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="server_port" readonly>
-						<input class="destport" type="text" name="query" placeholder="Dest. Port">
+						<input class="fa destport" type="text" name="query" placeholder="Dst Port"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="geoip_country_code" readonly>
-						<input class="geolocation" type="text" name="query" placeholder="Geo">
+						<input class="fa geolocation" type="text" name="query" placeholder="Geo"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="time_local" readonly>
-						<input class="time" type="text" name="query" placeholder="Time">
+						<input class="fa time" type="text" name="query" placeholder="Time"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="http_referrer" readonly>
-						<input class="referrer" type="text" name="query" placeholder="HTTP Referrer">
+						<input class="fa referrer" type="text" name="query" placeholder="HTTP Referrer"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="status" readonly>
-						<input class="status" type="text" name="query" placeholder="Status">
+						<input class="fa status" type="text" name="query" placeholder="Status"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="request" readonly>
-						<input class="request" type="text" name="query" placeholder="Request">
+						<input class="fa request" type="text" name="query" placeholder="Request"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="path" readonly>
-						<input class="path" type="text" name="query" placeholder="Path">
+						<input class="fa path" type="text" name="query" placeholder="Path"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="request_body" readonly>
-						<input class="body" type="text" name="query" placeholder="Body">
+						<input class="fa request_body" type="text" name="query" placeholder="Body"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="user_agent" readonly>
-						<input class="useragent" type="text" name="query" placeholder="User Agent">
+						<input class="fa useragent" type="text" name="query" placeholder="User Agent"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="messages" readonly>
-						<input class="alert" type="text" name="query" placeholder="Alert">
+						<input class="fa alert" type="text" name="query" placeholder="Alert"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="flag" readonly>
-						<input class="flagged" type="text" name="query" placeholder="Flagged">
+						<input class="fa flagged" type="text" name="query" placeholder="Flagged"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
-						<button class="btn-icon" type="submit"><i class="fa fa-search"></i></button>
+						<button class="btn icon" type="submit"><i class="fa fa-search"></i></button>
 					</th>
 					</form>
 				</tr>
@@ -108,7 +104,7 @@
 					<td>{{x['status']}}</td>
 					<td>{{x['request']}}</td>
 					<td>{{x['path']}}</td>
-					<td><div class="body">{{x['request_body']}}</div></td>
+					<td><div class="request_body">{{x['request_body']}}</div></td>
 					<td>{{x['user_agent']}}</td>
 					<td>{{x['messages']}}</td>
 
@@ -122,7 +118,7 @@
 							<option value="{{x}}" name="new_flag">{{x}}</option>
 							{% endfor %}
 						</select>
-						<button class="btn-icon" type="submit"><i class="fa fa-flag"></i></button>
+						<button class="btn icon" type="submit"><i class="fa fa-flag"></i></button>
 						</form>
 						</div>
 					</td>

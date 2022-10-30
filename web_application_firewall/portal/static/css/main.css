@@ -6,7 +6,7 @@ body {
 }
 
 main {
-   margin: 30px;
+   margin: 20px;
 }
 
 input[type="text"],
@@ -128,7 +128,8 @@ table.logs thead {
 
 table.logs th {
    text-align: left;
-   padding: 10px;
+   padding: 5px 20px 5px 10px;
+   white-space: nowrap;
 }
 
 table.logs tr,
@@ -153,9 +154,6 @@ table.logs input {
    border-radius: 4px;
 }
 
-table.logs input:focus {
-    outline:none;
-}
 
 table.logs input::placeholder {
     color: #dff6ff;
@@ -193,7 +191,7 @@ div.flagged {
     margin: 10px;
 }
 
-.btn-icon {
+.btn.icon {
     background-color: inherit !important;
     width: fit-content !important;
     height: fit-content !important;
@@ -202,23 +200,27 @@ div.flagged {
     display: inline-block;
 }
 
-flagged.btn-icon {
+flagged.btn.icon {
     display: inline-block;
 }
 
-.btn-add,
-.btn-del {
-   margin: 5;
+.btn.add,
+.btn.del {
    border-radius: 4px;
 }
-.btn-del {
+.btn.del {
    width: 36px;
    background-color: #df2525;
    padding: 6px;
 }
-.btn-add {
+.btn.add {
    width: 120px;
    padding: 12px;
+}
+.btn.edit {
+   width: 36px;
+   background-color: #083aa9;
+   padding: 6px;
 }
 
 .settings {
@@ -275,38 +277,63 @@ flagged.btn-icon {
     text-align: center;
 }
 
-div.body {
+div.request_body {
     overflow: auto;
-    width: 150px;
+    width: 130px;
 }
 
-.destip, .status {
-    min-width: 52px;
+.status {
+    min-width: 30px;
 }
 
-.geolocation, .alert {
+.geolocation {
+    min-width: 15px;
+}
+
+.alert {
     min-width: 35px;
 }
 
-.sourceip, .destport {
-    min-width: 65px;
+.sourceip, .destip {
+    min-width: 30px;
+}
+
+.destport {
+    min-width: 45px;
 }
 
 .useragent {
     min-width: 150px;
 }
 
-input.readonly {
+input.flagged {
+    min-width: 45px;
+}
+
+input.settings {
    box-sizing: border-box;
    border: none !important;
    background-color: transparent;
    color: #ccc;
-   pointer-events: none;
    width: 100%;
    min-width: 100%;
    margin: 0;
    padding: 0 0 10px 0;
    border-bottom: 1px solid #06283d !important;
+}
+
+input.settings:focus, table.logs input:focus {
+ /*   outline:none;*/
+}
+
+input.settings:readonly {
+    pointer-events: none;
+}
+
+
+input.settings::placeholder {
+    opacity: 1;
+    border-bottom: 2px solid #06283d !important;
 }
 
 table {
@@ -317,3 +344,12 @@ td.btn {
     width: 36px;
 }
 
+.fa {
+  font-family: Arial, FontAwesome, sans-serif !important;
+}
+
+.fa.log {
+    margin: 0 6px 0 2px;
+    opacity: 0.7;
+    padding: 0;
+}
