@@ -34,7 +34,7 @@ def check_login():
     else:
         username_local = request.form['uname']
         password_local = request.form['pword']
-        account = db.UserAccounts.find_one({"username": username_local, "password": hash_pword(password_local)})
+        account = db.UserAccounts.find_one({'username': username_local, 'password': hash_pword(password_local)})
         if account is not None:
             session["user"] = username_local
             return redirect('/logsearch')
@@ -66,7 +66,7 @@ def editcurrentuser():
         new_pword = hash_pword(request.form['pword'])
         old_user = {"username": session["user"], "password": old_pword}
 
-        result = mycol.update_one(old_user, {"$set": {"password": new_pword}})
+        result = mycol.update_one(old_user, {'$set': {'password': new_pword}})
 
         message = "ERROR! User did not update. Please try again."
         if result.modified_count > 0:
@@ -204,11 +204,23 @@ def add_rule():
 def delete_rule():
     if "user" in session:
         rule = request.form['delete_rule']
-        db.ModsecCustomRules.delete_one({"rule": rule})
+        db.ModsecCustomRules.delete_one({'rule': rule})
         update_rule_file()
         return redirect('/firewall')
     else:
         return redirect('/login')
+
+@app.route('/edit_rule', methods=['POST'])
+def edit_rule():
+    if "user" in session:
+        old_rule = request.form['old_rule']
+        new_rule = request.form['new_rule']
+        db.ModsecCustomRules.update_one({'rule': old_rule}, {'$set': {'rule': new_rule}})
+        update_rule_file()
+        return redirect('/firewall')
+    else:
+        return redirect('/login')
+
 
 
 def update_rule_file():
@@ -235,7 +247,7 @@ def get_access_logs(i):
         query = i
         if not session["displaylogs"]:
             query.update({'$nor': [{'server_addr': PORTAL ,'server_port': PORTAL_PORT}]})
-        return db.WAFLogs.find(query).sort("time", -1)
+        return db.WAFLogs.find(query).sort('time', -1)
     return redirect('/login')
 
 
@@ -246,7 +258,7 @@ def search():
         queries = request.form.getlist('query')
         search_query = {}
         for i, field in enumerate(fields):
-            search_query.update({field: {"$regex": queries[i], '$options': 'i'}})
+            search_query.update({field: {'$regex': queries[i], '$options': 'i'}})
         return render_template('logsearch.html', results=get_access_logs(search_query), flag_list=FLAG_LIST)
     else:
         return redirect('/login')
@@ -281,7 +293,7 @@ def nginx_logger():
         if p.poll(1):
             log = json.loads(f.stdout.readline())
             log.update({'flag': 'Undefined'})
-            db.WAFLogs.update_one({'request_id': log['request_id']}, {'$setOnInsert': {'messages': ' '}, '$set': log}, upsert=True)
+            db.WAFLogs.update_one({'request_id': log['request_id']}, {'$setOnInsert': {'messages': []}, '$set': log}, upsert=True)
         time.sleep(5)
 
 
@@ -295,7 +307,7 @@ def modsec_logger():
     while True:
         if p.poll(1):
             log = json.loads(f.stdout.readline())
-            db.WAFLogs.update_one({'request_id': log['transaction']['unique_id']}, {'$set': {'messages': modsec_log_parser(log)}}, upsert=True)
+            db.WAFLogs.update_one({'request_id': log['transaction']['unique_id']}, {'$addToSet': {'messages': modsec_log_parser(log)}}, upsert=True)
         time.sleep(5)
 
 
