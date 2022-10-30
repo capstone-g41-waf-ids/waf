@@ -8,7 +8,10 @@
 		<div class="left">
 			<form id="show_portal_logs" action="{{url_for('hide_log')}}" method="POST">
 			<label for="show_portal_logs">Show/Hide Web Portal traffic logs:</label>
-			<button class="btn icon" type="submit"><i class="fa fa-check-square"></i></button>
+			<div class="tooltip">
+				<button class="btn icon" type="submit" title="View WAF Logs"><i class="fa fa-check-square"></i></button>
+				<span class="tooltiptext">Click here to hide or display WAF logs for this web portal.</span>
+			</div>
 			</form>
 		</div>
 		<div class="right">Click a table heading and type to search</div>
@@ -25,7 +28,7 @@
 				<col class="status"/>
 				<col class="request"/>
 				<col class="path"/>
-				<col class="body"/>
+				<col class="request_body"/>
 				<col class="useragent"/>
 				<col class="alert"/>
 				<col class="flagged"/>
@@ -36,58 +39,58 @@
 					<form action="{{url_for('search')}}" method="POST">
 					<th>
 						<input type="hidden" name="field" value="ip" readonly>
-						<input class="fa sourceip" type="text" name="query" placeholder="Src IP"><label class="fa log">&#xf0b0;</label>
+						<input class="fa sourceip" type="text" name="query" title="Click and type to search" placeholder="Src IP"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="server_addr" readonly>
-						<input class="fa destip" type="text" name="query" placeholder="Dst IP"><label class="fa log">&#xf0b0;</label>
+						<input class="fa destip" type="text" name="query" title="Click and type to search" placeholder="Dst IP"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="server_port" readonly>
-						<input class="fa destport" type="text" name="query" placeholder="Dst Port"><label class="fa log">&#xf0b0;</label>
+						<input class="fa destport" type="text" name="query" title="Click and type to search" placeholder="Dst Port"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="geoip_country_code" readonly>
-						<input class="fa geolocation" type="text" name="query" placeholder="Geo"><label class="fa log">&#xf0b0;</label>
+						<input class="fa geolocation" type="text" name="query" title="Click and type to search" placeholder="Geo"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="time_local" readonly>
-						<input class="fa time" type="text" name="query" placeholder="Time"><label class="fa log">&#xf0b0;</label>
+						<input class="fa time" type="text" name="query" title="Click and type to search" placeholder="Time"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="http_referrer" readonly>
-						<input class="fa referrer" type="text" name="query" placeholder="HTTP Referrer"><label class="fa log">&#xf0b0;</label>
+						<input class="fa referrer" type="text" name="query" title="Click and type to search" placeholder="HTTP Referrer"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="status" readonly>
-						<input class="fa status" type="text" name="query" placeholder="Status"><label class="fa log">&#xf0b0;</label>
+						<input class="fa status" type="text" name="query" title="Click and type to search" placeholder="Status"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="request" readonly>
-						<input class="fa request" type="text" name="query" placeholder="Request"><label class="fa log">&#xf0b0;</label>
+						<input class="fa request" type="text" name="query" title="Click and type to search" placeholder="Request"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="path" readonly>
-						<input class="fa path" type="text" name="query" placeholder="Path"><label class="fa log">&#xf0b0;</label>
+						<input class="fa path" type="text" name="query" title="Click and type to search" placeholder="Path"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="request_body" readonly>
-						<input class="fa request_body" type="text" name="query" placeholder="Body"><label class="fa log">&#xf0b0;</label>
+						<input class="fa request_body" type="text" name="query" title="Click and type to search" placeholder="Body"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="user_agent" readonly>
-						<input class="fa useragent" type="text" name="query" placeholder="User Agent"><label class="fa log">&#xf0b0;</label>
+						<input class="fa useragent" type="text" name="query" title="Click and type to search" placeholder="User Agent"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="messages" readonly>
-						<input class="fa alert" type="text" name="query" placeholder="Alert"><label class="fa log">&#xf0b0;</label>
+						<input class="fa alert" type="text" name="query" title="Click and type to search" placeholder="Alert"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="flag" readonly>
-						<input class="fa flagged" type="text" name="query" placeholder="Flagged"><label class="fa log">&#xf0b0;</label>
+						<input class="fa flagged" type="text" name="query" title="Click and type to search" placeholder="Flagged"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
-						<button class="btn icon" type="submit"><i class="fa fa-search"></i></button>
+						<div class="tooltip"><button class="btn icon" type="submit"><i class="fa fa-search"></i></button><span class="tooltiptext">Search any table value by clicking the heading and typing!</span></div>
 					</th>
 					</form>
 				</tr>
@@ -111,14 +114,14 @@
 					<td>
 						<div class="flagged">
 						<form action="{{url_for('flag_log')}}" method="POST">
-						<input type=hidden value="{{x['request_id']}}" name="request_id" readonly>
-						<select name="new_flag" id="flagSelect" required>
-							<option value="" selected disabled>{{x['flag']}}</option>
-							{% for x in flag_list %}
-							<option value="{{x}}" name="new_flag">{{x}}</option>
-							{% endfor %}
-						</select>
-						<button class="btn icon" type="submit"><i class="fa fa-flag"></i></button>
+							<input type=hidden value="{{x['request_id']}}" name="request_id" readonly>
+							<select name="new_flag" id="flagSelect" required>
+								<option value="" selected disabled>{{x['flag']}}</option>
+								{% for x in flag_list %}
+								<option value="{{x}}" name="new_flag">{{x}}</option>
+								{% endfor %}
+							</select>
+							<button class="btn icon" title="Flag log" type="submit"><i class="fa fa-flag"></i></button>
 						</form>
 						</div>
 					</td>

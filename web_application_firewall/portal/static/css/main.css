@@ -7,6 +7,8 @@ body {
 
 main {
    margin: 20px;
+   z-index: 1;
+   position: relative;
 }
 
 input[type="text"],
@@ -27,6 +29,7 @@ button {
    border: none;
    cursor: pointer;
    width: 100%;
+   border-radius: 4px;
 }
 
 .logs select:hover, button:hover, .logs input:hover {
@@ -58,14 +61,21 @@ span.pword {
    padding-top: 16px;
 }
 
-/* Change styles for span and cancel button on extra small screens */
-@media screen and (max-width: 300px) {
+/* Change styles on extra small screens */
+@media only screen and (max-width: 1320px) {
+   main {
+        overflow-x: auto;
+   }
    span.pword {
       display: block;
       float: none;
    }
    .cancelbtn {
       width: 50%;
+   }
+
+   table.logs thead {
+        top: 84px !important;
    }
 }
 
@@ -78,9 +88,10 @@ nav {
    font-size: large;
    background-color: #083aa9;
    position: sticky;
-   top: 0;
+   top: 0px;
    width: 100%;
    border-bottom: 2px solid #06283d;
+   z-index: 9999;
 }
 nav a {
    display: inline-block;
@@ -105,9 +116,12 @@ nav a {
 nav .left a {
    font-weight: bold;
 }
-
-fieldset .logs {
-    overflow: scroll;
+nav .right {
+    padding-right: 16px;
+}
+nav .right a {
+   padding: 14px 0 14px 16px;
+   font-size: 22px;
 }
 
 table.logs {
@@ -116,7 +130,6 @@ table.logs {
    border: 0 !important;
    width: 100%;
    font-size: 12px;
-   border-radius: 6px;
    overflow: scroll;
 }
 
@@ -124,11 +137,13 @@ table.logs thead {
    position: sticky;
    top: 54px;
    background-color: #06283d;
+   z-index: 999;
+   border-left: 2px solid #06283d;
 }
 
 table.logs th {
-   text-align: left;
-   padding: 5px 20px 5px 10px;
+   text-align: justify;
+   padding: 6px 20px 6px 6px;
    white-space: nowrap;
 }
 
@@ -152,8 +167,8 @@ table.logs input {
    font-size: 14px;
    color: inherit;
    border-radius: 4px;
+   cursor: auto !important;
 }
-
 
 table.logs input::placeholder {
     color: #dff6ff;
@@ -170,6 +185,7 @@ table.logs select {
     display: inline-block;
     font-size: inherit;
     appearance: none;
+    cursor: pointer !important;
 }
 
 table.logs select option {
@@ -206,26 +222,29 @@ flagged.btn.icon {
 
 .btn.add,
 .btn.del {
+   margin: 5;
    border-radius: 4px;
 }
+.btn.del, .btn.edit {
+    width: 30px;
+    text-align: center;
+}
 .btn.del {
-   width: 36px;
    background-color: #df2525;
    padding: 6px;
 }
 .btn.add {
-   width: 120px;
+   width: 60px;
    padding: 12px;
 }
 .btn.edit {
-   width: 36px;
    background-color: #083aa9;
    padding: 6px;
 }
 
 .settings {
     overflow: hidden;
-    padding-right: 124px;
+    padding-right: 64px;
     white-space: nowrap;
 }
 
@@ -237,11 +256,19 @@ flagged.btn.icon {
 
 .settings select {
    height: 40px;
+   width: 100%;
+   padding-left: 16px;
+}
+
+.i {
+    font-style: italic !important;
 }
 
 .settings p {
     white-space: normal;
-    padding-right: 0;
+    padding: 0;
+    margin: 6px 4px;
+
 }
 .form-block fieldset,
 .form-block,
@@ -279,22 +306,14 @@ flagged.btn.icon {
 
 div.request_body {
     overflow: auto;
-    width: 130px;
+    width: 170px;
 }
 
-.status {
+.geolocation, .alert {
     min-width: 30px;
 }
 
-.geolocation {
-    min-width: 15px;
-}
-
-.alert {
-    min-width: 35px;
-}
-
-.sourceip, .destip {
+.sourceip, .destip, .status {
     min-width: 30px;
 }
 
@@ -303,11 +322,7 @@ div.request_body {
 }
 
 .useragent {
-    min-width: 150px;
-}
-
-input.flagged {
-    min-width: 45px;
+    min-width: 120px;
 }
 
 input.settings {
@@ -323,13 +338,12 @@ input.settings {
 }
 
 input.settings:focus, table.logs input:focus {
- /*   outline:none;*/
+    outline:none;
 }
 
-input.settings:readonly {
+input.settings:read-only {
     pointer-events: none;
 }
-
 
 input.settings::placeholder {
     opacity: 1;
@@ -352,4 +366,61 @@ td.btn {
     margin: 0 6px 0 2px;
     opacity: 0.7;
     padding: 0;
+}
+
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: #1e3d50;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+  opacity: 0.8;
+
+  width: auto;
+  padding: 2px;
+  position: absolute;
+  z-index: 999999;
+  top: 75%;
+  left: 50%;
+  margin-left: -20px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  text-align: center;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.caption .tooltiptext, .logs .tooltiptext {
+    width: 100px;
+    margin-left: -75px;
+    top: 150%;
+    font-weight: normal;
+    white-space: normal;
+    text-align: left;
+}
+
+td .tooltip {
+      z-index: 99;
+}
+
+.btn .tooltiptext {
+    top: 75%;
+    margin-left: -25px;
+    opacity: 0.5;
+
+}
+
+.form-block h2 {
+    margin: 0 0 10px 0;
 }

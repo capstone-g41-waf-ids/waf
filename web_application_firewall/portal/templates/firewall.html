@@ -2,15 +2,15 @@
 {% block title %}Configure Firewall{% endblock %}
 {% block content %}
 <h1>Configure Firewall</h1>
-<div class="rendered-form">
+<div class="main">
 	<form id="confirm" action="" method="post"></form>
 	<div class="form-block">
 		<h2>Block by IP address</h2>
 		<div class="settings">
 			<form action="{{url_for('blacklist_ip')}}" method="POST">
 				<label for="block_ip"></label>
-				<input type="text" placeholder="add IP or IP with subnet eg: 192.168.0.1 or 192.168.0.1/24" id="block_ip" name="block_ip" pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}(\/(3[0-2]|[1-2]\d|\d))?" required>
-				<button type="submit" class="btn add">add IP</button>
+				<input type="text" placeholder="Add IP or IP with subnet eg: 192.168.0.1 or 192.168.0.1/24" id="block_ip" name="block_ip" pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}(\/(3[0-2]|[1-2]\d|\d))?" required>
+				<button type="submit" class="btn add" title="Add IP">Add</button>
 			</form>
 		</div>
 		<fieldset>
@@ -27,7 +27,7 @@
 									<input type="text" class="settings" value="{{x['ip']}}" name="delete_ip" readonly>
 								</td>
 								<td class="btn">
-									<button type="submit" class="btn del" name="delete_ip">✖</button>
+									<button type="submit" class="btn del" title="Delete IP" name="delete_ip"><i class="fa fa-trash" aria-hidden="true"></i></button>
 								</td>
 							</form>{% endfor %}
 						</tr>
@@ -43,7 +43,7 @@
 			<label for="block_geo"></label>
 			<select name="block_geo" id="block_geo"> {% for x in geo_list %}
 				<option value="{{x['Code']}}" name="block_geo">{{x['Name']}} ({{x['Code']}})</option> {% endfor %} </select>
-			<button type="submit" class="btn add">add Geolocation</button>
+			<button type="submit" class="btn add" title="Add Geolocation">Add</button>
 			</form>
 			</div>
 		<fieldset>
@@ -61,7 +61,7 @@
 									<input type="text" class="settings" value="{{x['country_code']}}" name="delete_geo" readonly>
 								</td>
 								<td class="btn">
-									<button type="submit" class="btn del" name="delete_geo">✖</button>
+									<button type="submit" class="btn del" title="Delete Geolocation" name="delete_geo"><i class="fa fa-trash" aria-hidden="true"></i></button>
 								</td>
 							</form>
 						</tr> {% endfor %} </div>
@@ -75,10 +75,10 @@
 			<form action="{{url_for('add_rule')}}" method="POST">
 				<label for="add_rule"></label>
 				<input type="text" placeholder="Add a WAF rule" id="add_rule" name="add_rule" required>
-				<button type="submit" class="btn add">add Rule</button>
+				<button type="submit" title="Add Rule" class="btn add">Add</button>
 			</form>
-			<p>WARNING: SUBMIT CUSTOM RULES AT YOUR OWN RISK.</p>
-			<p>Incorrectly formatted rules will at best have no effect, and at worst prevent your WAF from functioning.</p>
+			<p class="fa">&#xf071; WARNING: SUBMIT CUSTOM RULES AT YOUR OWN RISK &#xf071;</p>
+			<p class="i">Incorrectly designed or formatted rules may break your WAF. See ReadMe for further details</p>
 		</div>
 		<fieldset>
 			<table>
@@ -93,16 +93,14 @@
 							<form action="{{url_for('edit_rule')}}" method="POST">
 								<td>
 									<input type="hidden" value="{{x['rule']}}" name="old_rule" readonly>
-									<input type="text" placeholder="{{x['rule']}}" value="{{x['rule']}}" class="settings" name="new_rule" required>
+									<input type="text" title="Click and type to edit" placeholder="{{x['rule']}}" value="{{x['rule']}}" class="settings" name="new_rule" required>
 								</td>
-								<td>
-									<button class="btn edit" type="submit"><i class="fa-solid fa-pen-to-square"></i></button>
+								<td class="btn">
+									<button class="btn edit" title="Edit Rule" type="submit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
 								</td>
-							</form>
-							<form action="{{url_for('delete_rule')}}" method="POST">
 								<td class="btn">
 									<input type="hidden" value="{{x['rule']}}" name="delete_rule" readonly>
-									<button type="submit" class="btn del" name="delete_rule">✖</button>
+									<button type="submit" class="btn del" title="Delete Rule" name="delete_rule"><i class="fa fa-trash" aria-hidden="true"></i></button>
 								</td>
 							</form>
 						</tr> {% endfor %} </div>
