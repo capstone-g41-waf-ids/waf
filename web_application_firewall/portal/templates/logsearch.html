@@ -19,11 +19,11 @@
 	<fieldset class="logs">
 		<table class="logs">
 			<colgroup>
+				<col class="time"/>
 				<col class="sourceip"/>
 				<col class="destip"/>
 				<col class="destport"/>
 				<col class="geolocation"/>
-				<col class="time"/>
 				<col class="referrer"/>
 				<col class="status"/>
 				<col class="request"/>
@@ -37,6 +37,10 @@
 			<thead>
 				<tr>
 					<form action="{{url_for('search')}}" method="POST">
+					<th>
+						<input type="hidden" name="field" value="time_local" readonly>
+						<input class="fa time" type="text" name="query" title="Click and type to search" placeholder="Time"><label class="fa log">&#xf0b0;</label>
+					</th>
 					<th>
 						<input type="hidden" name="field" value="ip" readonly>
 						<input class="fa sourceip" type="text" name="query" title="Click and type to search" placeholder="Src IP"><label class="fa log">&#xf0b0;</label>
@@ -52,10 +56,6 @@
 					<th>
 						<input type="hidden" name="field" value="geoip_country_code" readonly>
 						<input class="fa geolocation" type="text" name="query" title="Click and type to search" placeholder="Geo"><label class="fa log">&#xf0b0;</label>
-					</th>
-					<th>
-						<input type="hidden" name="field" value="time_local" readonly>
-						<input class="fa time" type="text" name="query" title="Click and type to search" placeholder="Time"><label class="fa log">&#xf0b0;</label>
 					</th>
 					<th>
 						<input type="hidden" name="field" value="http_referrer" readonly>
@@ -98,11 +98,11 @@
 			<tbody>
 				{% for x in results %}
 				<tr>
+					<td>{{x['time_local']}}</td>
 					<td>{{x['ip']}}</td>
 					<td>{{x['server_addr']}}</td>
 					<td>{{x['server_port']}}</td>
 					<td>{{x['geoip_country_code']}}</td>
-					<td>{{x['time_local']}}</td>
 					<td>{{x['http_referrer']}}</td>
 					<td>{{x['status']}}</td>
 					<td>{{x['request']}}</td>
@@ -110,7 +110,6 @@
 					<td><div class="request_body">{{x['request_body']}}</div></td>
 					<td>{{x['user_agent']}}</td>
 					<td>{{x['messages']}}</td>
-
 					<td>
 						<div class="flagged">
 						<form action="{{url_for('flag_log')}}" method="POST">

@@ -98,6 +98,8 @@
 								<td class="btn">
 									<button class="btn edit" title="Edit Rule" type="submit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
 								</td>
+							</form>
+							<form action="{{url_for('delete_rule')}}" method="POST">
 								<td class="btn">
 									<input type="hidden" value="{{x['rule']}}" name="delete_rule" readonly>
 									<button type="submit" class="btn del" title="Delete Rule" name="delete_rule"><i class="fa fa-trash" aria-hidden="true"></i></button>

@@ -293,7 +293,7 @@ def nginx_logger():
         if p.poll(1):
             log = json.loads(f.stdout.readline())
             log.update({'flag': 'Undefined'})
-            db.WAFLogs.update_one({'request_id': log['request_id']}, {'$setOnInsert': {'messages': ' '}, '$set': log}, upsert=True)
+            db.WAFLogs.update_one({'request_id': log['request_id']}, {'$setOnInsert': {'messages': []}, '$set': log}, upsert=True)
         time.sleep(5)
 
 
@@ -307,7 +307,7 @@ def modsec_logger():
     while True:
         if p.poll(1):
             log = json.loads(f.stdout.readline())
-            db.WAFLogs.update_one({'request_id': log['transaction']['unique_id']}, {'$set': {'messages': modsec_log_parser(log)}}, upsert=True)
+            db.WAFLogs.update_one({'request_id': log['transaction']['unique_id']}, {'$addToSet': {'messages': modsec_log_parser(log)}}, upsert=True)
         time.sleep(5)
 
 
