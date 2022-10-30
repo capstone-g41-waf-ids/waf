@@ -6,11 +6,6 @@ COPY . .
 
 HEALTHCHECK NONE
 
-EXPOSE 8000
-EXPOSE 80
-EXPOSE 30
-EXPOSE 443
-
 RUN touch /etc/nginx/geoblacklist
 RUN touch /etc/nginx/ipblacklist
 
@@ -22,6 +17,7 @@ RUN chmod 700 /etc/nginx/ssl
 
 RUN openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/secret.key -out /etc/nginx/ssl/secret.crt -sha256 -days 365\
      -subj "/C=AU/ST=VICTORIA/L=MELBOURNE/O=SWINBURNE/OU=GROUP 41/CN=website.com"
+
 CMD ["nginx", "-g", "daemon off;"]
 
 RUN chmod +x /docker-entrypoint.sh

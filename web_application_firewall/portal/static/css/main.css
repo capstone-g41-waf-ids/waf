@@ -16,6 +16,7 @@ input[type="password"] {
    margin: 8px 0;
    border: 1px solid #ccc;
    box-sizing: border-box;
+   font-size:11;
 }
 
 button {
@@ -28,7 +29,7 @@ button {
    width: 100%;
 }
 
-button:hover {
+.logs select:hover, button:hover, .logs input:hover {
    opacity: 0.8;
 }
 
@@ -77,7 +78,7 @@ nav {
    font-size: large;
    background-color: #083aa9;
    position: sticky;
-   top: 0px;
+   top: 0;
    width: 100%;
    border-bottom: 2px solid #06283d;
 }
@@ -89,122 +90,120 @@ nav a {
    text-decoration: none;
    font-size: large;
 }
-.nav0 a {
-   font-weight: bold;
-}
-.nav0 {
-   float: left;
-}
-.nav1 {
+
+.mid {
    display: inline-block;
    overflow: hidden;
 }
-.nav2 {
+.left {
+   float: left;
+}
+.right {
    float: right;
 }
 
-.tg {
+nav .left a {
+   font-weight: bold;
+}
+
+fieldset .logs {
+    overflow: scroll;
+}
+
+table.logs {
    border-collapse: collapse;
-   border-spacing: 0;
-}
-.tg td {
-   border-color: black;
-   border-style: solid;
-   border-width: 1px;
-   font-family: Arial, sans-serif;
-   font-size: 14px;
-   overflow: hidden;
-   padding: 10px 5px;
-   word-break: normal;
-}
-.tg th {
-   border-color: black;
-   border-style: solid;
-   border-width: 1px;
-   font-family: Arial, sans-serif;
-   font-size: 14px;
-   font-weight: normal;
-   overflow: hidden;
-   padding: 10px 5px;
-   word-break: normal;
-}
-
-.logs {
-   display: flex;
-   line-height: normal;
-   justify-content: center;
-}
-
-.tbody div {
-   overflow: scroll;
-   height: 100px;
-}
-
-.status {
-   display: flex;
-   line-height: normal;
-   vertical-align: middle;
-   justify-content: center;
-   text-align: center;
-}
-
-.btn-flag {
-    width: 24px
-}
-
-/* table stuff */
-#myInput {
+   border-style: hidden;
+   border: 0 !important;
    width: 100%;
-   /* Full-width */
-   font-size: 16px;
-   /* Increase font-size */
-   padding: 12px 20px 12px 40px;
-   /* Add some padding */
-   border: 1px solid #1e3d50;
-   margin-bottom: 12px;
-   /* Add some space below the input */
-}
-#myTable {
-   border-collapse: collapse;
-   /* Collapse borders */
-   width: 100%;
-   /* Full-width */
    font-size: 12px;
-   /* Increase font-size */
    border-radius: 6px;
-}
-#myTable th,
-#myTable td {
-   text-align: left;
-   /* Left-align text */
-   padding: 12px;
-   /* Add padding */
-}
-#myTable tr,
-.form-block tr {
-   /* Add a bottom border to all table rows */
-   border-bottom: 1px solid #1e3d50;
+   overflow: scroll;
 }
 
-#myTable .myTableSearch {
-   position: stick;
-   top: 80px;
-   background-color: #06283d;
-}
-
-#myTable th {
+table.logs thead {
    position: sticky;
    top: 54px;
    background-color: #06283d;
 }
 
-#myTable input {
-   height: 10px;
+table.logs th {
+   text-align: left;
+   padding: 10px;
+}
+
+table.logs tr,
+.form-block tr, table.logs thead {
+   border-bottom: 1px solid #1e3d50 !important;
+}
+
+table.logs td {
+   text-align: justify;
+   padding: 2px 8px 2px 8px;
+   border: 1px solid #1e3d50;
+}
+
+table.logs input {
+   background-color: transparent;
+   margin: 0;
+   border: 0;
+   padding: 0;
+   font-family: inherit;
+   font-size: 14px;
+   color: inherit;
    border-radius: 4px;
 }
-#myTable button {
-   padding: 4px;
-   border-radius: 4px;
+
+table.logs input:focus {
+    outline:none;
+}
+
+table.logs input::placeholder {
+    color: #dff6ff;
+    opacity: 1;
+    font-weight: bold;
+}
+
+table.logs select {
+    background-color: inherit;
+    color: inherit;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    font-size: inherit;
+    appearance: none;
+}
+
+table.logs select option {
+    background-color: inherit;
+    color: black;
+}
+
+
+div.flagged {
+    white-space: nowrap;
+}
+
+.caption {
+    font-size: 10pt;
+    font-style: italic;
+}
+
+.caption div {
+    margin: 10px;
+}
+
+.btn-icon {
+    background-color: inherit !important;
+    width: fit-content !important;
+    height: fit-content !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-block;
+}
+
+flagged.btn-icon {
+    display: inline-block;
 }
 
 .btn-add,
@@ -213,17 +212,23 @@ nav a {
    border-radius: 4px;
 }
 .btn-del {
-   width: 50px;
+   width: 36px;
    background-color: #df2525;
-   padding: 10px;
+   padding: 6px;
 }
 .btn-add {
    width: 120px;
    padding: 12px;
 }
 
+.settings {
+    overflow: hidden;
+    padding-right: 124px;
+    white-space: nowrap;
+}
+
 .settings input {
-   width: 400px;
+   width: 100%;
    border: none;
    border-radius: 4px;
 }
@@ -232,17 +237,10 @@ nav a {
    height: 40px;
 }
 
-input.readonly {
-   border: none;
-   background-color: transparent;
-   color: #ccc;
-   pointer-events: none;
-   padding: 6;
-   padding-left: 0;
-   margin-left: 0;
-   border-bottom: 1px solid #06283d;
+.settings p {
+    white-space: normal;
+    padding-right: 0;
 }
-
 .form-block fieldset,
 .form-block,
 .form-block tr,
@@ -255,10 +253,6 @@ input.readonly {
    background-color: #07314a;
    margin: 0;
    border: 0;
-}
-
-fieldset table {
-   width: 100%;
 }
 
 .form-block {
@@ -277,10 +271,49 @@ fieldset table {
    border-radius: 6px;
 }
 
-#flag-select select {
-    background: transparent;
-}
-
 #serverStatus {
     text-align: center;
 }
+
+div.body {
+    overflow: auto;
+    width: 150px;
+}
+
+.destip, .status {
+    min-width: 52px;
+}
+
+.geolocation, .alert {
+    min-width: 35px;
+}
+
+.sourceip, .destport {
+    min-width: 65px;
+}
+
+.useragent {
+    min-width: 150px;
+}
+
+input.readonly {
+   box-sizing: border-box;
+   border: none !important;
+   background-color: transparent;
+   color: #ccc;
+   pointer-events: none;
+   width: 100%;
+   min-width: 100%;
+   margin: 0;
+   padding: 0 0 10px 0;
+   border-bottom: 1px solid #06283d !important;
+}
+
+table {
+    width: 100%;
+}
+
+td.btn {
+    width: 36px;
+}
+
