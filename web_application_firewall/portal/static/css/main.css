@@ -6,7 +6,7 @@ body {
 }
 
 main {
-   margin: 20px;
+   margin: 16px;
    z-index: 1;
    position: relative;
 }
@@ -62,8 +62,8 @@ span.pword {
 }
 
 /* Change styles on extra small screens */
-@media only screen and (max-width: 1320px) {
-   main {
+@media only screen and (max-width: 1480px) {
+    main {
         overflow-x: auto;
    }
    span.pword {
@@ -157,6 +157,14 @@ table.logs td {
    padding: 2px 8px 2px 8px;
    border: 1px solid #1e3d50;
 }
+table.logs tr td:first-child,
+table.logs tr th:first-child {
+  border-left: 0;
+}
+table.logs tr td:last-child,
+table.logs tr th:last-child {
+  border-right: 0;
+}
 
 table.logs input {
    background-color: transparent;
@@ -191,6 +199,8 @@ table.logs select {
 table.logs select option {
     background-color: inherit;
     color: black;
+    padding: 0;
+    margin: 0;
 }
 
 
@@ -309,12 +319,16 @@ div.request_body {
     width: 170px;
 }
 
-.geolocation, .alert {
+.alert {
     min-width: 30px;
 }
 
+.geolocation {
+    min-width: 15px;
+}
+
 .sourceip, .destip, .status {
-    min-width: 30px;
+    min-width: 28px;
 }
 
 .destport {
@@ -323,6 +337,14 @@ div.request_body {
 
 .useragent {
     min-width: 120px;
+}
+
+.path {
+    min-width: 80px;
+}
+
+.end {
+    min-width: 16px;
 }
 
 input.settings {
@@ -423,4 +445,15 @@ td .tooltip {
 
 .form-block h2 {
     margin: 0 0 10px 0;
+}
+
+fieldset.logs {
+    float: left !important;
+    padding: 6px;
+}
+
+div.clear {
+    clear:both;
+    overflow:hidden;
+    height:0;
 }
