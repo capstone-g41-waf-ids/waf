@@ -22,6 +22,11 @@ client = pymongo.MongoClient(CONNSTRING, connect=False)  # connect to mongo
 db = client["database"]
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('error/404.html'), 404
+
 @app.route('/login')
 def index():
     return render_template('login.html')
