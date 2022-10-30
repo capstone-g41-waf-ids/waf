@@ -88,7 +88,7 @@ nav {
    font-size: large;
    background-color: #083aa9;
    position: sticky;
-   top: 0px;
+   top: 0;
    width: 100%;
    border-bottom: 2px solid #06283d;
    z-index: 9999;
@@ -258,6 +258,12 @@ flagged.btn.icon {
     white-space: nowrap;
 }
 
+.settings {
+    overflow: hidden;
+    padding-right: 124px;
+    white-space: nowrap;
+}
+
 .settings input {
    width: 100%;
    border: none;
@@ -278,8 +284,8 @@ flagged.btn.icon {
     white-space: normal;
     padding: 0;
     margin: 6px 4px;
-
 }
+
 .form-block fieldset,
 .form-block,
 .form-block tr,
