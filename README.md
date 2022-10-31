@@ -111,7 +111,7 @@ Please install the following items before attempting to install / run the projec
 4. Verify that the portals are accessible by attempting to reach the following URLs:
     * The WAF Configuration Portal
       ```sh
-       https://<localhost>:30
+       https://<localhost>:40
       ```
     * The WebGoat Application (Accessed through the WAF)
       ```sh
@@ -160,6 +160,8 @@ This page provides configurable options that feed into the WAF's functionality. 
 The second option is to block based on Geolocation. By selecting a country the WAF will filter incoming addresses based on the country code they are assigned to. 
 <br>
 Both of these functionalities also allow the user to remove anything they've added should the source IP be valid, or its been decided that the country should be allowed to access their web applications.
+<br>
+The third option lets the user add their own custom WAF rules.
 
 ### The Edit User Page
 <img src="documentation-images/edituser.png" width="720" >
