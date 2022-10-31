@@ -1,3 +1,4 @@
+from email import message
 import json
 import os
 import time
@@ -6,11 +7,13 @@ import select
 import pymongo
 import hashlib
 from threading import Thread
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, jsonify
+from flask_simple_geoip import SimpleGeoIP
 import uwsgidecorators
 
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
+simple_geoip = SimpleGeoIP(app)
 
 CONNSTRING = os.environ['MONGODB_CONNSTRING']  # from container env
 SERVER = os.environ['SERVER_NAME']  # from container env
@@ -21,6 +24,11 @@ FLAG_LIST = ["Malicious", "Suspicious", "Benign", "Undefined"]
 client = pymongo.MongoClient(CONNSTRING, connect=False)  # connect to mongo
 db = client["database"]
 
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('error/404.html'), 404
 
 @app.route('/login')
 def index():
@@ -107,10 +115,15 @@ def get_blacklist():
 def blacklist_ip():
     if "user" in session:
         ip = request.form['block_ip']
-        myquery = {'ip': ip}
-        db.IPBlacklist.replace_one(myquery, myquery, upsert=True)
-        update_blacklist_file()
-        return redirect('/firewall')
+        message = "IP address added successfully"
+        if ip != request.remote_addr:
+            myquery = {'ip': ip}
+            db.IPBlacklist.replace_one(myquery, myquery, upsert=True)
+            update_blacklist_file()
+        else:
+            message = "You can't block your own IP"
+        return render_template('firewall.html', ip_blacklist=get_blacklist(), geo_blacklist=get_geoblacklist(),
+                            geo_list=get_geoblacklist_options(), rule_list=get_custom_rules(), message=message)
     else:
         return redirect('/login')
 
@@ -153,10 +166,16 @@ def get_geoblacklist_options():
 def blacklist_geo():
     if "user" in session:
         geolocation = request.form['block_geo']
-        myquery = {"country_code": geolocation}
-        db.GEOBlacklist.replace_one(myquery, myquery, upsert=True)
-        update_geo_file()
-        return redirect('/firewall')
+        geoip_data = simple_geoip.get_geoip_data()
+        message = "GeoLocation added successfully"
+        if geolocation != geoip_data["location"]["country"]:
+            myquery = {"country_code": geolocation}
+            db.GEOBlacklist.replace_one(myquery, myquery, upsert=True)
+            update_geo_file()
+        else:
+            message = "You can't block your own GeoLocation"
+        return render_template('firewall.html', ip_blacklist=get_blacklist(), geo_blacklist=get_geoblacklist(),
+                            geo_list=get_geoblacklist_options(), rule_list=get_custom_rules(), message=message)
     else:
         return redirect('/login')
 

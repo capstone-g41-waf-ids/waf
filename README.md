@@ -136,7 +136,7 @@ To login to the application use the following credentials:
 **Please Change the password for use in a live or internet exposed environment**
 ```sh
 username: admin
-password: 12345
+password: 1234
 ```
 
 After logging in a session is generated with your credentials. You are then redirected to the logs page.
