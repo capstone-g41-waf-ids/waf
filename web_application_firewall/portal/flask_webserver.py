@@ -85,11 +85,10 @@ def logout():
         return redirect('/login')
 
 
-# Edit user page
 @app.route('/edituser')
 def edituser():
     """
-
+    Routes to and renders edit user page
     :return:
     """
     if "user" in session:
@@ -102,7 +101,8 @@ def edituser():
 def editcurrentuser():
     """
     Edit user function
-    :return:
+    Takes input from form on edit user page and updates user password if credentials are correct
+    :return: Renders edit user page with success or fail message
     """
     if "user" in session:
         # Accept current (old) and new password from form on Edit User page
@@ -121,12 +121,13 @@ def editcurrentuser():
         return redirect('/login')
 
 
-@app.route('/')  # Server Status is the default page
+@app.route('/')  # Set Server Status is the default page
 @app.route('/serverstatus')
 def serverstatus():
     """
     Server status page
     Curls webserver to check server status
+    This page is the default page for the website
     :return: Renders Server Status page based on curl response status code
     """
     if "user" in session:
@@ -165,18 +166,18 @@ def get_blacklist():
 @app.route('/blacklist_ip', methods=['POST'])
 def blacklist_ip():
     """
-
-    :return:
+    Takes form input from user and adds IP to WAF blacklist
+    Checks current user IP to prevent user from blocking themselves
+    :return: Renders firewall settings page with success/fail confirmation message
     """
     if "user" in session:
         ip = request.form['block_ip']
-        message = "IP address added successfully"
-        if ip != request.remote_addr:
+        message = "You can't block your own IP"
+        if ip != request.remote_addr:  # Rejects if user attempts to block their own IP
             myquery = {'ip': ip}
-            db.IPBlacklist.replace_one(myquery, myquery, upsert=True)  # blacklists the IP
+            db.IPBlacklist.replace_one(myquery, myquery, upsert=True)  # Blacklists the IP
             update_blacklist_file()  # updates the file that nginx reads from
-        else:
-            message = "You can't block your own IP"  # sets error message
+            message = "IP address added to blacklist"
         return render_template('firewall.html', ip_blacklist=get_blacklist(), geo_blacklist=get_geoblacklist(),
                                geo_list=get_geoblacklist_options(), rule_list=get_custom_rules(), message=message)
     else:
@@ -186,13 +187,13 @@ def blacklist_ip():
 @app.route('/delete_ip', methods=['POST'])
 def delete_ip():
     """
-
+    Delete IP from IP blacklist
     :return:
     """
     if "user" in session:
         ip = request.form['delete_ip']
-        db.IPBlacklist.delete_one({"ip": ip})  # will remove ip from collection
-        update_blacklist_file()  # updates the file that nginx reads from
+        db.IPBlacklist.delete_one({"ip": ip})  # Will remove ip from collection
+        update_blacklist_file()  # Updates nginx blacklist with new IP
         return redirect('/firewall')
     else:
         return redirect('/login')
@@ -200,8 +201,9 @@ def delete_ip():
 
 def update_blacklist_file():
     """
-
-    :return:
+    Updates nginx blacklist file from IPBlacklist database
+    Hot reloads nginx
+    :return: Does not return anything
     """
     f = open("/etc/nginx/ipblacklist", "w")
     x = db.IPBlacklist.find()
@@ -214,8 +216,8 @@ def update_blacklist_file():
 
 def get_geoblacklist():
     """
-
-    :return:
+    Returns all Geolocations recorded in Geolocation Blacklist Collection
+    :return: Does not return anything
     """
     if "user" in session:
         return db.GEOBlacklist.find()  # gets geo black list from collection
@@ -224,7 +226,8 @@ def get_geoblacklist():
 
 def get_geoblacklist_options():
     """
-
+    Get all countries and country codes for geolocation blacklisting
+    User uses selects from this list when block geolocations
     :return:
     """
     if "user" in session:
@@ -236,20 +239,20 @@ def get_geoblacklist_options():
 @app.route('/blacklist_geo', methods=['POST'])
 def blacklist_geo():
     """
-
-    :return:
+    Takes form input from user and adds geolocation to WAF blacklist
+    Checks current user geolocation to prevent user from blocking themselves
+    :return: Renders firewall settings page with success/fail confirmation message
     """
     if "user" in session:
         geolocation = request.form['block_geo']
         geoip_data = simple_geoip.get_geoip_data()  # Gets the users geolocation
-        message = "GeoLocation added successfully"
+        message = "You can't block your own GeoLocation"  # Add error message
         if geolocation != geoip_data["location"]["country"]:  # Won't let the user block their own geolocation
             myquery = {"country_code": geolocation}
             # Blacklists geolocation if it doesn't already exist in the collection
             db.GEOBlacklist.replace_one(myquery, myquery, upsert=True)
             update_geo_file()
-        else:
-            message = "You can't block your own GeoLocation"  # Add error message
+            message = "GeoLocation added successfully"
         return render_template('firewall.html', ip_blacklist=get_blacklist(), geo_blacklist=get_geoblacklist(),
                                geo_list=get_geoblacklist_options(), rule_list=get_custom_rules(), message=message)
     else:
@@ -259,7 +262,7 @@ def blacklist_geo():
 @app.route('/delete_geo', methods=['POST'])
 def delete_geo():
     """
-
+    Delete geolocation from blacklist
     :return:
     """
     if "user" in session:
@@ -273,7 +276,8 @@ def delete_geo():
 
 def update_geo_file():
     """
-
+    Updates nginx blacklist file from geolocation blacklist database
+    Hot reloads nginx
     :return:
     """
     f = open("/etc/nginx/geoblacklist", "w")
@@ -287,7 +291,7 @@ def update_geo_file():
 
 def get_custom_rules():
     """
-
+    Get list of custom rules from custom rule collection
     :return:
     """
     if "user" in session:
@@ -298,7 +302,7 @@ def get_custom_rules():
 @app.route('/add_rule', methods=['POST'])
 def add_rule():
     """
-
+    Add custom rule to custom rule collection
     :return:
     """
     if "user" in session:
@@ -314,7 +318,7 @@ def add_rule():
 @app.route('/delete_rule', methods=['POST'])
 def delete_rule():
     """
-
+    Delete custom rule from custom rule collection
     :return:
     """
     if "user" in session:
@@ -329,7 +333,7 @@ def delete_rule():
 @app.route('/edit_rule', methods=['POST'])
 def edit_rule():
     """
-
+    Edit existing rule in custom rule collection
     :return:
     """
     if "user" in session:
@@ -344,7 +348,8 @@ def edit_rule():
 
 def update_rule_file():
     """
-
+    Updates ModSecurity custom rules file from Custom rule database
+    Hot reloads nginx
     :return:
     """
     f = open("/etc/modsecurity.d/custom_rules.conf", "w")
@@ -359,25 +364,27 @@ def update_rule_file():
 @app.route('/logsearch')
 def logsearch():
     """
-
-    :return:
+    Routes to and renders log search page
+    Display all WAF logs in table
+    :return: Renders log search page
     """
     if "user" in session:
         if "displaylogs" not in session:
-            session["displaylogs"] = False
+            session["displaylogs"] = False # if user has not specified to show webportal logs, hides them
         return render_template('logsearch.html', results=get_access_logs({}), flag_list=FLAG_LIST)
     return redirect('/login')
 
 
-def get_access_logs(i):
+def get_access_logs(query):
     """
-
-    :param i:
-    :return:
+    Gets all access logs from WAF logs database
+    If specified, filters logs to display/hide specific logs
+    :param query: Query to specify access logs filtering, also may include
+    :return: Returns all access logs, including filtering by above query, sorted by time
     """
     if "user" in session:
-        query = i
-        if not session["displaylogs"]:
+        if not session["displaylogs"]: # checks if user has selected to hide web portal logs
+            # adds to query to exclude any logs where the server address and port match the portal (hide portal logs)
             query.update({'$nor': [{'server_addr': PORTAL, 'server_port': PORTAL_PORT}]})
         return db.WAFLogs.find(query).sort('time', -1)
     return redirect('/login')
@@ -386,7 +393,9 @@ def get_access_logs(i):
 @app.route('/search', methods=['POST'])
 def search():
     """
-
+    Search WAF logs and return logs based on user request
+    Takes user input from forms on logsearch page
+    Builds pymongo query based input and renders log page based on query
     :return:
     """
     if "user" in session:
@@ -403,7 +412,7 @@ def search():
 @app.route('/flag_log', methods=['POST'])
 def flag_log():
     """
-
+    Flag a log with a value "Malicious", "Suspicious", "Benign" or "Undefined"
     :return:
     """
     if "user" in session:
@@ -418,22 +427,25 @@ def flag_log():
 @app.route('/hide_log', methods=['POST'])
 def hide_log():
     """
-
-    :return:
+    Show/Hides the web portal logs from the logs table
+    Toggles display logs value when user clicks display logs button in log page
+    User submits empty form and session value "displaylogs" is toggled
+    :return: Redirects back to logsearch page
     """
     if "user" in session:
-        session["displaylogs"] ^= True # sets dislaylogs to true
+        session["displaylogs"] ^= True  # toggles displaylogs value
         return redirect('/logsearch')
     else:
         return redirect('/login')
 
 
 @uwsgidecorators.postfork
-@uwsgidecorators.thread # tells uWSGI that this function will be threaded
+@uwsgidecorators.thread  # tells uWSGI that this function will be threaded
 def nginx_logger():
     """
-
-    :return:
+    Send logs from WAF to WAFLogs database
+    Combines with existing entries from ModSec, if any.
+    :return: nothing
     """
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
@@ -449,11 +461,12 @@ def nginx_logger():
 
 
 @uwsgidecorators.postfork
-@uwsgidecorators.thread # tells uWSGI that this function will be threaded
+@uwsgidecorators.thread  # tells uWSGI that this function will be threaded
 def modsec_logger():
     """
-
-    :return:
+    Send logs from ModSec to WAFLog database
+    Combines with existing entries from NGINX, if any.
+    :return: nothing
     """
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/modsec_audit_log.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)  # logger will tail the file and catch any updates
@@ -469,7 +482,7 @@ def modsec_logger():
 
 def modsec_log_parser(log):
     """
-    Will parse ModSec logs
+    Parse Modsec logs to return relevant information
     :param log:
     :return:
     """
@@ -490,9 +503,6 @@ def hash_pword(var):
 
 
 if __name__ == '__main__':
-    """
-    
-    """
     update_blacklist_file()
     update_geo_file()
     update_rule_file()
