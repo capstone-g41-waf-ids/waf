@@ -1,4 +1,4 @@
-from email import message
+#All imports up here
 import json
 import os
 import time
@@ -11,6 +11,7 @@ from flask import Flask, render_template, request, session, redirect, jsonify
 from flask_simple_geoip import SimpleGeoIP
 import uwsgidecorators
 
+#initialize flask, secret key for ssl, geoIP
 app = Flask(__name__)
 app.secret_key = "hd72bd8a"
 simple_geoip = SimpleGeoIP(app)
@@ -20,10 +21,10 @@ SERVER = os.environ['SERVER_NAME']  # from container env
 PORTAL = os.environ['IP']  # from container env
 PORTAL_PORT = os.environ['PORTAL_PORT']
 FLAG_LIST = ["Malicious", "Suspicious", "Benign", "Undefined"]
+WEBGOAT_URL = os.environ['WEBGOAT_URL']
 
 client = pymongo.MongoClient(CONNSTRING, connect=False)  # connect to mongo
 db = client["database"]
-
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -32,26 +33,34 @@ def page_not_found(e):
 
 @app.route('/login')
 def index():
-    return render_template('login.html')
+    if "user" in session:
+        return redirect('/serverstatus')
+        #route user to the login page
+    else:
+        return render_template('login.html')
 
 
 @app.route('/check_login', methods=['POST'])
 def check_login():
+    #if the user already has a login session, they will go to the log serverstatus page
+    #if not we will have the check the login credentials with the database
     if "user" in session:
-        return redirect('/logsearch')
+        return redirect('/serverstatus')
     else:
         username_local = request.form['uname']
         password_local = request.form['pword']
         account = db.UserAccounts.find_one({'username': username_local, 'password': hash_pword(password_local)})
         if account is not None:
+            #if the user checks out we will create a login session for them and redirect them the the serverstatus page
             session["user"] = username_local
-            return redirect('/logsearch')
+            return redirect('/serverstatus')
         return redirect('/login')
 
 
 @app.route('/logout')
 def logout():
     if "user" in session:
+        #user will be removed from login session
         session.pop("user", None)
         return redirect('/login')
     else:
@@ -61,6 +70,7 @@ def logout():
 @app.route('/edituser')
 def edituser():
     if "user" in session:
+        #give user the edit user page
         return render_template('edituser.html', result=session['user'], message='')
     return redirect('/login')
 
@@ -74,6 +84,7 @@ def editcurrentuser():
         new_pword = hash_pword(request.form['pword'])
         old_user = {"username": session["user"], "password": old_pword}
 
+        #will update the users password if their current password is correct
         result = mycol.update_one(old_user, {'$set': {'password': new_pword}})
 
         message = "ERROR! User did not update. Please try again."
@@ -84,11 +95,11 @@ def editcurrentuser():
         return redirect('/login')
 
 
-@app.route('/')
+@app.route('/')#serverstatus is the deafult page
 @app.route('/serverstatus')
 def serverstatus():
     if "user" in session:
-        response = os.popen(f"curl --max-time 2 -I http://webgoat:8080/WebGoat").read()  # HARDCODED WEBGOAT MUST FIX
+        response = os.popen(f"curl --max-time 2 -I {WEBGOAT_URL}").read() #will curl webgoat to make sure its alive
         if "HTTP/1.1 302 Found" in response:
             return render_template('serverstatus.html', status="Active", server=SERVER, emote="\U0001F642")
         return render_template('serverstatus.html', status="Inactive", server=SERVER, emote="\U0001F641")
@@ -100,14 +111,14 @@ def serverstatus():
 def firewall():
     if "user" in session:
         return render_template('firewall.html', ip_blacklist=get_blacklist(), geo_blacklist=get_geoblacklist(),
-                               geo_list=get_geoblacklist_options(), rule_list=get_custom_rules())
+                               geo_list=get_geoblacklist_options(), rule_list=get_custom_rules())#return firewall page
     else:
         return redirect('/login')
 
 
 def get_blacklist():
     if "user" in session:
-        return db.IPBlacklist.find()
+        return db.IPBlacklist.find()# returns blacklist collection
     return redirect('/login')
 
 
@@ -118,10 +129,10 @@ def blacklist_ip():
         message = "IP address added successfully"
         if ip != request.remote_addr:
             myquery = {'ip': ip}
-            db.IPBlacklist.replace_one(myquery, myquery, upsert=True)
-            update_blacklist_file()
+            db.IPBlacklist.replace_one(myquery, myquery, upsert=True)#blacklists the IP
+            update_blacklist_file()#updates the file that nginx reads from
         else:
-            message = "You can't block your own IP"
+            message = "You can't block your own IP" #sets error message
         return render_template('firewall.html', ip_blacklist=get_blacklist(), geo_blacklist=get_geoblacklist(),
                             geo_list=get_geoblacklist_options(), rule_list=get_custom_rules(), message=message)
     else:
@@ -132,8 +143,8 @@ def blacklist_ip():
 def delete_ip():
     if "user" in session:
         ip = request.form['delete_ip']
-        db.IPBlacklist.delete_one({"ip": ip})
-        update_blacklist_file()
+        db.IPBlacklist.delete_one({"ip": ip})#will remove ip from collection
+        update_blacklist_file()#updates the file that nginx reads from
         return redirect('/firewall')
     else:
         return redirect('/login')
@@ -146,7 +157,7 @@ def update_blacklist_file():
         if data["ip"] is not None:
             f.write("deny " + data["ip"] + ";\n")
     f.close()
-    os.system('service nginx reload')
+    os.system('service nginx reload')#reload nginx to update it with the leatest blacklist
 
 
 def get_geoblacklist():
