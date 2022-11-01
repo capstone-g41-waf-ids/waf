@@ -299,7 +299,7 @@ def flag_log():
     if "user" in session:
         new_flag = request.form['new_flag']
         request_id = request.form['request_id']
-        db.WAFLogs.update_one({'request_id': request_id}, {'$set': {'flag': new_flag}})
+        db.WAFLogs.update_one({'request_id': request_id}, {'$set': {'flag': new_flag}}) 
         return redirect('/logsearch')
     else:
         return redirect('/login')
@@ -307,13 +307,13 @@ def flag_log():
 @app.route('/hide_log', methods=['POST'])
 def hide_log():
     if "user" in session:
-        session["displaylogs"] ^= True
+        session["displaylogs"] ^= True # sets dislaylogs to true
         return redirect('/logsearch')
     else:
         return redirect('/login')
 
 @uwsgidecorators.postfork
-@uwsgidecorators.thread
+@uwsgidecorators.thread # tells uWSGI that this function will be threaded
 def nginx_logger():
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/host.access.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
@@ -328,7 +328,7 @@ def nginx_logger():
 
 
 @uwsgidecorators.postfork
-@uwsgidecorators.thread
+@uwsgidecorators.thread # tells uWSGI that this function will be threaded
 def modsec_logger():
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/modsec_audit_log.log'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)#logger will tail the file and catch any updates
