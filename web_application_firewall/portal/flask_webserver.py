@@ -370,7 +370,7 @@ def logsearch():
     """
     if "user" in session:
         if "displaylogs" not in session:
-            session["displaylogs"] = False # if user has not specified to show webportal logs, hides them
+            session["displaylogs"] = False  # if user has not specified to show web portal logs, hides them
         return render_template('logsearch.html', results=get_access_logs({}), flag_list=FLAG_LIST)
     return redirect('/login')
 
@@ -383,7 +383,7 @@ def get_access_logs(query):
     :return: Returns all access logs, including filtering by above query, sorted by time
     """
     if "user" in session:
-        if not session["displaylogs"]: # checks if user has selected to hide web portal logs
+        if not session["displaylogs"]:  # checks if user has selected to hide web portal logs
             # adds to query to exclude any logs where the server address and port match the portal (hide portal logs)
             query.update({'$nor': [{'server_addr': PORTAL, 'server_port': PORTAL_PORT}]})
         return db.WAFLogs.find(query).sort('time', -1)
