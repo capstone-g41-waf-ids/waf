@@ -162,14 +162,14 @@ def update_blacklist_file():
 
 def get_geoblacklist():
     if "user" in session:
-        return db.GEOBlacklist.find()
+        return db.GEOBlacklist.find() #gets geo black list from collection
     return redirect('/login')
 
 
 def get_geoblacklist_options():
     if "user" in session:
         with open("../country_codes") as json_file:
-            return json.load(json_file)
+            return json.load(json_file) #gets the options for the user to to choose from when blocking a country
     return redirect('/login')
 
 
@@ -177,14 +177,14 @@ def get_geoblacklist_options():
 def blacklist_geo():
     if "user" in session:
         geolocation = request.form['block_geo']
-        geoip_data = simple_geoip.get_geoip_data()
+        geoip_data = simple_geoip.get_geoip_data() # gets the users geolocation
         message = "GeoLocation added successfully"
-        if geolocation != geoip_data["location"]["country"]:
+        if geolocation != geoip_data["location"]["country"]: # wont let the user block their own geolocation 
             myquery = {"country_code": geolocation}
-            db.GEOBlacklist.replace_one(myquery, myquery, upsert=True)
+            db.GEOBlacklist.replace_one(myquery, myquery, upsert=True) #blacklists geo location if it doesent already exsist in the collection 
             update_geo_file()
         else:
-            message = "You can't block your own GeoLocation"
+            message = "You can't block your own GeoLocation" # add error message
         return render_template('firewall.html', ip_blacklist=get_blacklist(), geo_blacklist=get_geoblacklist(),
                             geo_list=get_geoblacklist_options(), rule_list=get_custom_rules(), message=message)
     else:
@@ -195,8 +195,8 @@ def blacklist_geo():
 def delete_geo():
     if "user" in session:
         geo = request.form['delete_geo']
-        db.GEOBlacklist.delete_one({"country_code": geo})
-        update_geo_file()
+        db.GEOBlacklist.delete_one({"country_code": geo})# deletes the geo location from the collection
+        update_geo_file() #updates the file that nginx reads from
         return redirect('/firewall')
     else:
         return redirect('/login')
@@ -207,7 +207,7 @@ def update_geo_file():
     x = db.GEOBlacklist.find()
     for data in x:
         if data["country_code"] is not None:
-            f.write(data["country_code"] + " no;\n")
+            f.write(data["country_code"] + " no;\n")#updates the file that nginx reads from
     f.close()
     os.system('service nginx reload')
 
@@ -331,17 +331,17 @@ def nginx_logger():
 @uwsgidecorators.thread
 def modsec_logger():
     f = subprocess.Popen(['tail', '-F', '/var/log/nginx/modsec_audit_log.log'], stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
+                         stderr=subprocess.PIPE)#logger will tail the file and catch any updates
     p = select.poll()
     p.register(f.stdout)
     while True:
-        if p.poll(1):
-            log = json.loads(f.stdout.readline())
+        if p.poll(1): #poll will only take in responces from the file if they havent been posted before
+            log = json.loads(f.stdout.readline())#reads line and converts to json format
             db.WAFLogs.update_one({'request_id': log['transaction']['unique_id']}, {'$addToSet': {'messages': modsec_log_parser(log)}}, upsert=True)
         time.sleep(5)
 
 
-def modsec_log_parser(log):
+def modsec_log_parser(log): #will parse modsec logs
     if len(log['transaction']['messages']) > 0:
         message = log['transaction']['messages'][0]['message']
         rule = log['transaction']['messages'][0]['details']['ruleId']
@@ -350,15 +350,15 @@ def modsec_log_parser(log):
 
 
 def hash_pword(var):
-    return hashlib.md5(var.encode('utf-8')).hexdigest()
+    return hashlib.md5(var.encode('utf-8')).hexdigest()#MD5 hash the password
 
 
 if __name__ == '__main__':
     update_blacklist_file()
     update_geo_file()
     update_rule_file()
-    nginx_logger = Thread(target=nginx_logger)
+    nginx_logger = Thread(target=nginx_logger)#Threaded workload logger runs in the background while flask runs in the main thread
     nginx_logger.start()
-    modsec_logger = Thread(target=modsec_logger)
+    modsec_logger = Thread(target=modsec_logger)#Threaded workload logger runs in the background while flask runs in the main thread
     modsec_logger.start()
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0')#start flask
