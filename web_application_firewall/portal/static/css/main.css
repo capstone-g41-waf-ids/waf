@@ -1,0 +1,463 @@
+body {
+   font-family: Arial, Helvetica, sans-serif;
+   background-color: #06283d;
+   color: #dff6ff;
+   margin: 0;
+}
+
+main {
+   margin: 16px;
+   z-index: 1;
+   position: relative;
+}
+
+input[type="text"],
+input[type="password"] {
+   width: 100%;
+   padding: 12px 20px;
+   margin: 8px 0;
+   border: 1px solid #ccc;
+   box-sizing: border-box;
+   font-size:11;
+}
+
+button {
+   background-color: #083aa9;
+   color: #ede4e0;
+   padding: 14px 20px;
+   margin: 8px 0;
+   border: none;
+   cursor: pointer;
+   width: 100%;
+   border-radius: 4px;
+}
+
+.logs select:hover, button:hover, .logs input:hover {
+   opacity: 0.8;
+}
+
+.cancel {
+   width: auto;
+   padding: 10px 18px;
+   background-color: #f44336;
+}
+
+.main .user_form {
+   margin: auto;
+   padding: 16px;
+   max-width: 420px;
+}
+
+.centre h1 {
+   text-align: center;
+}
+
+.content {
+   width: 50%;
+}
+
+span.pword {
+   float: right;
+   padding-top: 16px;
+}
+
+/* Change styles on extra small screens */
+@media only screen and (max-width: 1480px) {
+    main {
+        overflow-x: auto;
+   }
+   span.pword {
+      display: block;
+      float: none;
+   }
+   .cancelbtn {
+      width: 50%;
+   }
+
+   table.logs thead {
+        top: 84px !important;
+   }
+}
+
+nav {
+   list-style-type: none;
+   margin: 0;
+   padding: 0;
+   overflow: hidden;
+   text-align: center;
+   font-size: large;
+   background-color: #083aa9;
+   position: sticky;
+   top: 0;
+   width: 100%;
+   border-bottom: 2px solid #06283d;
+   z-index: 9999;
+}
+nav a {
+   display: inline-block;
+   color: #dff6ff;
+   text-align: center;
+   padding: 14px 16px;
+   text-decoration: none;
+   font-size: large;
+}
+
+.mid {
+   display: inline-block;
+   overflow: hidden;
+}
+.left {
+   float: left;
+}
+.right {
+   float: right;
+}
+
+nav .left a {
+   font-weight: bold;
+}
+nav .right {
+    padding-right: 16px;
+}
+nav .right a {
+   padding: 14px 0 14px 16px;
+   font-size: 22px;
+}
+
+table.logs {
+   border-collapse: collapse;
+   border-style: hidden;
+   border: 0 !important;
+   width: 100%;
+   font-size: 12px;
+   overflow: scroll;
+}
+
+table.logs thead {
+   position: sticky;
+   top: 54px;
+   background-color: #06283d;
+   z-index: 999;
+   border-left: 2px solid #06283d;
+}
+
+table.logs th {
+   text-align: justify;
+   padding: 6px 20px 6px 6px;
+   white-space: nowrap;
+}
+
+table.logs tr,
+.form-block tr, table.logs thead {
+   border-bottom: 1px solid #1e3d50 !important;
+}
+
+table.logs td {
+   text-align: justify;
+   padding: 2px 8px 2px 8px;
+   border: 1px solid #1e3d50;
+}
+table.logs tr td:first-child,
+table.logs tr th:first-child {
+  border-left: 0;
+}
+table.logs tr td:last-child,
+table.logs tr th:last-child {
+  border-right: 0;
+}
+
+table.logs input {
+   background-color: transparent;
+   margin: 0;
+   border: 0;
+   padding: 0;
+   font-family: inherit;
+   font-size: 14px;
+   color: inherit;
+   border-radius: 4px;
+   cursor: auto !important;
+}
+
+table.logs input::placeholder {
+    color: #dff6ff;
+    opacity: 1;
+    font-weight: bold;
+}
+
+table.logs select {
+    background-color: inherit;
+    color: inherit;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    font-size: inherit;
+    appearance: none;
+    cursor: pointer !important;
+}
+
+table.logs select option {
+    background-color: inherit;
+    color: black;
+    padding: 0;
+    margin: 0;
+}
+
+
+div.flagged {
+    white-space: nowrap;
+}
+
+.caption {
+    font-size: 10pt;
+    font-style: italic;
+}
+
+.caption div {
+    margin: 10px;
+}
+
+.btn.icon {
+    background-color: inherit !important;
+    width: fit-content !important;
+    height: fit-content !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-block;
+}
+
+flagged.btn.icon {
+    display: inline-block;
+}
+
+.btn.add,
+.btn.del {
+   margin: 5;
+   border-radius: 4px;
+}
+.btn.del, .btn.edit {
+    width: 30px;
+    text-align: center;
+}
+.btn.del {
+   background-color: #df2525;
+   padding: 6px;
+}
+.btn.add {
+   width: 60px;
+   padding: 12px;
+}
+.btn.edit {
+   background-color: #083aa9;
+   padding: 6px;
+}
+
+.settings {
+    overflow: hidden;
+    padding-right: 66px;
+    white-space: nowrap;
+}
+
+.settings input {
+   width: 100%;
+   border: none;
+   border-radius: 4px;
+}
+
+.settings select {
+   height: 40px;
+   width: 100%;
+   padding-left: 16px;
+}
+
+.i {
+    font-style: italic !important;
+}
+
+.settings p {
+    white-space: normal;
+    padding: 0;
+    margin: 6px 4px;
+}
+
+.form-block fieldset,
+.form-block,
+.form-block tr,
+.logs {
+   border: 1px solid #1e3d50;
+   border-radius: 6px;
+}
+
+.form-block fieldset {
+   background-color: #07314a;
+   margin: 0;
+   border: 0;
+}
+
+.form-block {
+   padding: 16px;
+   margin: 16px;
+   margin-left: 0;
+   float: left;
+}
+
+.form-block th {
+   text-align: left;
+}
+
+.user_form input,
+.user_form button {
+   border-radius: 6px;
+}
+
+#serverStatus {
+    text-align: center;
+}
+
+div.request_body {
+    overflow: auto;
+    width: 170px;
+}
+
+.alert {
+    min-width: 30px;
+}
+
+.geolocation {
+    min-width: 15px;
+}
+
+.sourceip, .destip, .status {
+    min-width: 28px;
+}
+
+.destport {
+    min-width: 45px;
+}
+
+.useragent {
+    min-width: 120px;
+}
+
+.path {
+    min-width: 80px;
+}
+
+.end {
+    min-width: 16px;
+}
+
+input.settings {
+   box-sizing: border-box;
+   border: none !important;
+   background-color: transparent;
+   color: #ccc;
+   width: 100%;
+   min-width: 100%;
+   margin: 0;
+   padding: 0 0 10px 0;
+   border-bottom: 1px solid #06283d !important;
+}
+
+input.settings:focus, table.logs input:focus {
+    outline:none;
+}
+
+input.settings:read-only {
+    pointer-events: none;
+}
+
+input.settings::placeholder {
+    opacity: 1;
+    border-bottom: 2px solid #06283d !important;
+}
+
+table {
+    width: 100%;
+}
+
+td.btn {
+    width: 36px;
+}
+
+.fa {
+  font-family: Arial, FontAwesome, sans-serif !important;
+}
+
+.fa.log {
+    margin: 0 6px 0 2px;
+    opacity: 0.7;
+    padding: 0;
+}
+
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: #1e3d50;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+  opacity: 0.8;
+
+  width: auto;
+  padding: 2px;
+  position: absolute;
+  z-index: 999999;
+  top: 75%;
+  left: 50%;
+  margin-left: -20px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  text-align: center;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.caption .tooltiptext, .logs .tooltiptext {
+    width: 100px;
+    margin-left: -75px;
+    top: 150%;
+    font-weight: normal;
+    white-space: normal;
+    text-align: left;
+}
+
+td .tooltip {
+      z-index: 99;
+}
+
+.btn .tooltiptext {
+    top: 75%;
+    margin-left: -25px;
+    opacity: 0.5;
+
+}
+
+.form-block h2 {
+    margin: 0 0 10px 0;
+}
+
+fieldset.logs {
+    float: left !important;
+    padding: 6px;
+}
+
+div.clear {
+    clear:both;
+    overflow:hidden;
+    height:0;
+}
+
+#block_ip {
+    min-width: 325px;
+}

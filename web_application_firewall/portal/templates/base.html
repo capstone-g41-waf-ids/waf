@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+  {% block head %}
+    <meta charset="utf-8" />
+    <meta name="description" content="Firewall page" />
+    <meta name="keywords" content="Apply" />
+    <meta name="author" content="Group-41" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	{% endblock %}
+	<title>{% block title %}{% endblock %} | WAF</title>
+</head>
+  <body>
+  {% block nav %}
+	<nav><!-- nav menu -->
+		<div class="left">
+			<a href="/">Group41-WAF</a>
+		</div>
+		<div class="mid">
+			<a href="serverstatus">Server Status</a>
+			<a href="logsearch">Log Search</a>
+			<a href="firewall">Firewall Settings</a>
+		</div>
+		<div class="right">
+			<a href="edituser" title="Edit User" class="fa">&#xf007;</a>
+			<a href="{{url_for('logout')}}" title="Logout" class="fa">&#xf08b;</a>
+		</div>
+	</nav>
+  <main>
+  {% endblock %}
+    {% block content %}{% endblock %}
+  </main>
+  </body>
+</html>
+

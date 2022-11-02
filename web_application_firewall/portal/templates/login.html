@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block nav %}
+{% endblock %}
+{% block content %}
+<div class="main">
+  <div class="user_form">
+    <form action="{{url_for('check_login')}}" method="POST">
+        <h1 class="centre">WAF Login</h1>
+        <label for="uname" class="form-label"><b>Username</b></label>
+        <input type="text" class="form-control" placeholder="Enter Username" id="uname" name="uname" required>
+
+        <label for="pword" class="form-label"><b>Password</b></label>
+        <input type="password" class="form-control" placeholder="Enter Password" id="pword" name="pword" required>
+          
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

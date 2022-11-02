@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Edit User{% endblock %}
+{% block content %}
+<h1>Edit User</h1>
+
+<div id="id01" class="form">
+  <form class="content" action="{{url_for('editcurrentuser')}}" method="post">
+    <div class="user_form">
+      <h2>Hello {{result}}</h2>
+
+      <label for="current_pword"><b>Current Password</b></label>
+      <input type="password" placeholder="Enter current password" id="current_pword" name="current_pword">
+
+      <label for="pword"><b>New Password</b></label>
+      <input type="password" placeholder="Enter Password" id="pword" name="pword">
+
+      <button type="submit">Submit</button>
+    </div>
+    <h3>{{ message }}</h3>
+  </form>
+</div>
+{% endblock %}

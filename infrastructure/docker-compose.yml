@@ -1,0 +1,71 @@
+version: '3.8'
+services:
+
+# WAF
+  web_application_firewall:
+    build: ../web_application_firewall
+    image: owasp/modsecurity:nginx-alpine
+    container_name: web_application_firewall
+    ports:
+      - "8000:8000"
+      - "40:40"
+    expose:
+      - "8000"
+      - "40"
+    depends_on:
+      - webserver
+    env_file:
+      - /opt/webportal.env
+      - /opt/secrets.env
+    volumes:
+      - ../web_application_firewall/portal/templates:/templates:rw
+      - ../web_application_firewall/portal/static:/static:rw
+      - ../web_application_firewall/etc/nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:rw
+      - ../web_application_firewall/etc/modsecurity.d/setup.conf:/etc/nginx/templates/modsecurity.d/setup.conf.template:rw
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.4
+
+# DATABASE
+  database:
+    image: mongo
+    container_name: mongodb
+    env_file:
+      - /opt/secrets.env
+    volumes:
+      - db:/data/db
+      - ../database/seed:/seed
+      - ../database/init:/docker-entrypoint-initdb.d
+    expose:
+      - "27017"
+      - "27018"
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.3
+
+# PROTECTED WEB SERVER
+###
+### CUSTOMISE THESE DETAILS TO MATCH YOUR OWN WEB SERVER
+###
+  webserver:
+    build: ../webgoat
+    image: webgoat/webgoat-8.0
+    container_name: webgoat
+    expose:
+      - "8080"
+    networks:
+      projectNetwork:
+        ipv4_address: 172.2.2.5
+
+
+volumes:
+    db:
+
+
+networks:
+  projectNetwork:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.2.2.0/28"
