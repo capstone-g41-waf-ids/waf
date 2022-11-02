@@ -131,7 +131,7 @@ Please note that the design in these screenshots and the actual product may diff
 <img src="documentation-images/login.png" width="720" >
 <br>
 
-To login to the application use the following credentials:
+To log in to the application use the following credentials:
 <br>
 **Please Change the password for use in a live or internet exposed environment**
 ```sh
@@ -159,14 +159,14 @@ This page provides configurable options that feed into the WAF's functionality. 
 <br>
 The second option is to block based on Geolocation. By selecting a country the WAF will filter incoming addresses based on the country code they are assigned to. 
 <br>
-Both of these functionalities also allow the user to remove anything they've added should the source IP be valid, or its been decided that the country should be allowed to access their web applications.
+Both of these functionalities also allow the user to remove anything they've added should the source IP be valid, or it's been decided that the country should be allowed to access their web applications.
 <br>
 The third option lets the user add their own custom WAF rules.
 
 ### The Edit User Page
 <img src="documentation-images/edituser.png" width="720" >
 
-The edit user page allows the logged in user to change their current password for a new one.
+The edit user page allows the logged-in user to change their current password for a new one.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -197,7 +197,6 @@ The edit user page allows the logged in user to change their current password fo
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[product-screenshot]: documentation-images/screenshot.png
 [Docker.com]: https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
 [Docker-url]: https://docker.com/
 [Nginx.com]: https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white

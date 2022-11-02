@@ -512,4 +512,4 @@ if __name__ == '__main__':
     modsec_logger = Thread(
         target=modsec_logger)  # Threaded workload logger runs in the background while flask runs in the main thread
     modsec_logger.start()
-    app.run(host='0.0.0.0')  # start flask
+    app.run(host='0.0.0.0')  # Start flask
