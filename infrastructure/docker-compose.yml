@@ -44,6 +44,9 @@ services:
         ipv4_address: 172.2.2.3
 
 # PROTECTED WEB SERVER
+###
+### CUSTOMISE THESE DETAILS TO MATCH YOUR OWN WEB SERVER
+###
   webserver:
     build: ../webgoat
     image: webgoat/webgoat-8.0

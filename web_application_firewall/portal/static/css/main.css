@@ -254,13 +254,7 @@ flagged.btn.icon {
 
 .settings {
     overflow: hidden;
-    padding-right: 64px;
-    white-space: nowrap;
-}
-
-.settings {
-    overflow: hidden;
-    padding-right: 124px;
+    padding-right: 66px;
     white-space: nowrap;
 }
 
@@ -462,4 +456,8 @@ div.clear {
     clear:both;
     overflow:hidden;
     height:0;
+}
+
+#block_ip {
+    min-width: 325px;
 }
