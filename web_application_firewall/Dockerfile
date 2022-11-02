@@ -1,5 +1,5 @@
 FROM owasp/modsecurity:nginx
-#FROM nginx
+
 WORKDIR /
 
 COPY . .
