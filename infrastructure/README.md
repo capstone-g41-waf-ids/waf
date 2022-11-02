@@ -31,6 +31,7 @@ This folder also contains the .env file which contains secrets that shouldn't be
 * [Roy](https://github.com/orgs/capstone-g41-waf-ids/people/RoystonJoel)
 * [Ellen](https://github.com/orgs/capstone-g41-waf-ids/people/orangeblossomest)
 * [Tom](https://github.com/orgs/capstone-g41-waf-ids/people/Choski)
+* [Fuman](https://github.com/orgs/capstone-g41-waf-ids/people/fumank2)
 * [Darcy](https://github.com/orgs/capstone-g41-waf-ids/people/ASD-Database)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
