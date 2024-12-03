@@ -185,7 +185,7 @@ The edit user page allows the logged-in user to change their current password fo
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* [Roy](https://github.com/orgs/capstone-g41-waf-ids/people/RoystonJoel)
+* [Royston Joel Selvaraj](https://github.com/orgs/capstone-g41-waf-ids/people/RoystonJoel)
 * [Ellen](https://github.com/orgs/capstone-g41-waf-ids/people/orangeblossomest)
 * [Tom](https://github.com/orgs/capstone-g41-waf-ids/people/Choski)
 * [Darcy](https://github.com/orgs/capstone-g41-waf-ids/people/ASD-Database)
